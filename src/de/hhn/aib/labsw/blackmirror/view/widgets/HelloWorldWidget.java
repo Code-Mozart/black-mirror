@@ -11,7 +11,7 @@ import java.awt.*;
  */
 public class HelloWorldWidget extends AbstractWidget {
     public HelloWorldWidget() {
-        this.setSize(200, 200);
+        this.setSize(400, 400);
 
         JPanel panel = new JPanel();
         panel.setBackground(Color.BLACK);

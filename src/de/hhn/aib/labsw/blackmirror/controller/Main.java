@@ -37,9 +37,15 @@ public class Main {
         widgets.forEach(AbstractWidget::onNextSecond);
     }
 
+    /**
+     * Method to set all widgets in the widgets ArrayList invisible.
+     */
     private void setWidgetsInvisible() {
         widgets.forEach(w -> w.setVisible(false)); //Sets each widget invisible
     }
+    /**
+     * Method to set all widgets in the widgets ArrayList visible.
+     */
     private void setWidgetsVisible() {
         widgets.forEach(w -> w.setVisible(true)); //Sets each widget visible
     }

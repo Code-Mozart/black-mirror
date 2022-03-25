@@ -2,6 +2,7 @@ package de.hhn.aib.labsw.blackmirror.controller;
 
 import de.hhn.aib.labsw.blackmirror.view.widgets.AbstractWidget;
 import de.hhn.aib.labsw.blackmirror.view.widgets.HelloWorldWidget;
+import de.hhn.aib.labsw.blackmirror.view.widgets.WeatherWidget;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,9 +24,8 @@ public class Main {
         widgets = new ArrayList<>();
 
         // @Team add your widgets here to test them -Markus
-        widgets.add(new
-                HelloWorldWidget()
-        );
+        widgets.add(new HelloWorldWidget());
+        widgets.add(new WeatherWidget());
 
         widgets.forEach(w -> w.setVisible(true));
     }

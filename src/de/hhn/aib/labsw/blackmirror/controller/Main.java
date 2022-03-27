@@ -1,8 +1,8 @@
 package de.hhn.aib.labsw.blackmirror.controller;
 
 import de.hhn.aib.labsw.blackmirror.view.widgets.AbstractWidget;
-import de.hhn.aib.labsw.blackmirror.view.widgets.CalendarWidget;
 import de.hhn.aib.labsw.blackmirror.view.widgets.HelloWorldWidget;
+import de.hhn.aib.labsw.blackmirror.view.widgets.ReminderWidget;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,7 @@ public class Main {
 
         // @Team add your widgets here to test them -Markus
         widgets.add(new
-                CalendarWidget()
+                ReminderWidget()
         );
 
         widgets.forEach(w -> w.setVisible(true));

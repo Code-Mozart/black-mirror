@@ -71,7 +71,7 @@ public class WeatherWidget extends AbstractWidget {
         backgroundPanel.setLayout(new GridBagLayout());
         backgroundPanel.setBackground(Color.BLACK);
         add(backgroundPanel);
-        GridBagConstraints gbc = new GridBagConstraints();
+        WeatherWidgetConstraints wwc = new WeatherWidgetConstraints();
 
         //Init current weather
         weather_c = new WeatherPanel();
@@ -88,12 +88,9 @@ public class WeatherWidget extends AbstractWidget {
         weather_c.add(humidity_c);
         weather_c.add(pressure_c);
         weather_c.add(windspeed_c);
-        gbc.gridwidth = 4;
-        gbc.anchor = GridBagConstraints.CENTER;
-        gbc.ipadx = 10;
-        gbc.ipady = 10;
-        gbc.weightx = 0.0;
-        backgroundPanel.add(weather_c,gbc);
+        wwc.gridwidth = 4;
+        wwc.weightx = 0.0;
+        backgroundPanel.add(weather_c,wwc);
 
         //Init 8h weather
         weather_08h = new WeatherPanel();
@@ -103,12 +100,10 @@ public class WeatherWidget extends AbstractWidget {
         weather_08h.add(header_08h);
         weather_08h.add(temperature_08h);
         weather_08h.add(wc_08h);
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        gbc.ipadx = 10;
-        gbc.ipady = 10;
-        backgroundPanel.add(weather_08h,gbc);
+        wwc = new WeatherWidgetConstraints();
+        wwc.gridx = 0;
+        wwc.gridy = 3;
+        backgroundPanel.add(weather_08h,wwc);
 
         //Init 12h weather
         weather_12h = new WeatherPanel();
@@ -118,12 +113,10 @@ public class WeatherWidget extends AbstractWidget {
         weather_12h.add(header_12h);
         weather_12h.add(temperature_12h);
         weather_12h.add(wc_12h);
-        gbc = new GridBagConstraints();
-        gbc.gridx = 1;
-        gbc.gridy = 3;
-        gbc.ipadx = 10;
-        gbc.ipady = 10;
-        backgroundPanel.add(weather_12h,gbc);
+        wwc = new WeatherWidgetConstraints();
+        wwc.gridx = 1;
+        wwc.gridy = 3;
+        backgroundPanel.add(weather_12h,wwc);
 
         //Init 16h weather
         weather_16h = new WeatherPanel();
@@ -133,12 +126,10 @@ public class WeatherWidget extends AbstractWidget {
         weather_16h.add(header_16h);
         weather_16h.add(temperature_16h);
         weather_16h.add(wc_16h);
-        gbc = new GridBagConstraints();
-        gbc.gridx = 2;
-        gbc.gridy = 3;
-        gbc.ipadx = 10;
-        gbc.ipady = 10;
-        backgroundPanel.add(weather_16h,gbc);
+        wwc = new WeatherWidgetConstraints();
+        wwc.gridx = 2;
+        wwc.gridy = 3;
+        backgroundPanel.add(weather_16h,wwc);
 
         //Init 20h weather
         weather_20h = new WeatherPanel();
@@ -148,12 +139,10 @@ public class WeatherWidget extends AbstractWidget {
         weather_20h.add(header_20h);
         weather_20h.add(temperature_20h);
         weather_20h.add(wc_20h);
-        gbc = new GridBagConstraints();
-        gbc.gridx = 3;
-        gbc.gridy = 3;
-        gbc.ipadx = 10;
-        gbc.ipady = 10;
-        backgroundPanel.add(weather_20h,gbc);
+        wwc = new WeatherWidgetConstraints();
+        wwc.gridx = 3;
+        wwc.gridy = 3;
+        backgroundPanel.add(weather_20h,wwc);
     }
 
     /**
@@ -250,6 +239,14 @@ public class WeatherWidget extends AbstractWidget {
         public WeatherLabel(String text){
             super(text);
             this.setForeground(Color.WHITE);
+        }
+    }
+
+    static class WeatherWidgetConstraints extends GridBagConstraints{
+        public WeatherWidgetConstraints(){
+            super();
+            anchor = GridBagConstraints.CENTER;
+            insets = new Insets(0,25,50,25);
         }
     }
 }

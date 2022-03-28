@@ -15,11 +15,15 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
 import java.util.LinkedList;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.concurrent.*;
 
 public class WeatherWidget extends AbstractWidget {
-    private static final String ADDRESS = "https://api.open-meteo.com/v1/forecast?latitude=%s&longitude=%s&hourly=temperature_2m,pressure_msl,precipitation,weathercode&current_weather=true&timezone=Europe/Berlin";
+    private static final String ADDRESS = "https://api.open-meteo.com/v1/forecast?latitude=%s&longitude=%s&hourly=temperature_2m,relativehumidity_2m,apparent_temperature,pressure_msl,precipitation,weathercode,windspeed_10m&timezone=Europe/Berlin";
     private static final DateTimeFormatter DATEFORMAT = new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd'T'HH:mm").parseDefaulting(ChronoField.SECOND_OF_MINUTE, 0).toFormatter();
+
+    ResourceBundle resources = ResourceBundle.getBundle("WeatherWidget", Locale.getDefault());
 
     //Linked List with the weather sets
     LinkedList<WeatherSet> sets = null;
@@ -51,6 +55,9 @@ public class WeatherWidget extends AbstractWidget {
     private WeatherPanel weather_c;
     private WeatherLabel header_c;
     private WeatherLabel temperature_c;
+    private WeatherLabel pressure_c;
+    private WeatherLabel humidity_c;
+    private WeatherLabel windspeed_c;
     private WeatherLabel wc_c;
 
     public WeatherWidget() {
@@ -68,12 +75,19 @@ public class WeatherWidget extends AbstractWidget {
 
         //Init current weather
         weather_c = new WeatherPanel();
-        header_c = new WeatherLabel("aktuell");
+        weather_c.setLayout(new GridLayout(6,1));
+        header_c = new WeatherLabel(resources.getString("header_current"));
         temperature_c = new WeatherLabel("12°C");
+        humidity_c = new WeatherLabel("58%");
+        pressure_c = new WeatherLabel("1023,65 hPa");
+        windspeed_c = new WeatherLabel("5 Km/h");
         wc_c = new WeatherLabel("leicht bewölkt");
         weather_c.add(header_c);
         weather_c.add(temperature_c);
         weather_c.add(wc_c);
+        weather_c.add(humidity_c);
+        weather_c.add(pressure_c);
+        weather_c.add(windspeed_c);
         gbc.gridwidth = 4;
         gbc.anchor = GridBagConstraints.CENTER;
         gbc.ipadx = 10;
@@ -83,7 +97,7 @@ public class WeatherWidget extends AbstractWidget {
 
         //Init 8h weather
         weather_08h = new WeatherPanel();
-        header_08h = new WeatherLabel("08:00");
+        header_08h = new WeatherLabel(resources.getString("header_01"));
         temperature_08h = new WeatherLabel("12°C");
         wc_08h = new WeatherLabel("leicht bewölkt");
         weather_08h.add(header_08h);
@@ -98,7 +112,7 @@ public class WeatherWidget extends AbstractWidget {
 
         //Init 12h weather
         weather_12h = new WeatherPanel();
-        header_12h = new WeatherLabel("12:00");
+        header_12h = new WeatherLabel(resources.getString("header_02"));
         temperature_12h = new WeatherLabel("12°C");
         wc_12h = new WeatherLabel("leicht bewölkt");
         weather_12h.add(header_12h);
@@ -113,7 +127,7 @@ public class WeatherWidget extends AbstractWidget {
 
         //Init 16h weather
         weather_16h = new WeatherPanel();
-        header_16h = new WeatherLabel("16:00");
+        header_16h = new WeatherLabel(resources.getString("header_03"));
         temperature_16h = new WeatherLabel("12°C");
         wc_16h = new WeatherLabel("leicht bewölkt");
         weather_16h.add(header_16h);
@@ -128,7 +142,7 @@ public class WeatherWidget extends AbstractWidget {
 
         //Init 20h weather
         weather_20h = new WeatherPanel();
-        header_20h = new WeatherLabel("20:00");
+        header_20h = new WeatherLabel(resources.getString("header_04"));
         temperature_20h = new WeatherLabel("12°C");
         wc_20h = new WeatherLabel("leicht bewölkt");
         weather_20h.add(header_20h);
@@ -160,6 +174,9 @@ public class WeatherWidget extends AbstractWidget {
         JSONArray weathercodes = data.getJSONObject("hourly").getJSONArray("weathercode");
         JSONArray temperatures = data.getJSONObject("hourly").getJSONArray("temperature_2m");
         JSONArray precipitations = data.getJSONObject("hourly").getJSONArray("precipitation");
+        JSONArray windspeeds = data.getJSONObject("hourly").getJSONArray("windspeed_10m");
+        JSONArray humidities = data.getJSONObject("hourly").getJSONArray("relativehumidity_2m");
+        JSONArray pressures = data.getJSONObject("hourly").getJSONArray("pressure_msl");
 
         LinkedList<WeatherSet> weatherSets = new LinkedList<>();
         for (int i = 0; i < times.length(); i++) {
@@ -167,6 +184,9 @@ public class WeatherWidget extends AbstractWidget {
             temp.setTemperature(temperatures.getDouble(i));
             temp.setPrecipitation(precipitations.getDouble(i));
             temp.setWeathercode(weathercodes.getInt(i));
+            temp.setWindspeed(windspeeds.getDouble(i));
+            temp.setHumidity(humidities.getInt(i));
+            temp.setPressure(pressures.getDouble(i));
             LocalDateTime dt = LocalDateTime.parse(times.getString(i), DATEFORMAT);
             temp.setTimestamp(dt);
             weatherSets.add(temp);
@@ -178,22 +198,24 @@ public class WeatherWidget extends AbstractWidget {
     }
 
     private void updateGUI() {
-        int cTime = LocalDateTime.now().getHour();
-        WeatherSet temp = sets.get(cTime);
+        WeatherSet temp = sets.get(LocalDateTime.now().getHour());
         temperature_c.setText("%02.2f °C".formatted(temp.getTemperature()));
-        wc_c.setText(temp.getCodeAsString());
+        wc_c.setText(resources.getString(temp.getCodeAsString()));
+        pressure_c.setText("%02.2f hPa".formatted(temp.getPressure()));
+        humidity_c.setText("%d %%".formatted(temp.getHumidity()));
+        windspeed_c.setText("%02.2f Km/h".formatted(temp.getWindspeed()));
         temp = sets.get(8);
         temperature_08h.setText("%02.2f °C".formatted(temp.getTemperature()));
-        wc_08h.setText(temp.getCodeAsString());
+        wc_08h.setText(resources.getString(temp.getCodeAsString()));
         temp = sets.get(12);
         temperature_12h.setText("%02.2f °C".formatted(temp.getTemperature()));
-        wc_12h.setText(temp.getCodeAsString());
+        wc_12h.setText(resources.getString(temp.getCodeAsString()));
         temp = sets.get(16);
         temperature_16h.setText("%02.2f °C".formatted(temp.getTemperature()));
-        wc_16h.setText(temp.getCodeAsString());
+        wc_16h.setText(resources.getString(temp.getCodeAsString()));
         temp = sets.get(20);
         temperature_20h.setText("%02.2f °C".formatted(temp.getTemperature()));
-        wc_20h.setText(temp.getCodeAsString());
+        wc_20h.setText(resources.getString(temp.getCodeAsString()));
     }
 
     class WeatherReceiver extends Thread {

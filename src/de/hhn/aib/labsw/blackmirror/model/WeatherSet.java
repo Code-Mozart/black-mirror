@@ -12,39 +12,42 @@ public class WeatherSet {
     private LocalDateTime timestamp;
     private int weathercode;
     private double temperature;
+    private double pressure;
+    private int humidity;
+    private double windspeed;
     private double precipitation;
 
     // HashMap to convert weather codes to string
     private static final HashMap<Integer,String> codeMap = new HashMap<>();
     static{
-        codeMap.put(0,"clear");
-        codeMap.put(1,"mainly clear");
-        codeMap.put(2,"partly clear");
-        codeMap.put(3,"overcast");
-        codeMap.put(45,"fog");
-        codeMap.put(48,"depositing rime fog");
-        codeMap.put(51,"light drizzle");
-        codeMap.put(53,"moderate drizzle");
-        codeMap.put(55,"dense drizzle");
-        codeMap.put(56,"light freezing drizzle");
-        codeMap.put(57,"dense freezing drizzle");
-        codeMap.put(61,"light rain");
-        codeMap.put(63,"moderate rain");
-        codeMap.put(65,"heavy rain");
-        codeMap.put(66,"light freezing rain");
-        codeMap.put(67,"heavy freezing rain");
-        codeMap.put(71,"slight snow fall");
-        codeMap.put(73,"moderate snow fall");
-        codeMap.put(75,"heavy snow fall");
-        codeMap.put(77,"snow grains");
-        codeMap.put(80,"slight rain showers");
-        codeMap.put(81,"moderate rain showers");
-        codeMap.put(82,"violent rain showers");
-        codeMap.put(85,"slight snow showers");
-        codeMap.put(86,"heavy snow showers");
-        codeMap.put(95,"thunderstorm");
-        codeMap.put(96,"thunderstorm with slight hail");
-        codeMap.put(99,"thunderstorm with heavy hail");
+        codeMap.put(0,"wc_clear");
+        codeMap.put(1,"wc_mainly_clear");
+        codeMap.put(2,"wc_partly_clear");
+        codeMap.put(3,"wc_overcast");
+        codeMap.put(45,"wc_fog");
+        codeMap.put(48,"wc_depositing_rime_fog");
+        codeMap.put(51,"wc_light_drizzle");
+        codeMap.put(53,"wc_moderate_drizzle");
+        codeMap.put(55,"wc_dense_drizzle");
+        codeMap.put(56,"wc_light_freezing_drizzle");
+        codeMap.put(57,"wc_dense_freezing_drizzle");
+        codeMap.put(61,"wc_light_rain");
+        codeMap.put(63,"wc_moderate_rain");
+        codeMap.put(65,"wc_heavy_rain");
+        codeMap.put(66,"wc_light_freezing_rain");
+        codeMap.put(67,"wc_heavy_freezing_rain");
+        codeMap.put(71,"wc_slight_snow_fall");
+        codeMap.put(73,"wc_moderate_snow_fall");
+        codeMap.put(75,"wc_heavy_snow_fall");
+        codeMap.put(77,"wc_snow_grains");
+        codeMap.put(80,"wc_slight_rain_showers");
+        codeMap.put(81,"wc_moderate_rain_showers");
+        codeMap.put(82,"wc_violent_rain_showers");
+        codeMap.put(85,"wc_slight_snow_showers");
+        codeMap.put(86,"wc_heavy_snow_showers");
+        codeMap.put(95,"wc_thunderstorm");
+        codeMap.put(96,"wc_thunderstorm_with_slight_hail");
+        codeMap.put(99,"wc_thunderstorm_with_heavy_hail");
     }
 
     /**
@@ -64,68 +67,60 @@ public class WeatherSet {
         return codeMap.get(weathercode);
     }
 
-    /**
-     * get the timestamp of the weather set
-     * @return the timestamp as LocalDateTime
-     */
     public LocalDateTime getTimestamp() {
         return timestamp;
     }
 
-    /**
-     * get the weather code of the weather set
-     * @return the weather code
-     */
     public int getWeathercode() {
         return weathercode;
     }
 
-    /**
-     * get the temperature of the weather set
-     * @return the temperature
-     */
     public double getTemperature() {
         return temperature;
     }
 
-    /**
-     * get the precipitation of the weather set
-     * @return the precipitation
-     */
     public double getPrecipitation() {
         return precipitation;
     }
 
-    /**
-     * set the timestamp of the weather set
-     * @param timestamp the timestamp
-     */
     public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
     }
 
-    /**
-     * set the weathercode of the weather set
-     * @param weathercode the weathercode
-     */
     public void setWeathercode(int weathercode) {
         this.weathercode = weathercode;
     }
 
-    /**
-     * set the Temperature of the weather set
-     * @param temperature the temperature
-     */
     public void setTemperature(double temperature) {
         this.temperature = temperature;
     }
 
-    /**
-     * set the precipitation of the weather set
-     * @param precipitation the precipitation
-     */
     public void setPrecipitation(double precipitation) {
         this.precipitation = precipitation;
+    }
+
+    public double getPressure() {
+        return pressure;
+    }
+
+    public void setPressure(double pressure) {
+        this.pressure = pressure;
+    }
+
+    public int getHumidity() {
+        return humidity;
+    }
+
+    public void setHumidity(int humidity) {
+        this.humidity = humidity;
+    }
+
+    public double getWindspeed() {
+        return windspeed;
+    }
+
+    public void setWindspeed(double windspeed) {
+        this.windspeed = windspeed;
     }
 
     /**

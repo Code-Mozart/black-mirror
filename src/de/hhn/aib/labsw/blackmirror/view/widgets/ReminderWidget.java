@@ -65,7 +65,7 @@ public class ReminderWidget extends AbstractWidget {
     }
 
     private void getTodayEvents() {
-        //TODO: Get Events by requesting them over Calendar
+        //TODO: Get Events by requesting them over Calendar (needs to be done after app is finished)
     }
 
     private String parseEvent(Event e) {

@@ -2,6 +2,7 @@ package de.hhn.aib.labsw.blackmirror.view.widgets;
 
 import javax.swing.*;
 import java.awt.*;
+import java.lang.reflect.Array;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -19,8 +20,6 @@ import java.util.List;
 public class ReminderWidget extends AbstractWidget {
     private JLabel label;
     private ZonedDateTime now;
-    private JList<String> list;
-    private Calendar calendar;
     private List<Event> events;
 
 
@@ -60,7 +59,7 @@ public class ReminderWidget extends AbstractWidget {
 
         if(!events.isEmpty()) {
             int i = 0;
-            List eventsStr = new ArrayList<>();
+            List<String> eventsStr = new ArrayList<>();
             for (Event ev :
                     events) {
                 if (i<6) {
@@ -69,13 +68,17 @@ public class ReminderWidget extends AbstractWidget {
                 }
             }
 
-            list = new JList(eventsStr.toArray());
+            JList<String> list = new JList(eventsStr.toArray());
             list.setBackground(Color.BLACK);
             list.setForeground(Color.WHITE);
 
             panel.add(list);
         } else {
+            JLabel noEventsText = new JLabel("No events for today");
+            noEventsText.setBackground(Color.BLACK);
+            noEventsText.setForeground(Color.WHITE);
 
+            panel.add(noEventsText);
         }
         panel.setBackground(Color.BLACK);
 
@@ -115,8 +118,8 @@ public class ReminderWidget extends AbstractWidget {
  * Event class used for reminders.
  */
 class Event {
-    private ZonedDateTime time;
-    private String desc;
+    private final ZonedDateTime time;
+    private final String desc;
 
     public Event(ZonedDateTime time, String description) {
         this.time = time;

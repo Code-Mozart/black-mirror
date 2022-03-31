@@ -5,29 +5,29 @@ import de.hhn.aib.labsw.blackmirror.view.widgets.AbstractWidget;
 import java.util.ArrayList;
 
 /**
- * Common parent class from which all pages should be derived.
+ * Class to hold all widgets on one page.
  *
  * @author Niklas Binder
- * @version 2022-03-24
+ * @version 2022-03-26
  */
-public class AbstractPage {
+public class Page {
 
     private ArrayList<AbstractWidget> widgetsOnPage;
 
-    public AbstractPage (ArrayList<AbstractWidget> widgetsOnPage)
+    public Page(ArrayList<AbstractWidget> widgetsOnPage)
     {
         this.widgetsOnPage = widgetsOnPage;
     }
     /**
      * Method to set all widgets in the widgets ArrayList invisible.
      */
-    public void setWidgetsInvisible() {
+    protected void setWidgetsInvisible() {
         widgetsOnPage.forEach(w -> w.setVisible(false)); //Sets each widget invisible
     }
     /**
      * Method to set all widgets in the widgets ArrayList visible.
      */
-    public void setWidgetsVisible() {
+    protected void setWidgetsVisible() {
         widgetsOnPage.forEach(w -> w.setVisible(true)); //Sets each widget visible
     }
 

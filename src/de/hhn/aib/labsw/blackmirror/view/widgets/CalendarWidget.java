@@ -2,9 +2,14 @@ package de.hhn.aib.labsw.blackmirror.view.widgets;
 
 import javax.swing.*;
 import java.awt.*;
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.time.format.TextStyle;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -13,10 +18,12 @@ import java.util.Locale;
  */
 public class CalendarWidget extends AbstractWidget {
     private JLabel label;
+    private List<CalendarDayComponent> dayComponents;
 
     public CalendarWidget() {
-        this.setSize(600, 400);
+        this.setSize(500, 100);
         initComponents();
+        onNextSecond();
     }
 
     @Override
@@ -27,6 +34,10 @@ public class CalendarWidget extends AbstractWidget {
                 .withLocale(Locale.getDefault());
         String dateString = formatter.format(now);
         label.setText(dateString);
+        int i = 0;
+        for (CalendarDayComponent cdc : dayComponents) {
+            cdc.setDay(now.plusDays(i++));
+        }
     }
 
     private void initComponents() {
@@ -36,9 +47,12 @@ public class CalendarWidget extends AbstractWidget {
         label = new JLabel("Time");
         label.setForeground(Color.WHITE);
 
+        dayComponents = new ArrayList<>();
         JPanel panelDays = new JPanel(new GridLayout(1, 7));
         for (int i = 0; i < 7; i++) {
-            panelDays.add(new CalendarDayComponent());
+            CalendarDayComponent cdc = new CalendarDayComponent(i == 0);
+            dayComponents.add(cdc);
+            panelDays.add(cdc);
         }
 
         panelMain.add(label, BorderLayout.NORTH);
@@ -50,11 +64,14 @@ public class CalendarWidget extends AbstractWidget {
         private final JLabel dateLabel;
         private final JLabel dayLabel;
 
-        public CalendarDayComponent() {
+        public CalendarDayComponent(boolean thick) {
             this.setBackground(Color.BLACK);
 
             this.setLayout(new BorderLayout());
-            this.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+            if (thick)
+                this.setBorder(BorderFactory.createLineBorder(Color.WHITE, 3));
+            else
+                this.setBorder(BorderFactory.createLineBorder(Color.WHITE));
 
             JPanel panelLabels = new JPanel(new GridLayout(2, 1));
             panelLabels.setBackground(Color.BLACK);
@@ -67,6 +84,11 @@ public class CalendarWidget extends AbstractWidget {
             dayLabel = new JLabel("Xx");
             dayLabel.setForeground(Color.WHITE);
             panelLabels.add(dayLabel);
+        }
+
+        public void setDay(ZonedDateTime date) {
+            dayLabel.setText(date.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.getDefault()));
+            dateLabel.setText(String.valueOf(date.getDayOfMonth()));
         }
     }
 }

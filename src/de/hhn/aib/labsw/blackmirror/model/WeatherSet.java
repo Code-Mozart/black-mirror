@@ -1,4 +1,6 @@
 package de.hhn.aib.labsw.blackmirror.model;
+import javax.swing.*;
+import java.awt.*;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 
@@ -17,8 +19,22 @@ public class WeatherSet {
     private double windspeed;
     private double precipitation;
 
+    //Static icons
+    private static final ImageIcon clearIcon = new ImageIcon("icons/clear.png");
+    private static final ImageIcon msunnyIcon = new ImageIcon("icons/mostlysunny.png");
+    private static final ImageIcon mcloudyIcon = new ImageIcon("icons/mostlycloudy.png");
+    private static final ImageIcon cloudyIcon = new ImageIcon("icons/cloudy.png");
+    private static final ImageIcon fogIcon = new ImageIcon("icons/fog.png");
+    private static final ImageIcon drizzleIcon = new ImageIcon("icons/chancerain.png");
+    private static final ImageIcon rainIcon = new ImageIcon("icons/rain.png");
+    private static final ImageIcon hailIcon = new ImageIcon("icons/flurries.png");
+    private static final ImageIcon snowIcon = new ImageIcon("icons/chancesnow.png");
+    private static final ImageIcon sleetIcon = new ImageIcon("icons/chancesleet.png");
+    private static final ImageIcon stormIcon = new ImageIcon("icons/tstorms.png");
+
     // HashMap to convert weather codes to string
     private static final HashMap<Integer,String> codeMap = new HashMap<>();
+    private static final HashMap<Integer, Icon> iconMap = new HashMap<>();
     static{
         codeMap.put(0,"wc_clear");
         codeMap.put(1,"wc_mainly_clear");
@@ -48,6 +64,52 @@ public class WeatherSet {
         codeMap.put(95,"wc_thunderstorm");
         codeMap.put(96,"wc_thunderstorm_with_slight_hail");
         codeMap.put(99,"wc_thunderstorm_with_heavy_hail");
+
+        iconMap.put(0,clearIcon);
+        iconMap.put(1,msunnyIcon);
+        iconMap.put(2,mcloudyIcon);
+        iconMap.put(3,cloudyIcon);
+        iconMap.put(45,fogIcon);
+        iconMap.put(48,fogIcon);
+        iconMap.put(51,drizzleIcon);
+        iconMap.put(53,drizzleIcon);
+        iconMap.put(55,drizzleIcon);
+        iconMap.put(56,drizzleIcon);
+        iconMap.put(57,drizzleIcon);
+        iconMap.put(61,drizzleIcon);
+        iconMap.put(63,rainIcon);
+        iconMap.put(65,rainIcon);
+        iconMap.put(66,drizzleIcon);
+        iconMap.put(67,rainIcon);
+        iconMap.put(71,snowIcon);
+        iconMap.put(73,snowIcon);
+        iconMap.put(75,snowIcon);
+        iconMap.put(77,hailIcon);
+        iconMap.put(80,drizzleIcon);
+        iconMap.put(81,rainIcon);
+        iconMap.put(82,rainIcon);
+        iconMap.put(85,snowIcon);
+        iconMap.put(86,snowIcon);
+        iconMap.put(95,stormIcon);
+        iconMap.put(96,stormIcon);
+        iconMap.put(99,stormIcon);
+    }
+
+    /**
+     * Convert a given weather code to the relevant icon
+     * @param code code to be converted
+     * @return weather code as icon
+     */
+    public static Icon convertCodeToIcon(int code){
+        return iconMap.get(code);
+    }
+
+    /**
+     * convert the weather code of the weather set to Icon
+     * @return weather code as icon
+     */
+    public Icon getCodeAsIcon(){
+        return iconMap.get(weathercode);
     }
 
     /**

@@ -24,7 +24,7 @@ public class Main {
         widgets = new ArrayList<>();
 
         // @Team add your widgets here to test them -Markus
-        widgets.add(new HelloWorldWidget());
+        //widgets.add(new HelloWorldWidget());
         widgets.add(new WeatherWidget());
 
         widgets.forEach(w -> w.setVisible(true));

@@ -4,8 +4,12 @@ import de.hhn.aib.labsw.blackmirror.model.WeatherSet;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -59,10 +63,15 @@ public class WeatherWidget extends AbstractWidget {
     private WeatherLabel humidity_c;
     private WeatherLabel windspeed_c;
     private WeatherLabel wc_c;
+    private JLabel iconPosition_c;
+    private JLabel iconPosition_08h;
+    private JLabel iconPosition_12h;
+    private JLabel iconPosition_16h;
+    private JLabel iconPosition_20h;
 
     public WeatherWidget() {
-        setSize(400,400);
         initGUI();
+        setSize(600,350);
         executor.scheduleAtFixedRate(new WeatherWidget.WeatherReceiver(), 0, 15, TimeUnit.MINUTES);
     }
 
@@ -72,22 +81,30 @@ public class WeatherWidget extends AbstractWidget {
         backgroundPanel.setBackground(Color.BLACK);
         add(backgroundPanel);
         WeatherWidgetConstraints wwc = new WeatherWidgetConstraints();
+        InnerConstraints ic = new InnerConstraints();
 
         //Init current weather
         weather_c = new WeatherPanel();
-        weather_c.setLayout(new GridLayout(6,1));
         header_c = new WeatherLabel(resources.getString("header_current"));
         temperature_c = new WeatherLabel("12°C");
         humidity_c = new WeatherLabel("58%");
         pressure_c = new WeatherLabel("1023,65 hPa");
         windspeed_c = new WeatherLabel("5 Km/h");
         wc_c = new WeatherLabel("leicht bewölkt");
-        weather_c.add(header_c);
-        weather_c.add(temperature_c);
-        weather_c.add(wc_c);
-        weather_c.add(humidity_c);
-        weather_c.add(pressure_c);
-        weather_c.add(windspeed_c);
+        weather_c.add(header_c,ic);
+        ic.gridy++;
+        iconPosition_c = new JLabel(new ImageIcon("icons/cloudy.png"));
+        weather_c.add(iconPosition_c,ic);
+        ic.gridy++;
+        weather_c.add(temperature_c,ic);
+        ic.gridy++;
+        weather_c.add(wc_c,ic);
+        ic.gridy++;
+        weather_c.add(humidity_c,ic);
+        ic.gridy++;
+        weather_c.add(pressure_c,ic);
+        ic.gridy++;
+        weather_c.add(windspeed_c,ic);
         wwc.gridwidth = 4;
         wwc.weightx = 0.0;
         backgroundPanel.add(weather_c,wwc);
@@ -97,9 +114,15 @@ public class WeatherWidget extends AbstractWidget {
         header_08h = new WeatherLabel(resources.getString("header_01"));
         temperature_08h = new WeatherLabel("12°C");
         wc_08h = new WeatherLabel("leicht bewölkt");
-        weather_08h.add(header_08h);
-        weather_08h.add(temperature_08h);
-        weather_08h.add(wc_08h);
+        ic.gridy = 0;
+        weather_08h.add(header_08h,ic);
+        ic.gridy++;
+        iconPosition_08h = new JLabel(new ImageIcon("icons/cloudy.png"));
+        weather_08h.add(iconPosition_08h,ic);
+        ic.gridy++;
+        weather_08h.add(temperature_08h,ic);
+        ic.gridy++;
+        weather_08h.add(wc_08h,ic);
         wwc = new WeatherWidgetConstraints();
         wwc.gridx = 0;
         wwc.gridy = 3;
@@ -110,9 +133,15 @@ public class WeatherWidget extends AbstractWidget {
         header_12h = new WeatherLabel(resources.getString("header_02"));
         temperature_12h = new WeatherLabel("12°C");
         wc_12h = new WeatherLabel("leicht bewölkt");
-        weather_12h.add(header_12h);
-        weather_12h.add(temperature_12h);
-        weather_12h.add(wc_12h);
+        ic.gridy=0;
+        weather_12h.add(header_12h,ic);
+        ic.gridy++;
+        iconPosition_12h = new JLabel(new ImageIcon("icons/cloudy.png"));
+        weather_12h.add(iconPosition_12h,ic);
+        ic.gridy++;
+        weather_12h.add(temperature_12h,ic);
+        ic.gridy++;
+        weather_12h.add(wc_12h,ic);
         wwc = new WeatherWidgetConstraints();
         wwc.gridx = 1;
         wwc.gridy = 3;
@@ -123,9 +152,15 @@ public class WeatherWidget extends AbstractWidget {
         header_16h = new WeatherLabel(resources.getString("header_03"));
         temperature_16h = new WeatherLabel("12°C");
         wc_16h = new WeatherLabel("leicht bewölkt");
-        weather_16h.add(header_16h);
-        weather_16h.add(temperature_16h);
-        weather_16h.add(wc_16h);
+        ic.gridy = 0;
+        weather_16h.add(header_16h,ic);
+        ic.gridy++;
+        iconPosition_16h = new JLabel(new ImageIcon("icons/cloudy.png"));
+        weather_16h.add(iconPosition_16h,ic);
+        ic.gridy++;
+        weather_16h.add(temperature_16h,ic);
+        ic.gridy++;
+        weather_16h.add(wc_16h,ic);
         wwc = new WeatherWidgetConstraints();
         wwc.gridx = 2;
         wwc.gridy = 3;
@@ -136,9 +171,15 @@ public class WeatherWidget extends AbstractWidget {
         header_20h = new WeatherLabel(resources.getString("header_04"));
         temperature_20h = new WeatherLabel("12°C");
         wc_20h = new WeatherLabel("leicht bewölkt");
-        weather_20h.add(header_20h);
-        weather_20h.add(temperature_20h);
-        weather_20h.add(wc_20h);
+        ic.gridy = 0;
+        weather_20h.add(header_20h,ic);
+        ic.gridy++;
+        iconPosition_20h = new JLabel(new ImageIcon("icons/cloudy.png"));
+        weather_20h.add(iconPosition_20h,ic);
+        ic.gridy++;
+        weather_20h.add(temperature_20h,ic);
+        ic.gridy++;
+        weather_20h.add(wc_20h,ic);
         wwc = new WeatherWidgetConstraints();
         wwc.gridx = 3;
         wwc.gridy = 3;
@@ -193,18 +234,23 @@ public class WeatherWidget extends AbstractWidget {
         pressure_c.setText("%02.2f hPa".formatted(temp.getPressure()));
         humidity_c.setText("%d %%".formatted(temp.getHumidity()));
         windspeed_c.setText("%02.2f Km/h".formatted(temp.getWindspeed()));
+        iconPosition_c.setIcon(temp.getCodeAsIcon());
         temp = sets.get(8);
         temperature_08h.setText("%02.2f °C".formatted(temp.getTemperature()));
         wc_08h.setText(resources.getString(temp.getCodeAsString()));
+        iconPosition_08h.setIcon(temp.getCodeAsIcon());
         temp = sets.get(12);
         temperature_12h.setText("%02.2f °C".formatted(temp.getTemperature()));
         wc_12h.setText(resources.getString(temp.getCodeAsString()));
+        iconPosition_12h.setIcon(temp.getCodeAsIcon());
         temp = sets.get(16);
         temperature_16h.setText("%02.2f °C".formatted(temp.getTemperature()));
         wc_16h.setText(resources.getString(temp.getCodeAsString()));
+        iconPosition_16h.setIcon(temp.getCodeAsIcon());
         temp = sets.get(20);
         temperature_20h.setText("%02.2f °C".formatted(temp.getTemperature()));
         wc_20h.setText(resources.getString(temp.getCodeAsString()));
+        iconPosition_20h.setIcon(temp.getCodeAsIcon());
     }
 
     class WeatherReceiver extends Thread {
@@ -227,7 +273,7 @@ public class WeatherWidget extends AbstractWidget {
     static class WeatherPanel extends JPanel{
         public WeatherPanel(){
             this.setBackground(Color.BLACK);
-            this.setLayout(new GridLayout(3,1));
+            this.setLayout(new GridBagLayout());
         }
     }
 
@@ -239,6 +285,17 @@ public class WeatherWidget extends AbstractWidget {
         public WeatherLabel(String text){
             super(text);
             this.setForeground(Color.WHITE);
+        }
+    }
+
+    static class InnerConstraints extends GridBagConstraints{
+        public InnerConstraints(){
+            super();
+            fill = GridBagConstraints.BOTH;
+            weightx = 1;
+            weighty = 1;
+            gridy = 0;
+            gridx = 0;
         }
     }
 

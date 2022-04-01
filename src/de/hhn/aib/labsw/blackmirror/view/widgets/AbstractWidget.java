@@ -13,6 +13,9 @@ public abstract class AbstractWidget extends JDialog {
         this.setUndecorated(true);
     }
 
+    /**
+     * A method hook to be called every second.
+     */
     public void onNextSecond() {
     }
 }

@@ -3,6 +3,12 @@ package de.hhn.aib.labsw.blackmirror.controller;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * This class implements a timer that calls back every second.
+ *
+ * @author Markus Marewitz
+ * @version 2022-04-01
+ */
 public class SecondsTimer {
     private final Runnable onUpdateCallback;
     private final Timer t;
@@ -16,6 +22,10 @@ public class SecondsTimer {
         }
     }
 
+    /**
+     * Creates a new timer. Every second the callback is triggered.
+     * @param onUpdateCallback The callback that is triggered every second.
+     */
     public SecondsTimer(Runnable onUpdateCallback) {
         this.onUpdateCallback = onUpdateCallback;
 
@@ -23,6 +33,9 @@ public class SecondsTimer {
         t.schedule(new EverySecondTimerTask(), getRemainingMillis());
     }
 
+    /**
+     * @return The remaining milliseconds for the current second.
+     */
     private long getRemainingMillis() {
         return 1000L - System.currentTimeMillis() % 1000L;
     }

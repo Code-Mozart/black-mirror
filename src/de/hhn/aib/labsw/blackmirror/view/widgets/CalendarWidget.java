@@ -1,5 +1,7 @@
 package de.hhn.aib.labsw.blackmirror.view.widgets;
 
+import de.hhn.aib.labsw.blackmirror.util.SwingUtils;
+
 import javax.swing.*;
 import java.awt.*;
 import java.time.DayOfWeek;
@@ -13,6 +15,8 @@ import java.util.List;
 import java.util.Locale;
 
 /**
+ * Calendar widget displaying the date and an overview of the coming week.
+ *
  * @author Markus Marewitz
  * @version 2022-03-24
  */
@@ -26,6 +30,9 @@ public class CalendarWidget extends AbstractWidget {
         onNextSecond();
     }
 
+    /**
+     * Checks every second if it is the next day in which case it updates the UI.
+     */
     @Override
     public void onNextSecond() {
         ZonedDateTime now = ZonedDateTime.now();
@@ -58,12 +65,20 @@ public class CalendarWidget extends AbstractWidget {
         panelMain.add(label, BorderLayout.NORTH);
         panelMain.add(panelDays, BorderLayout.CENTER);
         this.add(panelMain);
+
+        SwingUtils.setFont(this, new Font("Calibri", Font.PLAIN, 18));
     }
 
+    /**
+     * A sheet for a single calendar day.
+     */
     private static class CalendarDayComponent extends JPanel {
         private final JLabel dateLabel;
         private final JLabel dayLabel;
 
+        /**
+         * @param thick Sets whether the border should be thick or thin.
+         */
         public CalendarDayComponent(boolean thick) {
             this.setBackground(Color.BLACK);
 
@@ -86,6 +101,10 @@ public class CalendarWidget extends AbstractWidget {
             panelLabels.add(dayLabel);
         }
 
+        /**
+         * Sets the day this sheet displays and updates the UI respectively.
+         * @param date The date of the day that should be displayed by this sheet.
+         */
         public void setDay(ZonedDateTime date) {
             dayLabel.setText(date.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.getDefault()));
             dateLabel.setText(String.valueOf(date.getDayOfMonth()));

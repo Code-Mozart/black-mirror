@@ -4,12 +4,8 @@ import de.hhn.aib.labsw.blackmirror.model.WeatherSet;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -24,7 +20,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.*;
 
 public class WeatherWidget extends AbstractWidget {
-    private static final String ADDRESS = "https://api.open-meteo.com/v1/forecast?latitude=%s&longitude=%s&hourly=temperature_2m,relativehumidity_2m,apparent_temperature,pressure_msl,precipitation,weathercode,windspeed_10m&timezone=Europe/Berlin";
+    private static final String ADDRESS = "https://api.open-meteo.com/v1/forecast?latitude=%02.4f&longitude=%02.4f&hourly=temperature_2m,relativehumidity_2m,apparent_temperature,pressure_msl,precipitation,weathercode,windspeed_10m&timezone=Europe/Berlin";
     private static final DateTimeFormatter DATEFORMAT = new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd'T'HH:mm").parseDefaulting(ChronoField.SECOND_OF_MINUTE, 0).toFormatter();
 
     ResourceBundle resources = ResourceBundle.getBundle("WeatherWidget", Locale.getDefault());
@@ -36,8 +32,8 @@ public class WeatherWidget extends AbstractWidget {
     ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
     //Location for which the weather data should be downloaded
-    private String LAT = "49.066";
-    private String LON = "9.220";
+    private double LAT = 49.066;
+    private double LON = 9.220;
 
     //GUI Items
     private JPanel backgroundPanel;
@@ -211,9 +207,14 @@ public class WeatherWidget extends AbstractWidget {
     /**
      * set the location for which the weather information should be downloaded
      */
-    public void setGPSLocation(String lat, String lon) {
-        this.LAT = lat;
-        this.LON = lon;
+    public void setGPSLocation(double lat, double lon) {
+        if(lat > 90 || lat < -90 || lon > 180 || lon < -180){
+            throw new IllegalArgumentException("invalid coordinates!");
+        }
+        else{
+            LAT = lat;
+            LON = lon;
+        }
     }
 
     /**
@@ -296,7 +297,7 @@ public class WeatherWidget extends AbstractWidget {
         public void run() {
             try {
                 HttpClient client = HttpClient.newHttpClient();
-                HttpRequest req = HttpRequest.newBuilder(URI.create(ADDRESS.formatted(LAT, LON))).header("accept", "application/json").build();
+                HttpRequest req = HttpRequest.newBuilder(URI.create(String.format(Locale.US,ADDRESS,LAT, LON))).header("accept", "application/json").build();
                 CompletableFuture<HttpResponse<String>> futureResult = client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
                 updateData(new JSONObject(futureResult.get().body()));
             } catch (InterruptedException | ExecutionException e) {

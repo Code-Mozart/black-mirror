@@ -32,10 +32,10 @@ public class Main {
         pageController.addPage(widgets);
 
         pageController.getCurrentPage().setWidgetsVisible(); //Sets all widgets on the default page visible.
-        new SecondsTimer(this::updateCurrentPage);
+        new SecondsTimer(this::onNextSecond);
     }
-    private void updateCurrentPage()
+    private void onNextSecond()
     {
-        pageController.getCurrentPage().updatePage();
+        pageController.getCurrentPage().onNextSecond();
     }
 }

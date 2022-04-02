@@ -35,7 +35,7 @@ public class Page {
      * Updates all visible widgets on the page every second.
      * Method coded from Markus Marewitz.
      */
-    protected void updatePage() {
+    protected void onNextSecond() {
         widgetsOnPage.forEach(AbstractWidget::onNextSecond);
     }
 }

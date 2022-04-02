@@ -6,17 +6,18 @@ import java.util.ArrayList;
 
 /**
  *  PageController Class to hold all pages and provide all necessary methods.
+ *
+ * @author Niklas Binder
+ * @version 02.04.2022
  */
 public class PageController
 {
-    private ArrayList<Page> pages;
+    private ArrayList<Page> pages  = new ArrayList<>();;
     private int pageIndex = 0;
     private boolean isStandby = false;
 
     public PageController ()
     {
-        pages = new ArrayList<>();
-
     }
 
     /**
@@ -37,6 +38,7 @@ public class PageController
     {
         pages.add(pageIndex, new Page(widgetsOnPage));
     }
+
     /**
      * Deletes a page at the given index.
      * @param pageIndex Index of the page to be deleted.
@@ -48,14 +50,14 @@ public class PageController
 
     /**
      * Moves a page to another position in the list.
-     * @param currentPosition Index, where the page currently is.
-     * @param newPosition Index, where the page should be moved to.
+     * @param pageIndex Index, where the page currently is.
+     * @param newPageIndex Index, where the page should be moved to.
      */
-    protected void movePage (int currentPosition, int newPosition)
+    protected void movePage (int pageIndex, int newPageIndex)
     {
-        Page pageToMove = pages.get(currentPosition);
-        pages.remove(currentPosition);
-        pages.add(newPosition, pageToMove);
+        Page pageToMove = pages.get(pageIndex);
+        pages.remove(pageIndex);
+        pages.add(newPageIndex, pageToMove);
     }
 
     /**
@@ -64,7 +66,7 @@ public class PageController
      */
     protected void goToNextPage()
     {
-        if (isStandby == false)
+        if (!isStandby)
         {
             int oldIndex = pageIndex;
             if (pageIndex==(pages.size()-1))
@@ -77,13 +79,14 @@ public class PageController
             getCurrentPage().setWidgetsVisible();
         }
     }
+
     /**
      * Navigates to the previous page.
      * If it is on the first page, it navigates from the first page to the last page.
      */
     protected void goToPreviousPage()
     {
-        if (isStandby == false)
+        if (!isStandby)
         {
             int oldIndex = pageIndex;
             if (pageIndex==0)
@@ -98,20 +101,19 @@ public class PageController
     }
 
     /**
-     * Activates the standby-mode. After Activation the navigation is deactivated.
+     * Activates & Deactivates the standby-mode. While the Standby-Mode is activated,  the navigation is deactivated.
      */
-    private void activateStandby()
+    private void changeMode()
     {
-        isStandby = true;
-        getCurrentPage().setWidgetsInvisible();
-    }
-    /**
-     * Deactivates the standby-mode. After deactivation the navigation is activated again.
-     */
-    protected void deactivateStandby()
-    {
-        isStandby = false;
-        getCurrentPage().setWidgetsVisible();
+        isStandby = !isStandby;
+        if (isStandby)
+        {
+            getCurrentPage().setWidgetsInvisible();
+        }
+        else
+        {
+            getCurrentPage().setWidgetsVisible();
+        }
     }
 
     /**

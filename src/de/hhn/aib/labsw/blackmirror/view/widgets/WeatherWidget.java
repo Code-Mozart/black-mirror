@@ -39,6 +39,7 @@ public class WeatherWidget extends AbstractWidget {
     private String LAT = "49.066";
     private String LON = "9.220";
 
+    //GUI Items
     private JPanel backgroundPanel;
     private WeatherLabel header_08h;
     private WeatherLabel temperature_08h;
@@ -62,7 +63,13 @@ public class WeatherWidget extends AbstractWidget {
     private WeatherLabel pressure_c;
     private WeatherLabel humidity_c;
     private WeatherLabel windspeed_c;
+    private WeatherLabel windspeed_08h;
+    private WeatherLabel windspeed_12h;
+    private WeatherLabel windspeed_16h;
+    private WeatherLabel windspeed_20h;
     private WeatherLabel wc_c;
+
+    //Labels that contain the images
     private JLabel iconPosition_c;
     private JLabel iconPosition_08h;
     private JLabel iconPosition_12h;
@@ -71,10 +78,13 @@ public class WeatherWidget extends AbstractWidget {
 
     public WeatherWidget() {
         initGUI();
-        setSize(600,350);
+        setSize(600,400);
         executor.scheduleAtFixedRate(new WeatherWidget.WeatherReceiver(), 0, 15, TimeUnit.MINUTES);
     }
 
+    /**
+     * initializes the GUI
+     */
     private void initGUI(){
         backgroundPanel = new JPanel();
         backgroundPanel.setLayout(new GridBagLayout());
@@ -86,11 +96,11 @@ public class WeatherWidget extends AbstractWidget {
         //Init current weather
         weather_c = new WeatherPanel();
         header_c = new WeatherLabel(resources.getString("header_current"));
-        temperature_c = new WeatherLabel("12°C");
-        humidity_c = new WeatherLabel("58%");
-        pressure_c = new WeatherLabel("1023,65 hPa");
-        windspeed_c = new WeatherLabel("5 Km/h");
-        wc_c = new WeatherLabel("leicht bewölkt");
+        temperature_c = new WeatherLabel();
+        humidity_c = new WeatherLabel();
+        pressure_c = new WeatherLabel();
+        windspeed_c = new WeatherLabel();
+        wc_c = new WeatherLabel();
         weather_c.add(header_c,ic);
         ic.gridy++;
         iconPosition_c = new JLabel(new ImageIcon("icons/cloudy.png"));
@@ -112,8 +122,9 @@ public class WeatherWidget extends AbstractWidget {
         //Init 8h weather
         weather_08h = new WeatherPanel();
         header_08h = new WeatherLabel(resources.getString("header_01"));
-        temperature_08h = new WeatherLabel("12°C");
-        wc_08h = new WeatherLabel("leicht bewölkt");
+        temperature_08h = new WeatherLabel();
+        windspeed_08h = new WeatherLabel();
+        wc_08h = new WeatherLabel();
         ic.gridy = 0;
         weather_08h.add(header_08h,ic);
         ic.gridy++;
@@ -123,6 +134,8 @@ public class WeatherWidget extends AbstractWidget {
         weather_08h.add(temperature_08h,ic);
         ic.gridy++;
         weather_08h.add(wc_08h,ic);
+        ic.gridy++;
+        weather_08h.add(windspeed_08h,ic);
         wwc = new WeatherWidgetConstraints();
         wwc.gridx = 0;
         wwc.gridy = 3;
@@ -131,8 +144,9 @@ public class WeatherWidget extends AbstractWidget {
         //Init 12h weather
         weather_12h = new WeatherPanel();
         header_12h = new WeatherLabel(resources.getString("header_02"));
-        temperature_12h = new WeatherLabel("12°C");
-        wc_12h = new WeatherLabel("leicht bewölkt");
+        temperature_12h = new WeatherLabel();
+        windspeed_12h = new WeatherLabel();
+        wc_12h = new WeatherLabel();
         ic.gridy=0;
         weather_12h.add(header_12h,ic);
         ic.gridy++;
@@ -142,6 +156,8 @@ public class WeatherWidget extends AbstractWidget {
         weather_12h.add(temperature_12h,ic);
         ic.gridy++;
         weather_12h.add(wc_12h,ic);
+        ic.gridy++;
+        weather_12h.add(windspeed_12h,ic);
         wwc = new WeatherWidgetConstraints();
         wwc.gridx = 1;
         wwc.gridy = 3;
@@ -150,8 +166,9 @@ public class WeatherWidget extends AbstractWidget {
         //Init 16h weather
         weather_16h = new WeatherPanel();
         header_16h = new WeatherLabel(resources.getString("header_03"));
-        temperature_16h = new WeatherLabel("12°C");
-        wc_16h = new WeatherLabel("leicht bewölkt");
+        temperature_16h = new WeatherLabel();
+        windspeed_16h = new WeatherLabel();
+        wc_16h = new WeatherLabel();
         ic.gridy = 0;
         weather_16h.add(header_16h,ic);
         ic.gridy++;
@@ -161,6 +178,8 @@ public class WeatherWidget extends AbstractWidget {
         weather_16h.add(temperature_16h,ic);
         ic.gridy++;
         weather_16h.add(wc_16h,ic);
+        ic.gridy++;
+        weather_16h.add(windspeed_16h,ic);
         wwc = new WeatherWidgetConstraints();
         wwc.gridx = 2;
         wwc.gridy = 3;
@@ -169,8 +188,9 @@ public class WeatherWidget extends AbstractWidget {
         //Init 20h weather
         weather_20h = new WeatherPanel();
         header_20h = new WeatherLabel(resources.getString("header_04"));
-        temperature_20h = new WeatherLabel("12°C");
-        wc_20h = new WeatherLabel("leicht bewölkt");
+        temperature_20h = new WeatherLabel();
+        windspeed_20h = new WeatherLabel();
+        wc_20h = new WeatherLabel();
         ic.gridy = 0;
         weather_20h.add(header_20h,ic);
         ic.gridy++;
@@ -180,6 +200,8 @@ public class WeatherWidget extends AbstractWidget {
         weather_20h.add(temperature_20h,ic);
         ic.gridy++;
         weather_20h.add(wc_20h,ic);
+        ic.gridy++;
+        weather_20h.add(windspeed_20h,ic);
         wwc = new WeatherWidgetConstraints();
         wwc.gridx = 3;
         wwc.gridy = 3;
@@ -228,29 +250,42 @@ public class WeatherWidget extends AbstractWidget {
     }
 
     private void updateGUI() {
+        //update current weather
         WeatherSet temp = sets.get(LocalDateTime.now().getHour());
-        temperature_c.setText("%02.2f °C".formatted(temp.getTemperature()));
+        temperature_c.setText("Temperatur: %01.1f °C".formatted(temp.getTemperature()));
         wc_c.setText(resources.getString(temp.getCodeAsString()));
-        pressure_c.setText("%02.2f hPa".formatted(temp.getPressure()));
-        humidity_c.setText("%d %%".formatted(temp.getHumidity()));
-        windspeed_c.setText("%02.2f Km/h".formatted(temp.getWindspeed()));
+        pressure_c.setText("Luftdruck: %01.1f hPa".formatted(temp.getPressure()));
+        humidity_c.setText("Luftfeuchte: %d %%".formatted(temp.getHumidity()));
+        windspeed_c.setText("Windgeschwindigkeit: %01.1f Km/h".formatted(temp.getWindspeed()));
         iconPosition_c.setIcon(temp.getCodeAsIcon());
+
+        //update 08h weather
         temp = sets.get(8);
-        temperature_08h.setText("%02.2f °C".formatted(temp.getTemperature()));
+        temperature_08h.setText("%01.1f °C".formatted(temp.getTemperature()));
         wc_08h.setText(resources.getString(temp.getCodeAsString()));
         iconPosition_08h.setIcon(temp.getCodeAsIcon());
+        windspeed_08h.setText("%01.1f Km/h".formatted(temp.getWindspeed()));
+
+        //update 12h weather
         temp = sets.get(12);
-        temperature_12h.setText("%02.2f °C".formatted(temp.getTemperature()));
+        temperature_12h.setText("%01.1f °C".formatted(temp.getTemperature()));
         wc_12h.setText(resources.getString(temp.getCodeAsString()));
         iconPosition_12h.setIcon(temp.getCodeAsIcon());
+        windspeed_12h.setText("%01.1f Km/h".formatted(temp.getWindspeed()));
+
+        //update 16h weather
         temp = sets.get(16);
-        temperature_16h.setText("%02.2f °C".formatted(temp.getTemperature()));
+        temperature_16h.setText("%01.1f °C".formatted(temp.getTemperature()));
         wc_16h.setText(resources.getString(temp.getCodeAsString()));
         iconPosition_16h.setIcon(temp.getCodeAsIcon());
+        windspeed_16h.setText("%01.1f Km/h".formatted(temp.getWindspeed()));
+
+        //update 20h weather
         temp = sets.get(20);
-        temperature_20h.setText("%02.2f °C".formatted(temp.getTemperature()));
+        temperature_20h.setText("%01.1f °C".formatted(temp.getTemperature()));
         wc_20h.setText(resources.getString(temp.getCodeAsString()));
         iconPosition_20h.setIcon(temp.getCodeAsIcon());
+        windspeed_20h.setText("%01.1f Km/h".formatted(temp.getWindspeed()));
     }
 
     class WeatherReceiver extends Thread {

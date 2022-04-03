@@ -2,13 +2,14 @@ package de.hhn.aib.labsw.blackmirror.view.widgets;
 
 import javax.swing.*;
 import java.awt.*;
-import java.lang.reflect.Array;
+import java.awt.font.TextAttribute;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This class represents a widget used for showing reminders on the users mirror for events that are going to happen
@@ -42,8 +43,12 @@ public class ReminderWidget extends AbstractWidget {
         JPanel panelMain = new JPanel(new BorderLayout());
         panelMain.setBackground(Color.BLACK);
 
-        label = new JLabel("Todays events:");
+        label = new JLabel("Today's events:");
         label.setForeground(Color.WHITE);
+        Font font = label.getFont();
+        Map a = font.getAttributes();
+        a.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+        label.setFont(font.deriveFont(a));
 
         JPanel panel = new JPanel();
         events = new ArrayList<>();
@@ -68,7 +73,7 @@ public class ReminderWidget extends AbstractWidget {
                 }
             }
 
-            JList<String> list = new JList(eventsStr.toArray());
+            JList list = new JList(eventsStr.toArray());
             list.setBackground(Color.BLACK);
             list.setForeground(Color.WHITE);
 
@@ -111,8 +116,7 @@ public class ReminderWidget extends AbstractWidget {
      * @return the time of the event e as a String ("hh:mm")
      */
     private String parseEvent(Event e) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL)
-                .withLocale(Locale.getDefault()).ofPattern("hh:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm");
         String eventDesc = e.getDesc();
         if (eventDesc.length() > 30) {
             eventDesc = eventDesc.substring(0, 29) + "...";
@@ -126,15 +130,11 @@ public class ReminderWidget extends AbstractWidget {
  */
 class Event {
     private final ZonedDateTime time;
-    private String desc;
+    private final String desc;
 
     public Event(ZonedDateTime time, String description) {
         this.time = time;
         desc = description;
-    }
-
-    public void setDesc(String newDescription) {
-        desc = newDescription;
     }
 
     public ZonedDateTime getTime() {

@@ -24,7 +24,7 @@ public class ReminderWidget extends AbstractWidget {
 
 
     public ReminderWidget() {
-        this.setSize(200, 200);
+        this.setSize(300, 200);
         label = new JLabel();
         label.setText("Reminders");
         initComponents();
@@ -50,19 +50,19 @@ public class ReminderWidget extends AbstractWidget {
 
         // Hardcoded Events
         Event e1 = new Event(ZonedDateTime.of(2022, 8, 12, 8, 30, 0,
-                0, ZoneId.of("Europe/Berlin")), "Meeting");
+                0, ZoneId.of("Europe/Berlin")), "Meetingnnnnnnnnnnnnnnnmnnnnnnnnnn");
         Event e2 = new Event(ZonedDateTime.of(2022, 8, 12, 10, 30, 0,
                 0, ZoneId.of("Europe/Berlin")), "Meeting");
         events.add(e2);
         events.add(e1);
-        events.sort(new EventComparator());
 
-        if(!events.isEmpty()) {
+        events.sort(new EventComparator());
+        if (!events.isEmpty()) {
             int i = 0;
             List<String> eventsStr = new ArrayList<>();
             for (Event ev :
                     events) {
-                if (i<6) {
+                if (i < 6) {
                     eventsStr.add(parseEvent(ev));
                     i++;
                 }
@@ -85,6 +85,8 @@ public class ReminderWidget extends AbstractWidget {
         panelMain.add(label, BorderLayout.NORTH);
         panelMain.add(panel, BorderLayout.CENTER);
         this.add(panelMain);
+
+        // SwingUtils.setFont(this, new Font("Calibri", Font.PLAIN, 18));
     }
 
     /**
@@ -95,7 +97,7 @@ public class ReminderWidget extends AbstractWidget {
         //TODO: Get Events by requesting them over Calendar (needs to be done after app is finished)
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy,MM,dd");
-        for (Event ev: requestedEvents) {
+        for (Event ev : requestedEvents) {
             if (formatter.format(ev.getTime()).equals(formatter.format(now))) {
                 events.add(ev);
             }
@@ -104,13 +106,18 @@ public class ReminderWidget extends AbstractWidget {
 
     /**
      * Formats a time given with an event to a time String
+     *
      * @param e Event
      * @return the time of the event e as a String ("hh:mm")
      */
     private String parseEvent(Event e) {
         DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL)
                 .withLocale(Locale.getDefault()).ofPattern("hh:mm");
-        return formatter.format(e.getTime()) + " - " + e.getDesc();
+        String eventDesc = e.getDesc();
+        if (eventDesc.length() > 30) {
+            eventDesc = eventDesc.substring(0, 29) + "...";
+        }
+        return formatter.format(e.getTime()) + " - " + eventDesc;
     }
 }
 
@@ -119,11 +126,15 @@ public class ReminderWidget extends AbstractWidget {
  */
 class Event {
     private final ZonedDateTime time;
-    private final String desc;
+    private String desc;
 
     public Event(ZonedDateTime time, String description) {
         this.time = time;
         desc = description;
+    }
+
+    public void setDesc(String newDescription) {
+        desc = newDescription;
     }
 
     public ZonedDateTime getTime() {

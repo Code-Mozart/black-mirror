@@ -16,7 +16,7 @@ import java.util.Map;
  * on the current day.
  *
  * @author Selim Özdemir
- * @version 30-03-2022
+ * @version 03-04-2022
  */
 public class ReminderWidget extends AbstractWidget {
     private JLabel label;

@@ -1,27 +1,30 @@
-package de.hhn.aib.labsw.blackmirror.utility;
+package de.hhn.aib.labsw.blackmirror.util;
 
 import com.sun.mail.imap.IMAPStore;
 
 import javax.mail.*;
+import java.util.Locale;
 import java.util.Properties;
+import java.util.ResourceBundle;
 
 /**
  * @author Philipp Herda
  * @version 2022-03-24
- *
  * Simple utility class to login to a mail provider via imap
  * Ensure a login() call before every checkForMail() call
  */
 public class EmailReceiver {
 
     protected IMAPStore imapStore;
+    private final ResourceBundle resources = ResourceBundle.getBundle("EmailNotificationWidget", Locale.getDefault());
 
     /**
      * Opens a connection to the mail provider
-     * @param host      the hostname of the mail provider
-     * @param port      imap port is 993
-     * @param username  full email address
-     * @param password  pw for the user
+     *
+     * @param host     the hostname of the mail provider
+     * @param port     imap port is 993
+     * @param username full email address
+     * @param password pw for the user
      * @throws MessagingException if connection failed
      */
     public void login(String host, String port, String username, String password) throws MessagingException {
@@ -34,6 +37,7 @@ public class EmailReceiver {
 
         Store store = mailSession.getStore("imaps");
         store.connect(host, username, password);
+
         this.imapStore = (IMAPStore) store;
     }
 
@@ -41,14 +45,14 @@ public class EmailReceiver {
      * Checks the amount of unread messages in the inbox
      * Requires a login() call beforehand
      * Closes connection on it´s own
-     *
+     * <p>
      * Hint: imap must be manually activated for some mail providers!
      *
-     * @return  a String containing the amount of new messages
+     * @return a String containing the amount of new messages
      * @throws MessagingException if connection failed
      */
     public String checkForMails() throws MessagingException {
-        if(imapStore == null) {
+        if (imapStore == null) {
             throw new IllegalStateException("User not logged in");
         }
 
@@ -56,21 +60,14 @@ public class EmailReceiver {
         Folder mailFolder = imapStore.getFolder("INBOX");
         mailFolder.open(Folder.READ_ONLY);
 
-        // todo: remove hardcoded stuff
-        //System.out.println("Total amount of mails: " + mailFolder.getMessageCount());
-        //strings[0] = "Total emails in inbox: " + mailFolder.getMessageCount();
-        System.out.println("New mails: " + mailFolder.getUnreadMessageCount());
         String newMsgs = "";
-        if(mailFolder.getUnreadMessageCount() == 0) {
-            newMsgs = "You have no new messages!";
-        } else if(mailFolder.getUnreadMessageCount() == 1) {
-            newMsgs = "You have a new message!";
+        if (mailFolder.getUnreadMessageCount() == 0) {
+            newMsgs = resources.getString("noNewMails");
+        } else if (mailFolder.getUnreadMessageCount() == 1) {
+            newMsgs = resources.getString("oneNewMail");
         } else {
-            newMsgs = "You have " + mailFolder.getUnreadMessageCount() + " new messages!";
+            newMsgs = resources.getString("youHave") + " " + mailFolder.getUnreadMessageCount() + " " + resources.getString("newMails");
         }
-
-        /*activation/DataHandler needed for extended message handling
-        Message[] messages = mailFolder.getMessages();*/
 
         mailFolder.close();
         imapStore.close();

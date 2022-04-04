@@ -19,6 +19,10 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.concurrent.*;
 
+/**
+ * This widget displays the weather information for a given location.
+ * The location can be updated with the setGPSLocation method
+ */
 public class WeatherWidget extends AbstractWidget {
     private static final String ADDRESS = "https://api.open-meteo.com/v1/forecast?latitude=%02.4f&longitude=%02.4f&hourly=temperature_2m,relativehumidity_2m,apparent_temperature,pressure_msl,precipitation,weathercode,windspeed_10m&timezone=Europe/Berlin";
     private static final DateTimeFormatter DATEFORMAT = new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd'T'HH:mm").parseDefaulting(ChronoField.SECOND_OF_MINUTE, 0).toFormatter();

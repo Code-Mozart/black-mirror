@@ -30,10 +30,10 @@ public class WeatherWidget extends AbstractWidget {
     ResourceBundle resources = ResourceBundle.getBundle("WeatherWidget", Locale.getDefault());
 
     //Linked List with the weather sets
-    LinkedList<WeatherSet> sets = null;
+    LinkedList<WeatherSet> weatherSets = null;
 
     //Scheduler runs the data update automatically every 15 Minutes
-    ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+    ScheduledExecutorService updateExecutor = Executors.newSingleThreadScheduledExecutor();
 
     //Location for which the weather data should be downloaded
     private double LAT = 49.066;
@@ -44,7 +44,7 @@ public class WeatherWidget extends AbstractWidget {
     public WeatherWidget() {
         initGUI();
         setSize(600,400);
-        executor.scheduleAtFixedRate(new WeatherWidget.WeatherReceiver(), 0, 15, TimeUnit.MINUTES);
+        updateExecutor.scheduleAtFixedRate(new WeatherWidget.WeatherReceiver(), 0, 15, TimeUnit.MINUTES);
     }
 
     /**
@@ -114,7 +114,7 @@ public class WeatherWidget extends AbstractWidget {
             temp.setTimestamp(LocalDateTime.parse(times.getString(i), DATEFORMAT));
             weatherSets.add(temp);
         }
-        sets = weatherSets;
+        this.weatherSets = weatherSets;
 
         //GUI stuff must run on UI thread...
         SwingUtilities.invokeLater(this::updateGUI);
@@ -126,12 +126,12 @@ public class WeatherWidget extends AbstractWidget {
     private void updateGUI() {
         for(int i = 0;i<weatherPanels.length;i++){
             switch (i) {
-                case 0 -> weatherPanels[i].setData(resources.getString("header_current"), sets.get(LocalDateTime.now().getHour()));
-                case 1 -> weatherPanels[i].setData(resources.getString("header_01"), sets.get(8));
-                case 2 -> weatherPanels[i].setData(resources.getString("header_02"), sets.get(12));
-                case 3 -> weatherPanels[i].setData(resources.getString("header_03"), sets.get(16));
-                case 4 -> weatherPanels[i].setData(resources.getString("header_04"), sets.get(20));
-                default -> weatherPanels[i].setData("no header", sets.get(32));
+                case 0 -> weatherPanels[i].setData(resources.getString("header_current"), weatherSets.get(LocalDateTime.now().getHour()));
+                case 1 -> weatherPanels[i].setData(resources.getString("header_01"), weatherSets.get(8));
+                case 2 -> weatherPanels[i].setData(resources.getString("header_02"), weatherSets.get(12));
+                case 3 -> weatherPanels[i].setData(resources.getString("header_03"), weatherSets.get(16));
+                case 4 -> weatherPanels[i].setData(resources.getString("header_04"), weatherSets.get(20));
+                default -> weatherPanels[i].setData("no header", weatherSets.get(32));
             }
         }
     }

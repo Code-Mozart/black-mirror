@@ -99,7 +99,7 @@ public class PageController {
      * @param pageIndex Index of the page to be navigated to.
      * @throws IndexOutOfBoundsException Exception to be thrown, if the given Index is lower than 0 or higher than the amount of pages-1.
      */
-    private void goToAnyPage(int pageIndex) throws IndexOutOfBoundsException {
+    protected void goToAnyPage(int pageIndex) throws IndexOutOfBoundsException {
         if (pageIndex < 0) {
             throw new IndexOutOfBoundsException("Index has to be higher than 0");
         } else if (pageIndex > (pages.size() - 1)) {

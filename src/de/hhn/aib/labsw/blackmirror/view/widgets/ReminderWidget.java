@@ -6,10 +6,8 @@ import java.awt.font.TextAttribute;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 /**
  * This class represents a widget used for showing reminders on the users mirror for events that are going to happen
@@ -23,6 +21,7 @@ public class ReminderWidget extends AbstractWidget {
     private ZonedDateTime now;
     private List<Event> events;
 
+    private final ResourceBundle resources = ResourceBundle.getBundle("ReminderWidget", Locale.getDefault());
 
     public ReminderWidget() {
         this.setSize(300, 200);
@@ -31,6 +30,9 @@ public class ReminderWidget extends AbstractWidget {
 
     @Override
     public void onNextSecond() {
+        if (now.getDayOfMonth() != ZonedDateTime.now().getDayOfMonth()) {
+            initComponents();
+        }
         now = ZonedDateTime.now();
     }
 
@@ -41,7 +43,7 @@ public class ReminderWidget extends AbstractWidget {
         JPanel panelMain = new JPanel(new BorderLayout());
         panelMain.setBackground(Color.BLACK);
 
-        reminderLabel = new JLabel("Today's events:");
+        reminderLabel = new JLabel(resources.getString("reminderTitle"));
         reminderLabel.setForeground(Color.WHITE);
         Font font = reminderLabel.getFont();
         Map a = font.getAttributes();
@@ -77,7 +79,7 @@ public class ReminderWidget extends AbstractWidget {
 
             panel.add(list);
         } else {
-            JLabel noEventsText = new JLabel("No events for today");
+            JLabel noEventsText = new JLabel(resources.getString("noEvents"));
             noEventsText.setBackground(Color.BLACK);
             noEventsText.setForeground(Color.WHITE);
 

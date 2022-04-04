@@ -19,15 +19,13 @@ import java.util.Map;
  * @version 03-04-2022
  */
 public class ReminderWidget extends AbstractWidget {
-    private JLabel label;
+    private JLabel reminderLabel;
     private ZonedDateTime now;
     private List<Event> events;
 
 
     public ReminderWidget() {
         this.setSize(300, 200);
-        label = new JLabel();
-        label.setText("Reminders");
         initComponents();
     }
 
@@ -43,12 +41,12 @@ public class ReminderWidget extends AbstractWidget {
         JPanel panelMain = new JPanel(new BorderLayout());
         panelMain.setBackground(Color.BLACK);
 
-        label = new JLabel("Today's events:");
-        label.setForeground(Color.WHITE);
-        Font font = label.getFont();
+        reminderLabel = new JLabel("Today's events:");
+        reminderLabel.setForeground(Color.WHITE);
+        Font font = reminderLabel.getFont();
         Map a = font.getAttributes();
         a.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
-        label.setFont(font.deriveFont(a));
+        reminderLabel.setFont(font.deriveFont(a));
 
         JPanel panel = new JPanel();
         events = new ArrayList<>();
@@ -87,7 +85,7 @@ public class ReminderWidget extends AbstractWidget {
         }
         panel.setBackground(Color.BLACK);
 
-        panelMain.add(label, BorderLayout.NORTH);
+        panelMain.add(reminderLabel, BorderLayout.NORTH);
         panelMain.add(panel, BorderLayout.CENTER);
         this.add(panelMain);
 

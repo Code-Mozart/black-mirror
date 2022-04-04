@@ -129,6 +129,7 @@ public class WeatherWidget extends AbstractWidget {
                 case 2 -> weatherPanels[i].setData(resources.getString("header_02"), sets.get(12));
                 case 3 -> weatherPanels[i].setData(resources.getString("header_03"), sets.get(16));
                 case 4 -> weatherPanels[i].setData(resources.getString("header_04"), sets.get(20));
+                default -> weatherPanels[i].setData("no header", sets.get(32));
             }
         }
     }
@@ -157,7 +158,9 @@ public class WeatherWidget extends AbstractWidget {
         WeatherLabel header;
         WeatherLabel icon;
         WeatherLabel temperature;
+        WeatherLabel pressure;
         WeatherLabel wind;
+        WeatherLabel humidity;
 
         public WeatherPanel(){
             this.setBackground(Color.BLACK);
@@ -167,11 +170,17 @@ public class WeatherWidget extends AbstractWidget {
             icon = new WeatherLabel();
             temperature = new WeatherLabel();
             wind = new WeatherLabel();
+            pressure = new WeatherLabel();
+            humidity = new WeatherLabel();
             this.add(header,ic);
             ic.gridy++;
             this.add(icon,ic);
             ic.gridy++;
             this.add(temperature,ic);
+            ic.gridy++;
+            this.add(pressure,ic);
+            ic.gridy++;
+            this.add(humidity,ic);
             ic.gridy++;
             this.add(wind,ic);
         }
@@ -181,6 +190,8 @@ public class WeatherWidget extends AbstractWidget {
             icon.setIcon(set.getCodeAsIcon());
             temperature.setText("%01.1f °C".formatted(set.getTemperature()));
             wind.setText("%01.1f Km/h".formatted(set.getWindspeed()));
+            pressure.setText("%04.1f hPa".formatted(set.getPressure()));
+            humidity.setText("%d %%".formatted(set.getHumidity()));
         }
     }
 

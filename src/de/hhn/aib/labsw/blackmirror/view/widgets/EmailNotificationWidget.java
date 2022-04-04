@@ -5,14 +5,19 @@ import de.hhn.aib.labsw.blackmirror.util.EmailReceiver;
 import javax.mail.MessagingException;
 import javax.swing.*;
 import java.awt.*;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
+ * This widget displays the number of unread mails in the users inbox
+ *
  * @author Philipp Herda
- * @version 2022-03-24
+ * @version 2022-04-04
  */
 public class EmailNotificationWidget extends AbstractWidget {
 
     private final EmailReceiver receiver;
+    private final ResourceBundle resources = ResourceBundle.getBundle("EmailNotificationWidget", Locale.getDefault());
     private final JLabel textLabel;
 
     private final String host;
@@ -38,7 +43,7 @@ public class EmailNotificationWidget extends AbstractWidget {
 
         textLabel = new JLabel("", SwingConstants.CENTER);
         textLabel.setForeground(Color.WHITE);
-        textLabel.setFont(new Font(textLabel.getFont().getFontName(), Font.BOLD, 20));
+        textLabel.setFont(new Font(textLabel.getFont().getFontName(), Font.BOLD, 16));
 
         panel.add(iconLabel);
         panel.add(textLabel);
@@ -46,20 +51,20 @@ public class EmailNotificationWidget extends AbstractWidget {
 
         receiver = new EmailReceiver();
 
-        // user data should later be obtained from db
+        // todo: user data should later be obtained from db
         // hotmail imap server: imap-mail.outlook.com
         // web.de imap server: imap.web.de
         // gmail.com imap server: imap.gmail.com
         // Project Mail: "blackmirror.labswp@gmail.com", "labSWPproject" (error: app not a "secure app" for google)
         host = "imap.web.de";
         port = "993";
-        username = "yourMailAdressHere";
-        password = "yourPwHere";
+        username = "YOUR_USERNAME_HERE";
+        password = "YOUR_PASSWORD_HERE";
 
         try {
             drawUnreadEmails();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (MessagingException me) {
+            me.printStackTrace();
         }
     }
 
@@ -69,17 +74,22 @@ public class EmailNotificationWidget extends AbstractWidget {
      * @throws MessagingException if connection failed
      */
     private void drawUnreadEmails() throws MessagingException {
-        receiver.login(host, port, username, password);
-        textLabel.setText(receiver.checkForMails());
+        try {
+            receiver.login(host, port, username, password);
+            textLabel.setText(receiver.checkForMails());
+        } catch (MessagingException me) {
+            me.printStackTrace();
+            textLabel.setText(resources.getString("failedToConnect"));
+        }
     }
 
     /**
-     * Check every 10 seconds for new mail
+     * Checks every 30 seconds for new mail
      */
     @Override
     public void onNextSecond() {
         counter += 1;
-        if (counter % 10 == 0) {
+        if (counter % 30 == 0) {
             try {
                 drawUnreadEmails();
             } catch (MessagingException e) {

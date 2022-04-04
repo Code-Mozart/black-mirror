@@ -9,7 +9,7 @@ import java.util.ResourceBundle;
 
 /**
  * @author Philipp Herda
- * @version 2022-03-24
+ * @version 2022-04-04
  * Simple utility class to login to a mail provider via imap
  * Ensure a login() call before every checkForMail() call
  */
@@ -53,14 +53,14 @@ public class EmailReceiver {
      */
     public String checkForMails() throws MessagingException {
         if (imapStore == null) {
-            throw new IllegalStateException("User not logged in");
+            throw new IllegalStateException(resources.getString("failedToConnect"));
         }
 
         // Folder name might be dependent on mail provider "INBOX" works on most
         Folder mailFolder = imapStore.getFolder("INBOX");
         mailFolder.open(Folder.READ_ONLY);
 
-        String newMsgs = "";
+        String newMsgs;
         if (mailFolder.getUnreadMessageCount() == 0) {
             newMsgs = resources.getString("noNewMails");
         } else if (mailFolder.getUnreadMessageCount() == 1) {

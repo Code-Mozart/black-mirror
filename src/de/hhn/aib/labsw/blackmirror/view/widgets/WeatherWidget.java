@@ -111,8 +111,7 @@ public class WeatherWidget extends AbstractWidget {
             temp.setWindspeed(windspeeds.getDouble(i));
             temp.setHumidity(humidities.getInt(i));
             temp.setPressure(pressures.getDouble(i));
-            LocalDateTime dt = LocalDateTime.parse(times.getString(i), DATEFORMAT);
-            temp.setTimestamp(dt);
+            temp.setTimestamp(LocalDateTime.parse(times.getString(i), DATEFORMAT));
             weatherSets.add(temp);
         }
         sets = weatherSets;
@@ -121,6 +120,9 @@ public class WeatherWidget extends AbstractWidget {
         SwingUtilities.invokeLater(this::updateGUI);
     }
 
+    /**
+     * updates the gui to display the new data
+     */
     private void updateGUI() {
         for(int i = 0;i<weatherPanels.length;i++){
             switch (i) {
@@ -134,6 +136,9 @@ public class WeatherWidget extends AbstractWidget {
         }
     }
 
+    /**
+     * weather receiver that downloads new information automatically when called
+     */
     class WeatherReceiver extends Thread {
         /**
          * connect to the server and download the json file.
@@ -195,6 +200,9 @@ public class WeatherWidget extends AbstractWidget {
         }
     }
 
+    /**
+     * special label that already has a white text color.
+     */
     static class WeatherLabel extends JLabel{
         public WeatherLabel(){
             this.setForeground(Color.WHITE);
@@ -206,6 +214,9 @@ public class WeatherWidget extends AbstractWidget {
         }
     }
 
+    /**
+     * special constraint to be used inside the weather containers
+     */
     static class InnerConstraints extends GridBagConstraints{
         public InnerConstraints(){
             super();
@@ -218,6 +229,9 @@ public class WeatherWidget extends AbstractWidget {
         }
     }
 
+    /**
+     * special constraints that is used to place the weather containers
+     */
     static class WeatherWidgetConstraints extends GridBagConstraints{
         public WeatherWidgetConstraints(){
             super();

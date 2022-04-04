@@ -25,6 +25,7 @@ public class ReminderWidget extends AbstractWidget {
 
     public ReminderWidget() {
         this.setSize(300, 200);
+        now = ZonedDateTime.now();
         initComponents();
     }
 

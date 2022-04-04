@@ -39,42 +39,7 @@ public class WeatherWidget extends AbstractWidget {
     private double LAT = 49.066;
     private double LON = 9.220;
 
-    //GUI Items
-    private JPanel backgroundPanel;
-    private WeatherLabel header_08h;
-    private WeatherLabel temperature_08h;
-    private WeatherLabel wc_08h;
-    private WeatherLabel header_12h;
-    private WeatherLabel temperature_12h;
-    private WeatherLabel wc_12h;
-    private WeatherPanel weather_08h;
-    private WeatherPanel weather_12h;
-    private WeatherPanel weather_16h;
-    private WeatherLabel header_16h;
-    private WeatherLabel temperature_16h;
-    private WeatherLabel wc_16h;
-    private WeatherPanel weather_20h;
-    private WeatherLabel header_20h;
-    private WeatherLabel temperature_20h;
-    private WeatherLabel wc_20h;
-    private WeatherPanel weather_c;
-    private WeatherLabel header_c;
-    private WeatherLabel temperature_c;
-    private WeatherLabel pressure_c;
-    private WeatherLabel humidity_c;
-    private WeatherLabel windspeed_c;
-    private WeatherLabel windspeed_08h;
-    private WeatherLabel windspeed_12h;
-    private WeatherLabel windspeed_16h;
-    private WeatherLabel windspeed_20h;
-    private WeatherLabel wc_c;
-
-    //Labels that contain the images
-    private JLabel iconPosition_c;
-    private JLabel iconPosition_08h;
-    private JLabel iconPosition_12h;
-    private JLabel iconPosition_16h;
-    private JLabel iconPosition_20h;
+    private final WeatherPanel[] weatherPanels = new WeatherPanel[5];
 
     public WeatherWidget() {
         initGUI();
@@ -86,126 +51,28 @@ public class WeatherWidget extends AbstractWidget {
      * initializes the GUI
      */
     private void initGUI(){
-        backgroundPanel = new JPanel();
+        //GUI Items
+        JPanel backgroundPanel = new JPanel();
         backgroundPanel.setLayout(new GridBagLayout());
         backgroundPanel.setBackground(Color.BLACK);
         add(backgroundPanel);
-        WeatherWidgetConstraints wwc = new WeatherWidgetConstraints();
-        InnerConstraints ic = new InnerConstraints();
 
-        //Init current weather
-        weather_c = new WeatherPanel();
-        header_c = new WeatherLabel(resources.getString("header_current"));
-        temperature_c = new WeatherLabel();
-        humidity_c = new WeatherLabel();
-        pressure_c = new WeatherLabel();
-        windspeed_c = new WeatherLabel();
-        wc_c = new WeatherLabel();
-        weather_c.add(header_c,ic);
-        ic.gridy++;
-        iconPosition_c = new JLabel(new ImageIcon("icons/cloudy.png"));
-        weather_c.add(iconPosition_c,ic);
-        ic.gridy++;
-        weather_c.add(temperature_c,ic);
-        ic.gridy++;
-        weather_c.add(wc_c,ic);
-        ic.gridy++;
-        weather_c.add(humidity_c,ic);
-        ic.gridy++;
-        weather_c.add(pressure_c,ic);
-        ic.gridy++;
-        weather_c.add(windspeed_c,ic);
-        wwc.gridwidth = 4;
-        wwc.weightx = 0.0;
-        backgroundPanel.add(weather_c,wwc);
-
-        //Init 8h weather
-        weather_08h = new WeatherPanel();
-        header_08h = new WeatherLabel(resources.getString("header_01"));
-        temperature_08h = new WeatherLabel();
-        windspeed_08h = new WeatherLabel();
-        wc_08h = new WeatherLabel();
-        ic.gridy = 0;
-        weather_08h.add(header_08h,ic);
-        ic.gridy++;
-        iconPosition_08h = new JLabel(new ImageIcon("icons/cloudy.png"));
-        weather_08h.add(iconPosition_08h,ic);
-        ic.gridy++;
-        weather_08h.add(temperature_08h,ic);
-        ic.gridy++;
-        weather_08h.add(wc_08h,ic);
-        ic.gridy++;
-        weather_08h.add(windspeed_08h,ic);
-        wwc = new WeatherWidgetConstraints();
-        wwc.gridx = 0;
-        wwc.gridy = 3;
-        backgroundPanel.add(weather_08h,wwc);
-
-        //Init 12h weather
-        weather_12h = new WeatherPanel();
-        header_12h = new WeatherLabel(resources.getString("header_02"));
-        temperature_12h = new WeatherLabel();
-        windspeed_12h = new WeatherLabel();
-        wc_12h = new WeatherLabel();
-        ic.gridy=0;
-        weather_12h.add(header_12h,ic);
-        ic.gridy++;
-        iconPosition_12h = new JLabel(new ImageIcon("icons/cloudy.png"));
-        weather_12h.add(iconPosition_12h,ic);
-        ic.gridy++;
-        weather_12h.add(temperature_12h,ic);
-        ic.gridy++;
-        weather_12h.add(wc_12h,ic);
-        ic.gridy++;
-        weather_12h.add(windspeed_12h,ic);
-        wwc = new WeatherWidgetConstraints();
-        wwc.gridx = 1;
-        wwc.gridy = 3;
-        backgroundPanel.add(weather_12h,wwc);
-
-        //Init 16h weather
-        weather_16h = new WeatherPanel();
-        header_16h = new WeatherLabel(resources.getString("header_03"));
-        temperature_16h = new WeatherLabel();
-        windspeed_16h = new WeatherLabel();
-        wc_16h = new WeatherLabel();
-        ic.gridy = 0;
-        weather_16h.add(header_16h,ic);
-        ic.gridy++;
-        iconPosition_16h = new JLabel(new ImageIcon("icons/cloudy.png"));
-        weather_16h.add(iconPosition_16h,ic);
-        ic.gridy++;
-        weather_16h.add(temperature_16h,ic);
-        ic.gridy++;
-        weather_16h.add(wc_16h,ic);
-        ic.gridy++;
-        weather_16h.add(windspeed_16h,ic);
-        wwc = new WeatherWidgetConstraints();
-        wwc.gridx = 2;
-        wwc.gridy = 3;
-        backgroundPanel.add(weather_16h,wwc);
-
-        //Init 20h weather
-        weather_20h = new WeatherPanel();
-        header_20h = new WeatherLabel(resources.getString("header_04"));
-        temperature_20h = new WeatherLabel();
-        windspeed_20h = new WeatherLabel();
-        wc_20h = new WeatherLabel();
-        ic.gridy = 0;
-        weather_20h.add(header_20h,ic);
-        ic.gridy++;
-        iconPosition_20h = new JLabel(new ImageIcon("icons/cloudy.png"));
-        weather_20h.add(iconPosition_20h,ic);
-        ic.gridy++;
-        weather_20h.add(temperature_20h,ic);
-        ic.gridy++;
-        weather_20h.add(wc_20h,ic);
-        ic.gridy++;
-        weather_20h.add(windspeed_20h,ic);
-        wwc = new WeatherWidgetConstraints();
-        wwc.gridx = 3;
-        wwc.gridy = 3;
-        backgroundPanel.add(weather_20h,wwc);
+        for(int i = 0; i<weatherPanels.length;i++){
+            weatherPanels[i] = new WeatherPanel();
+            WeatherWidgetConstraints wwc = new WeatherWidgetConstraints();
+            if(i == 0){
+                wwc.gridy = 0;
+                wwc.gridx = 0;
+                wwc.gridwidth = weatherPanels.length-1;
+                wwc.weightx = 0.0;
+                backgroundPanel.add(weatherPanels[i],wwc);
+            }
+            else{
+                wwc.gridy = 1;
+                wwc.gridx = i-1;
+                backgroundPanel.add(weatherPanels[i],wwc);
+            }
+        }
     }
 
     /**
@@ -255,42 +122,15 @@ public class WeatherWidget extends AbstractWidget {
     }
 
     private void updateGUI() {
-        //update current weather
-        WeatherSet temp = sets.get(LocalDateTime.now().getHour());
-        temperature_c.setText("Temperatur: %01.1f °C".formatted(temp.getTemperature()));
-        wc_c.setText(resources.getString(temp.getCodeAsString()));
-        pressure_c.setText("Luftdruck: %01.1f hPa".formatted(temp.getPressure()));
-        humidity_c.setText("Luftfeuchte: %d %%".formatted(temp.getHumidity()));
-        windspeed_c.setText("Windgeschwindigkeit: %01.1f Km/h".formatted(temp.getWindspeed()));
-        iconPosition_c.setIcon(temp.getCodeAsIcon());
-
-        //update 08h weather
-        temp = sets.get(8);
-        temperature_08h.setText("%01.1f °C".formatted(temp.getTemperature()));
-        wc_08h.setText(resources.getString(temp.getCodeAsString()));
-        iconPosition_08h.setIcon(temp.getCodeAsIcon());
-        windspeed_08h.setText("%01.1f Km/h".formatted(temp.getWindspeed()));
-
-        //update 12h weather
-        temp = sets.get(12);
-        temperature_12h.setText("%01.1f °C".formatted(temp.getTemperature()));
-        wc_12h.setText(resources.getString(temp.getCodeAsString()));
-        iconPosition_12h.setIcon(temp.getCodeAsIcon());
-        windspeed_12h.setText("%01.1f Km/h".formatted(temp.getWindspeed()));
-
-        //update 16h weather
-        temp = sets.get(16);
-        temperature_16h.setText("%01.1f °C".formatted(temp.getTemperature()));
-        wc_16h.setText(resources.getString(temp.getCodeAsString()));
-        iconPosition_16h.setIcon(temp.getCodeAsIcon());
-        windspeed_16h.setText("%01.1f Km/h".formatted(temp.getWindspeed()));
-
-        //update 20h weather
-        temp = sets.get(20);
-        temperature_20h.setText("%01.1f °C".formatted(temp.getTemperature()));
-        wc_20h.setText(resources.getString(temp.getCodeAsString()));
-        iconPosition_20h.setIcon(temp.getCodeAsIcon());
-        windspeed_20h.setText("%01.1f Km/h".formatted(temp.getWindspeed()));
+        for(int i = 0;i<weatherPanels.length;i++){
+            switch (i) {
+                case 0 -> weatherPanels[i].setData(resources.getString("header_current"), sets.get(LocalDateTime.now().getHour()));
+                case 1 -> weatherPanels[i].setData(resources.getString("header_01"), sets.get(8));
+                case 2 -> weatherPanels[i].setData(resources.getString("header_02"), sets.get(12));
+                case 3 -> weatherPanels[i].setData(resources.getString("header_03"), sets.get(16));
+                case 4 -> weatherPanels[i].setData(resources.getString("header_04"), sets.get(20));
+            }
+        }
     }
 
     class WeatherReceiver extends Thread {
@@ -310,10 +150,37 @@ public class WeatherWidget extends AbstractWidget {
         }
     }
 
+    /**
+     * creates a single panel that holds the information for one time
+     */
     static class WeatherPanel extends JPanel{
+        WeatherLabel header;
+        WeatherLabel icon;
+        WeatherLabel temperature;
+        WeatherLabel wind;
+
         public WeatherPanel(){
             this.setBackground(Color.BLACK);
             this.setLayout(new GridBagLayout());
+            GridBagConstraints ic = new InnerConstraints();
+            header = new WeatherLabel();
+            icon = new WeatherLabel();
+            temperature = new WeatherLabel();
+            wind = new WeatherLabel();
+            this.add(header,ic);
+            ic.gridy++;
+            this.add(icon,ic);
+            ic.gridy++;
+            this.add(temperature,ic);
+            ic.gridy++;
+            this.add(wind,ic);
+        }
+
+        public void setData(String headerText, WeatherSet set){
+            header.setText(headerText);
+            icon.setIcon(set.getCodeAsIcon());
+            temperature.setText("%01.1f °C".formatted(set.getTemperature()));
+            wind.setText("%01.1f Km/h".formatted(set.getWindspeed()));
         }
     }
 
@@ -332,6 +199,7 @@ public class WeatherWidget extends AbstractWidget {
         public InnerConstraints(){
             super();
             fill = GridBagConstraints.BOTH;
+            anchor = GridBagConstraints.CENTER;
             weightx = 1;
             weighty = 1;
             gridy = 0;

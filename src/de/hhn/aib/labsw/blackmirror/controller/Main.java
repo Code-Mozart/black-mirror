@@ -17,12 +17,10 @@ public class Main {
         new Main();
     }
 
-    private ArrayList<AbstractWidget> widgets;
+    private ArrayList<AbstractWidget> widgets = new ArrayList<>();
     private PageController pageController = new PageController();
 
     public Main() {
-        widgets = new ArrayList<>();
-
         // @Team add your widgets here to test them -Markus
         widgets.add(new
                 HelloWorldWidget()
@@ -34,8 +32,8 @@ public class Main {
         pageController.getCurrentPage().setWidgetsVisible(); //Sets all widgets on the default page visible.
         new SecondsTimer(this::onNextSecond);
     }
-    private void onNextSecond()
-    {
+
+    private void onNextSecond() {
         pageController.getCurrentPage().onNextSecond();
     }
 }

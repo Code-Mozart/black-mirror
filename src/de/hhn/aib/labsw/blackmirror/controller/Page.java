@@ -14,16 +14,17 @@ public class Page {
 
     private ArrayList<AbstractWidget> widgetsOnPage;
 
-    public Page(ArrayList<AbstractWidget> widgetsOnPage)
-    {
+    public Page(ArrayList<AbstractWidget> widgetsOnPage) {
         this.widgetsOnPage = widgetsOnPage;
     }
+
     /**
      * Method to set all widgets in the widgets ArrayList invisible.
      */
     protected void setWidgetsInvisible() {
         widgetsOnPage.forEach(w -> w.setVisible(false)); //Sets each widget invisible
     }
+
     /**
      * Method to set all widgets in the widgets ArrayList visible.
      */

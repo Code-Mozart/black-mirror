@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.concurrent.*;
@@ -30,7 +30,7 @@ public class WeatherWidget extends AbstractWidget {
     ResourceBundle resources = ResourceBundle.getBundle("WeatherWidget", Locale.getDefault());
 
     //Linked List with the weather sets
-    LinkedList<WeatherSet> weatherSets = null;
+    ArrayList<WeatherSet> weatherSets = null;
 
     //Scheduler runs the data update automatically every 15 Minutes
     ScheduledExecutorService updateExecutor = Executors.newSingleThreadScheduledExecutor();
@@ -77,6 +77,7 @@ public class WeatherWidget extends AbstractWidget {
 
     /**
      * set the location for which the weather information should be downloaded
+     * @throws IllegalArgumentException when coordinates invalid
      */
     public void setGPSLocation(double lat, double lon) {
         if(lat > 90 || lat < -90 || lon > 180 || lon < -180){
@@ -102,7 +103,7 @@ public class WeatherWidget extends AbstractWidget {
         JSONArray humidities = data.getJSONObject("hourly").getJSONArray("relativehumidity_2m");
         JSONArray pressures = data.getJSONObject("hourly").getJSONArray("pressure_msl");
 
-        LinkedList<WeatherSet> weatherSets = new LinkedList<>();
+        ArrayList<WeatherSet> weatherSets = new ArrayList<>();
         for (int i = 0; i < times.length(); i++) {
             WeatherSet temp = new WeatherSet();
             temp.setTemperature(temperatures.getDouble(i));

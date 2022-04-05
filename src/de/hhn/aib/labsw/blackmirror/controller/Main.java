@@ -2,6 +2,7 @@ package de.hhn.aib.labsw.blackmirror.controller;
 
 import de.hhn.aib.labsw.blackmirror.view.widgets.AbstractWidget;
 import de.hhn.aib.labsw.blackmirror.view.widgets.HelloWorldWidget;
+import de.hhn.aib.labsw.blackmirror.view.widgets.ReminderWidget;
 import de.hhn.aib.labsw.blackmirror.view.widgets.WeatherWidget;
 
 import java.util.ArrayList;

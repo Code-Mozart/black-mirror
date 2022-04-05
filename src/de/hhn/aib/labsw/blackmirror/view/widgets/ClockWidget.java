@@ -7,12 +7,12 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Analoguhr Widget für Black Mirror
+ * Analog clock widget Black Mirror
  * <p>
- * Hilfe von: https://github.com/nguyenphu27/Java-Project/tree/master/ClockGui
+ * Help: https://github.com/nguyenphu27/Java-Project/tree/master/ClockGui
  *
  * @author Lukas Michalsky
- * @version 1.0
+ * @version 2022-04-05
  */
 
 public class ClockWidget extends AbstractWidget {
@@ -39,7 +39,7 @@ public class ClockWidget extends AbstractWidget {
     };
 
     /**
-     * Konstruktor Clock Widget
+     * Constructor clock widget
      */
     public ClockWidget() {
 
@@ -51,14 +51,20 @@ public class ClockWidget extends AbstractWidget {
     }
 
     /**
-     * Methode zum zeichnen der Analoguhr
+     * Method drawing clock
      *
-     * @param g Graphic auf der gezeichnet wird
+     * @param g drawing on this graphic
      */
     @Override
     public void paint(Graphics g) {
 
         super.paint(g);
+
+        if (g instanceof Graphics2D) {
+            Graphics2D g2d = (Graphics2D) g;
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        }
+
         //border clock
         g.setColor(Color.BLACK);
         g.fillOval(35, spacing + 10, 330, 330);
@@ -92,9 +98,9 @@ public class ClockWidget extends AbstractWidget {
     }
 
     /**
-     * Methode zum zeichnen des Ziffernblatts der Uhr
+     * Methode drawing clock face
      *
-     * @param g Graphic auf der gezeichnet wird
+     * @param g drawing on this graphic
      */
     private void drawClockFace(Graphics g) {
 
@@ -112,15 +118,15 @@ public class ClockWidget extends AbstractWidget {
     }
 
     /**
-     * Methode zum Zeichnen der Größe des Ziffernblatts
+     * Methode drawing size of clock face
      *
-     * @param g           Graphic auf der gezeichnet wird
-     * @param x           x-Wert des Mittelpunkts der Uhr
-     * @param y           y-Wert des Mittelpunkts der Uhr
-     * @param angle       Winkel der Sekundenstriche
-     * @param minRadius   Startpunkt der Sekundenstriche
-     * @param maxRadius   Endpunkt der Sekundenstriche
-     * @param colorNumber Farbe des Rahmens der Uhr
+     * @param g           drawing on this graphic
+     * @param x           x-value middle of clock
+     * @param y           y-value middle of clock
+     * @param angle       angle of second marks
+     * @param minRadius   start point of second marks
+     * @param maxRadius   end point of second marks
+     * @param colorNumber color of clock face border
      */
     private void drawRadius(Graphics g, int x, int y, double angle,
                             int minRadius, int maxRadius, Color colorNumber) {
@@ -136,9 +142,9 @@ public class ClockWidget extends AbstractWidget {
 
 
     /**
-     * Methode zum Beschriften des Ziffernblatts
+     * Methode drawing numbers of the clock
      *
-     * @param g Graphic auf der gezeichnet wird
+     * @param g drawing on this graphic
      */
     private void drawNumberClock(Graphics g) {
 
@@ -148,11 +154,11 @@ public class ClockWidget extends AbstractWidget {
     }
 
     /**
-     * Methode zum Zeichnen der Nummern an der richtigen Stelle auf dem Ziffernblatt
+     * Methode drawing numbers on the right point on the clock face
      *
-     * @param g     Graphic auf der gezeichnet wird
-     * @param angle Winkel der Position der Zahl
-     * @param n     Zahl der Position
+     * @param g     drawing on this graphic
+     * @param angle angle position of number
+     * @param n     number for clock face position
      */
     private void drawnum(Graphics g, float angle, int n) {
 
@@ -166,13 +172,13 @@ public class ClockWidget extends AbstractWidget {
 
 
     /**
-     * Methode zum Zeichnen der Zeiger der Uhr
+     * Methode drawing clock hands
      *
-     * @param g      Graphic auf der gezeichnet wird
-     * @param hour   Aktuelle Stunden
-     * @param minute Aktuelle Minuten
-     * @param second Aktuelle Sekunden
-     * @param color  Farbe der Zeiger
+     * @param g      drawing on this graphic
+     * @param hour   current hour
+     * @param minute current minute
+     * @param second current second
+     * @param color  color of clock hands
      */
     private void drawHands(Graphics g, double hour, double minute, double second, Color color) {
 

@@ -23,11 +23,7 @@ public class ClockWidget extends AbstractWidget {
     private int centerX;
     private int centerY;
 
-    Calendar cal;
-    int hour;
-    int minute;
-    int second;
-    Color color;
+    private Calendar cal;
 
 
     Runnable refresh = new Runnable() {
@@ -60,8 +56,7 @@ public class ClockWidget extends AbstractWidget {
 
         super.paint(g);
 
-        if (g instanceof Graphics2D) {
-            Graphics2D g2d = (Graphics2D) g;
+        if (g instanceof Graphics2D g2d) {
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         }
 
@@ -82,12 +77,12 @@ public class ClockWidget extends AbstractWidget {
 
         //get system time
         cal = Calendar.getInstance();
-        hour = cal.get(Calendar.HOUR);
-        minute = cal.get(Calendar.MINUTE);
-        second = cal.get(Calendar.SECOND);
+        int hour = cal.get(Calendar.HOUR);
+        int minute = cal.get(Calendar.MINUTE);
+        int second = cal.get(Calendar.SECOND);
 
         //draw hands
-        drawHands(g, hour, minute, second, color);
+        drawHands(g, hour, minute, second);
 
         //draw point clock
         g.setColor(Color.WHITE);
@@ -112,7 +107,7 @@ public class ClockWidget extends AbstractWidget {
             } else {
                 ticStart = size / 2 - 5;
             }
-            drawRadius(g, centerX, centerY, radPerSecMin * sec, ticStart - 20, size / 2 - 20, color.WHITE);
+            drawRadius(g, centerX, centerY, radPerSecMin * sec, ticStart - 20, size / 2 - 20);
 
         }
     }
@@ -120,23 +115,22 @@ public class ClockWidget extends AbstractWidget {
     /**
      * Methode drawing size of clock face
      *
-     * @param g           drawing on this graphic
-     * @param x           x-value middle of clock
-     * @param y           y-value middle of clock
-     * @param angle       angle of second marks
-     * @param minRadius   start point of second marks
-     * @param maxRadius   end point of second marks
-     * @param colorNumber color of clock face border
+     * @param g         drawing on this graphic
+     * @param x         x-value middle of clock
+     * @param y         y-value middle of clock
+     * @param angle     angle of second marks
+     * @param minRadius start point of second marks
+     * @param maxRadius end point of second marks
      */
     private void drawRadius(Graphics g, int x, int y, double angle,
-                            int minRadius, int maxRadius, Color colorNumber) {
+                            int minRadius, int maxRadius) {
         float sine = (float) Math.sin(angle);
         float cosine = (float) Math.cos(angle);
         int dxmin = (int) (minRadius * sine);
         int dymin = (int) (minRadius * cosine);
         int dxmax = (int) (maxRadius * sine);
         int dymax = (int) (maxRadius * cosine);
-        g.setColor(colorNumber);
+        g.setColor(Color.WHITE);
         g.drawLine(x + dxmin, y + dymin, x + dxmax, y + dymax);
     }
 
@@ -178,17 +172,16 @@ public class ClockWidget extends AbstractWidget {
      * @param hour   current hour
      * @param minute current minute
      * @param second current second
-     * @param color  color of clock hands
      */
-    private void drawHands(Graphics g, double hour, double minute, double second, Color color) {
+    private void drawHands(Graphics g, double hour, double minute, double second) {
 
         double rsecond = (second * 6) * (Math.PI) / 180;
         double rminute = ((minute + (second / 60)) * 6) * (Math.PI) / 180;
         double rhours = ((hour + (minute / 60)) * 30) * (Math.PI) / 180;
 
-        g.setColor(color);
+        g.setColor(Color.WHITE);
         g.drawLine(centerX, centerY, centerX + (int) (150 * Math.cos(rsecond - (Math.PI / 2))), centerY + (int) (150 * Math.sin(rsecond - (Math.PI / 2))));
-        g.setColor(color);
+        g.setColor(Color.WHITE);
         g.drawLine(centerX, centerY, centerX + (int) (120 * Math.cos(rminute - (Math.PI / 2))), centerY + (int) (120 * Math.sin(rminute - (Math.PI / 2))));
         g.drawLine(centerX, centerY, centerX + (int) (90 * Math.cos(rhours - (Math.PI / 2))), centerY + (int) (90 * Math.sin(rhours - (Math.PI / 2))));
     }

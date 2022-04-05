@@ -43,6 +43,12 @@ public class ReminderWidget extends AbstractWidget {
     private void initComponents() {
         JPanel panelMain = new JPanel(new BorderLayout());
         panelMain.setBackground(Color.BLACK);
+        panelMain.setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+
+        c.gridx = 0;
+        c.gridy = 0;
+        c.insets = new Insets(5,5,5,5);
 
         reminderLabel = new JLabel(resources.getString("reminderTitle"));
         reminderLabel.setFont(new Font(reminderLabel.getFont().getName(), Font.BOLD, 16));
@@ -52,9 +58,18 @@ public class ReminderWidget extends AbstractWidget {
         a.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
         reminderLabel.setFont(font.deriveFont(a));
 
-        reminderLabel.setHorizontalAlignment(JLabel.CENTER);
+        JLabel iconLabel = new JLabel("", SwingConstants.CENTER);
+        // icon author @mallorysartwork
+        ImageIcon remindIcon = new ImageIcon("icons/reminder_icon.jpg");
+        iconLabel.setIcon(remindIcon);
 
-        JPanel panel = new JPanel();
+        reminderLabel.setVerticalAlignment(SwingConstants.NORTH);
+
+        panelMain.add(iconLabel, c);
+        c.gridy = 1;
+        panelMain.add(reminderLabel, c);
+
+        reminderLabel.setHorizontalAlignment(JLabel.CENTER);
         events = new ArrayList<>();
 
         // Hardcoded Events
@@ -62,10 +77,28 @@ public class ReminderWidget extends AbstractWidget {
                 0, ZoneId.of("Europe/Berlin")), "Meetingnnnnnnnnnnnnnnnmnnnnnnnnnn");
         Event e2 = new Event(ZonedDateTime.of(2022, 8, 12, 10, 30, 0,
                 0, ZoneId.of("Europe/Berlin")), "Meeting");
+        Event e3 = new Event(ZonedDateTime.of(2022, 8, 12, 11, 30, 0,
+                0, ZoneId.of("Europe/Berlin")), "Meeting");
+        Event e4 = new Event(ZonedDateTime.of(2022, 8, 12, 12, 30, 0,
+                0, ZoneId.of("Europe/Berlin")), "Meeting");
+        Event e5 = new Event(ZonedDateTime.of(2022, 8, 12, 13, 30, 0,
+                0, ZoneId.of("Europe/Berlin")), "Meeting");
+        Event e6 = new Event(ZonedDateTime.of(2022, 8, 12, 14, 30, 0,
+                0, ZoneId.of("Europe/Berlin")), "Meeting");
+        Event e7 = new Event(ZonedDateTime.of(2022, 8, 12, 15, 30, 0,
+                0, ZoneId.of("Europe/Berlin")), "Meeting");
+
         events.add(e2);
         events.add(e1);
+        events.add(e3);
+        events.add(e5);
+        events.add(e4);
+        events.add(e6);
+        events.add(e7);
 
         events.sort(new EventComparator());
+
+        c.gridy = 2;
         if (!events.isEmpty()) {
             int i = 0;
             List<String> eventsStr = new ArrayList<>();
@@ -77,35 +110,24 @@ public class ReminderWidget extends AbstractWidget {
                 }
             }
 
+            if (i==6) {
+                eventsStr.add("...");
+            }
+
             JList list = new JList(eventsStr.toArray());
             list.setBackground(Color.BLACK);
             list.setForeground(Color.WHITE);
+            list.setFont(new Font(list.getFont().getName(), list.getFont().getStyle(), 13));
 
-            panel.add(list, BorderLayout.NORTH);
+            panelMain.add(list, c);
         } else {
             JLabel noEventsText = new JLabel(resources.getString("noEvents"));
             noEventsText.setBackground(Color.BLACK);
             noEventsText.setForeground(Color.WHITE);
 
-            panel.add(noEventsText);
+            panelMain.add(noEventsText, c);
         }
-        panel.setBackground(Color.BLACK);
-
-        JLabel iconLabel = new JLabel("", SwingConstants.CENTER);
-        // icon author
-        ImageIcon remindIcon = new ImageIcon("icons/reminder_icon.jpg");
-        iconLabel.setIcon(remindIcon);
-
-        reminderLabel.setVerticalAlignment(SwingConstants.NORTH);
-
-
-        panelMain.add(iconLabel);
-        panelMain.add(reminderLabel);
-        panelMain.add(panel);
-        panelMain.setLayout(new GridLayout(3,1));
         this.add(panelMain);
-
-        // SwingUtils.setFont(this, new Font("Calibri", Font.PLAIN, 18));
     }
 
     /**
@@ -130,7 +152,7 @@ public class ReminderWidget extends AbstractWidget {
      * @return the time of the event e as a String ("hh:mm")
      */
     private String parseEvent(Event e) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm", Locale.getDefault());
         String eventDesc = e.getDesc();
         if (eventDesc.length() > 30) {
             eventDesc = eventDesc.substring(0, 29) + "...";

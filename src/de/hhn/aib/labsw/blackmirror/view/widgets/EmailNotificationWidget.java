@@ -58,8 +58,8 @@ public class EmailNotificationWidget extends AbstractWidget {
         // Project Mail: "blackmirror.labswp@gmail.com", "labSWPproject" (error: app not a "secure app" for google)
         host = "imap.web.de";
         port = "993";
-        username = "YOUR_USERNAME_HERE";
-        password = "YOUR_PASSWORD_HERE";
+        username = "blackmirror.labswp@web.de";
+        password = "labSWPproject";
 
         try {
             drawUnreadEmails();

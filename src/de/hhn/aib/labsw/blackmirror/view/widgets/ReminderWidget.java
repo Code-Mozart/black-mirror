@@ -24,7 +24,7 @@ public class ReminderWidget extends AbstractWidget {
     private final ResourceBundle resources = ResourceBundle.getBundle("ReminderWidget", Locale.getDefault());
 
     public ReminderWidget() {
-        this.setSize(300, 200);
+        this.setSize(300, 300);
         now = ZonedDateTime.now();
         initComponents();
     }
@@ -45,11 +45,14 @@ public class ReminderWidget extends AbstractWidget {
         panelMain.setBackground(Color.BLACK);
 
         reminderLabel = new JLabel(resources.getString("reminderTitle"));
+        reminderLabel.setFont(new Font(reminderLabel.getFont().getName(), Font.BOLD, 16));
         reminderLabel.setForeground(Color.WHITE);
         Font font = reminderLabel.getFont();
         Map a = font.getAttributes();
         a.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
         reminderLabel.setFont(font.deriveFont(a));
+
+        reminderLabel.setHorizontalAlignment(JLabel.CENTER);
 
         JPanel panel = new JPanel();
         events = new ArrayList<>();
@@ -78,7 +81,7 @@ public class ReminderWidget extends AbstractWidget {
             list.setBackground(Color.BLACK);
             list.setForeground(Color.WHITE);
 
-            panel.add(list);
+            panel.add(list, BorderLayout.NORTH);
         } else {
             JLabel noEventsText = new JLabel(resources.getString("noEvents"));
             noEventsText.setBackground(Color.BLACK);
@@ -88,8 +91,18 @@ public class ReminderWidget extends AbstractWidget {
         }
         panel.setBackground(Color.BLACK);
 
-        panelMain.add(reminderLabel, BorderLayout.NORTH);
-        panelMain.add(panel, BorderLayout.CENTER);
+        JLabel iconLabel = new JLabel("", SwingConstants.CENTER);
+        // icon author
+        ImageIcon remindIcon = new ImageIcon("icons/reminder_icon.jpg");
+        iconLabel.setIcon(remindIcon);
+
+        reminderLabel.setVerticalAlignment(SwingConstants.NORTH);
+
+
+        panelMain.add(iconLabel);
+        panelMain.add(reminderLabel);
+        panelMain.add(panel);
+        panelMain.setLayout(new GridLayout(3,1));
         this.add(panelMain);
 
         // SwingUtils.setFont(this, new Font("Calibri", Font.PLAIN, 18));

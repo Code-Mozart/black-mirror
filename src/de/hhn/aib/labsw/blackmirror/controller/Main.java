@@ -3,6 +3,7 @@ package de.hhn.aib.labsw.blackmirror.controller;
 import de.hhn.aib.labsw.blackmirror.view.widgets.AbstractWidget;
 import de.hhn.aib.labsw.blackmirror.view.widgets.HelloWorldWidget;
 import de.hhn.aib.labsw.blackmirror.view.widgets.ReminderWidget;
+import de.hhn.aib.labsw.blackmirror.view.widgets.WeatherWidget;
 
 import java.util.ArrayList;
 
@@ -23,9 +24,8 @@ public class Main {
 
     public Main() {
         // @Team add your widgets here to test them -Markus
-        widgets.add(new
-                HelloWorldWidget()
-        );
+        //widgets.add(new HelloWorldWidget());
+        widgets.add(new WeatherWidget());
 
         //@Team Use this method to add a new page, with a ArrayList of widgets -Niklas
         pageController.addPage(widgets);

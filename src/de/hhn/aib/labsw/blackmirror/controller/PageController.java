@@ -39,11 +39,20 @@ public class PageController {
     }
 
     /**
+     * Deletes a given page.
+     *
+     * @param page Page to be deleted.
+     */
+    protected void deletePage(Page page) {
+        pages.remove(page);
+    }
+
+    /**
      * Deletes a page at the given index.
      *
      * @param pageIndex Index of the page to be deleted.
      */
-    protected void deletePage(int pageIndex) {
+    protected void deletePageAtIndex(int pageIndex) {
         pages.remove(pageIndex);
     }
 

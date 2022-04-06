@@ -19,6 +19,33 @@ public class Page {
     }
 
     /**
+     * Adds a new widget to the page.
+     *
+     * @param newWidget Widget to be added
+     */
+    protected void addWidget(AbstractWidget newWidget) {
+        widgetsOnPage.add(newWidget);
+    }
+
+    /**
+     * Deletes a specific widget on the page.
+     *
+     * @param widget Widget to be deleted
+     */
+    protected void deleteWidget(AbstractWidget widget) {
+        widgetsOnPage.remove(widget);
+    }
+
+    /**
+     * Deletes a specific widget with a given index.
+     *
+     * @param widgetIndex Index of the widget to be deleted
+     */
+    protected void deleteWidgetByIndex(int widgetIndex) {
+        widgetsOnPage.remove(widgetIndex);
+    }
+
+    /**
      * Method to set all widgets in the widgets ArrayList invisible.
      */
     protected void setWidgetsInvisible() {

@@ -107,7 +107,7 @@ public class ReminderWidget extends AbstractWidget {
             noRemindersText.setBackground(Color.BLACK);
             noRemindersText.setForeground(Color.WHITE);
 
-            panelMain.add(noEventsText, c);
+            panelMain.add(noRemindersText, c);
         }
         this.add(panelMain);
     }

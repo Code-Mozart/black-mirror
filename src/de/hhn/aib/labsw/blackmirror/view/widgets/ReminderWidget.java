@@ -3,6 +3,7 @@ package de.hhn.aib.labsw.blackmirror.view.widgets;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.font.TextAttribute;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -19,7 +20,7 @@ import java.util.List;
 public class ReminderWidget extends AbstractWidget {
     private JLabel reminderLabel;
     private ZonedDateTime now;
-    private List<Event> events;
+    private List<Reminder> reminders;
 
     private final ResourceBundle resources = ResourceBundle.getBundle("ReminderWidget", Locale.getDefault());
 
@@ -70,51 +71,32 @@ public class ReminderWidget extends AbstractWidget {
         panelMain.add(reminderLabel, c);
 
         reminderLabel.setHorizontalAlignment(JLabel.CENTER);
-        events = new ArrayList<>();
+        reminders = new ArrayList<>();
 
         // Hardcoded Events
-        Event e1 = new Event(ZonedDateTime.of(2022, 8, 12, 8, 30, 0,
-                0, ZoneId.of("Europe/Berlin")), "Meetingnnnnnnnnnnnnnnnmnnnnnnnnnn");
-        Event e2 = new Event(ZonedDateTime.of(2022, 8, 12, 10, 30, 0,
-                0, ZoneId.of("Europe/Berlin")), "Meeting");
-        Event e3 = new Event(ZonedDateTime.of(2022, 8, 12, 11, 30, 0,
-                0, ZoneId.of("Europe/Berlin")), "Meeting");
-        Event e4 = new Event(ZonedDateTime.of(2022, 8, 12, 12, 30, 0,
-                0, ZoneId.of("Europe/Berlin")), "Meeting");
-        Event e5 = new Event(ZonedDateTime.of(2022, 8, 12, 13, 30, 0,
-                0, ZoneId.of("Europe/Berlin")), "Meeting");
-        Event e6 = new Event(ZonedDateTime.of(2022, 8, 12, 14, 30, 0,
-                0, ZoneId.of("Europe/Berlin")), "Meeting");
-        Event e7 = new Event(ZonedDateTime.of(2022, 8, 12, 15, 30, 0,
-                0, ZoneId.of("Europe/Berlin")), "Meeting");
+        Reminder r1 = new Reminder(LocalDate.now(), "Daily Scrum um 14 Uhr");
+        Reminder r2 = new Reminder(LocalDate.now(), "Programmieren usw.");
 
-        events.add(e2);
-        events.add(e1);
-        events.add(e3);
-        events.add(e5);
-        events.add(e4);
-        events.add(e6);
-        events.add(e7);
-
-        events.sort(new EventComparator());
+        reminders.add(r2);
+        reminders.add(r1);
 
         c.gridy = 2;
-        if (!events.isEmpty()) {
+        if (!reminders.isEmpty()) {
             int i = 0;
-            List<String> eventsStr = new ArrayList<>();
-            for (Event ev :
-                    events) {
-                if (i < 6) {
-                    eventsStr.add(parseEvent(ev));
+            List<String> reminderStr = new ArrayList<>();
+            for (Reminder r :
+                    reminders) {
+                if (i < 8) {
+                    reminderStr.add(parseReminder(r));
                     i++;
                 }
             }
 
             if (i==6) {
-                eventsStr.add("...");
+                reminderStr.add("...");
             }
 
-            JList list = new JList(eventsStr.toArray());
+            JList list = new JList(reminderStr.toArray());
             list.setBackground(Color.BLACK);
             list.setForeground(Color.WHITE);
             list.setFont(new Font(list.getFont().getName(), list.getFont().getStyle(), 13));
@@ -131,16 +113,16 @@ public class ReminderWidget extends AbstractWidget {
     }
 
     /**
-     * Requests all Events and adds them to a list if they are on the same date.
+     * Requests all Reminders and adds them to a list if they are on the same date.
      */
-    private void getTodayEvents() {
-        ArrayList<Event> requestedEvents = new ArrayList<>();
+    private void getTodaysReminders() {
+        ArrayList<Reminder> requestedReminders = new ArrayList<>();
         //TODO: Get Events by requesting them over Calendar (needs to be done after app is finished)
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy,MM,dd");
-        for (Event ev : requestedEvents) {
-            if (formatter.format(ev.getTime()).equals(formatter.format(now))) {
-                events.add(ev);
+        for (Reminder r : requestedReminders) {
+            if (formatter.format(r.getDate()).equals(formatter.format(now))) {
+                reminders.add(r);
             }
         }
     }
@@ -148,52 +130,36 @@ public class ReminderWidget extends AbstractWidget {
     /**
      * Formats a time given with an event to a time String
      *
-     * @param e Event
-     * @return the time of the event e as a String ("hh:mm")
+     * @param r Reminder
+     * @return parsed reminder information as a String
      */
-    private String parseEvent(Event e) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm", Locale.getDefault());
-        String eventDesc = e.getDesc();
+    private String parseReminder(Reminder r) {
+        String eventDesc = r.getDesc();
         if (eventDesc.length() > 30) {
             eventDesc = eventDesc.substring(0, 29) + "...";
         }
-        return formatter.format(e.getTime()) + " - " + eventDesc;
+        return "- "+r.getDesc();
     }
 }
 
 /**
- * Event class used for reminders.
+ * Reminder class used for reminders.
  */
-class Event {
-    private final ZonedDateTime time;
+class Reminder {
+    private final LocalDate date;
     private final String desc;
 
-    public Event(ZonedDateTime time, String description) {
-        this.time = time;
+    public Reminder(LocalDate reminderDate, String description) {
+        date = reminderDate;
         desc = description;
     }
 
-    public ZonedDateTime getTime() {
-        return time;
+    public LocalDate getDate() {
+        return date;
     }
 
     public String getDesc() {
         return desc;
-    }
-}
-
-/**
- * Used as a sorting algorithm for events.
- */
-class EventComparator implements Comparator<Event> {
-    public int compare(Event e1, Event e2) {
-        if (e1.getTime() == e2.getTime()) {
-            return 0;
-        } else if (e1.getTime().isBefore(e2.getTime())) {
-            return -1;
-        } else {
-            return 1;
-        }
     }
 }
 

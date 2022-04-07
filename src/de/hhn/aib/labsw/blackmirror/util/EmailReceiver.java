@@ -3,9 +3,7 @@ package de.hhn.aib.labsw.blackmirror.util;
 import com.sun.mail.imap.IMAPStore;
 
 import javax.mail.*;
-import java.util.Locale;
-import java.util.Properties;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * @author Philipp Herda
@@ -51,7 +49,7 @@ public class EmailReceiver {
      * @return a String containing the amount of new messages
      * @throws MessagingException if connection failed
      */
-    public String checkForMails() throws MessagingException {
+    public EmailInfo checkForMails() throws MessagingException {
         if (imapStore == null) {
             throw new IllegalStateException(resources.getString("failedToConnect"));
         }
@@ -60,18 +58,41 @@ public class EmailReceiver {
         Folder mailFolder = imapStore.getFolder("INBOX");
         mailFolder.open(Folder.READ_ONLY);
 
-        String newMsgs;
-        if (mailFolder.getUnreadMessageCount() == 0) {
-            newMsgs = resources.getString("noNewMails");
-        } else if (mailFolder.getUnreadMessageCount() == 1) {
-            newMsgs = resources.getString("oneNewMail");
+        HashMap<Integer, String> mailSubjects = new HashMap<>();
+        HashMap<Integer, String> mailSenderAddresses = new HashMap<>();
+
+        int messageCount = mailFolder.getMessageCount();
+
+        boolean firstIndexIsNewest = mailFolder.getMessage(messageCount).getReceivedDate().before(mailFolder.getMessage(1).getReceivedDate());
+
+        int j = 0;
+        if(firstIndexIsNewest) {
+            for (int i = 3; i >= 1; i--) {
+                j = extractMailInfo(mailFolder, mailSubjects, mailSenderAddresses, j, i);
+            }
         } else {
-            newMsgs = resources.getString("youHave") + " " + mailFolder.getUnreadMessageCount() + " " + resources.getString("newMails");
+            for (int i = messageCount - 2; i <= messageCount; i++) {
+                j = extractMailInfo(mailFolder, mailSubjects, mailSenderAddresses, j, i);
+            }
         }
 
         mailFolder.close();
         imapStore.close();
 
-        return newMsgs;
+        return new EmailInfo(mailFolder.getUnreadMessageCount(), mailSenderAddresses, mailSubjects);
+    }
+
+    private int extractMailInfo(Folder mailFolder, HashMap<Integer, String> mailSubjects, HashMap<Integer, String> mailSenderAddresses, int j, int i) throws MessagingException {
+        // only extract name of sender not the address
+        int endOfSubStr = mailFolder.getMessage(i).getFrom()[0].toString().indexOf("<");
+        if (endOfSubStr != -1) {
+            mailSenderAddresses.put(j, mailFolder.getMessage(i).getFrom()[0].toString().substring(0, endOfSubStr - 1));
+        } else {
+            mailSenderAddresses.put(j, mailFolder.getMessage(i).getFrom()[0].toString());
+        }
+
+        mailSubjects.put(j, mailFolder.getMessage(i).getSubject());
+        j++;
+        return j;
     }
 }

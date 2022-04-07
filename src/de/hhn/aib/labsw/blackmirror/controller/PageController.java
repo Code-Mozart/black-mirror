@@ -3,12 +3,13 @@ package de.hhn.aib.labsw.blackmirror.controller;
 import de.hhn.aib.labsw.blackmirror.view.widgets.AbstractWidget;
 
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 
 /**
  * PageController Class to hold all pages and provide all necessary methods.
  *
  * @author Niklas Binder
- * @version 2022-04-04
+ * @version 2022-07-04
  */
 public class PageController {
     private ArrayList<Page> pages = new ArrayList<>();
@@ -31,29 +32,48 @@ public class PageController {
     /**
      * Adds a new page at the given index.
      *
-     * @param widgetsOnPage Widgets to be shown on the new page.
      * @param pageIndex     Index where the page should be.
+     * @param widgetsOnPage Widgets to be shown on the new page.
+     * @throws IndexOutOfBoundsException Exception if pageIndex is lower than 0 or higher than the size of the list - 1.
      */
-    protected void addPageAtIndex(int pageIndex, ArrayList<AbstractWidget> widgetsOnPage) {
-        pages.add(pageIndex, new Page(widgetsOnPage));
+    protected void addPageAtIndex(int pageIndex, ArrayList<AbstractWidget> widgetsOnPage) throws IndexOutOfBoundsException {
+        if (pageIndex < 0) {
+            throw new IndexOutOfBoundsException("Index has to be higher than 0.");
+        } else if (pageIndex >= pages.size()) {
+            throw new IndexOutOfBoundsException("Index has to be lower than the size of the list - 1.");
+        } else {
+            pages.add(pageIndex, new Page(widgetsOnPage));
+        }
     }
 
     /**
      * Deletes a given page.
      *
      * @param page Page to be deleted.
+     * @throws NoSuchElementException Exception thrown if the given page is not in the list.
      */
-    protected void deletePage(Page page) {
-        pages.remove(page);
+    protected void deletePage(Page page) throws NoSuchElementException {
+        if (!pages.contains(page)) {
+            throw new NoSuchElementException("The given page doesn`t exist.");
+        } else {
+            pages.remove(page);
+        }
     }
 
     /**
      * Deletes a page at the given index.
      *
      * @param pageIndex Index of the page to be deleted.
+     * @throws NoSuchElementException Exception if pageIndex is lower than 0 or higher than the size of the list - 1.
      */
-    protected void deletePageAtIndex(int pageIndex) {
-        pages.remove(pageIndex);
+    protected void deletePageAtIndex(int pageIndex) throws NoSuchElementException {
+        if (pageIndex < 0) {
+            throw new IndexOutOfBoundsException("Index has to be higher than 0.");
+        } else if (pageIndex >= pages.size()) {
+            throw new IndexOutOfBoundsException("Index has to be lower than the size of the list - 1.");
+        } else {
+            pages.remove(pageIndex);
+        }
     }
 
     /**
@@ -61,11 +81,22 @@ public class PageController {
      *
      * @param pageIndex    Index, where the page currently is.
      * @param newPageIndex Index, where the page should be moved to.
+     * @throws NoSuchElementException Exception if one of the given indexes is lower than 0 or higher than the size of the list - 1.
      */
-    protected void movePage(int pageIndex, int newPageIndex) {
-        Page pageToMove = pages.get(pageIndex);
-        pages.remove(pageIndex);
-        pages.add(newPageIndex, pageToMove);
+    protected void movePage(int pageIndex, int newPageIndex) throws NoSuchElementException {
+        if (pageIndex < 0) {
+            throw new IndexOutOfBoundsException("PageIndex has to be higher than 0.");
+        } else if (pageIndex >= pages.size()) {
+            throw new IndexOutOfBoundsException("PageIndex has to be lower than the size of the list - 1.");
+        } else if (newPageIndex < 0) {
+            throw new IndexOutOfBoundsException("NewPageIndex has to be higher than 0.");
+        } else if (newPageIndex >= pages.size()) {
+            throw new IndexOutOfBoundsException("NewPageIndex has to be lower than the size of the list - 1.");
+        } else {
+            Page pageToMove = pages.get(pageIndex);
+            pages.remove(pageIndex);
+            pages.add(newPageIndex, pageToMove);
+        }
     }
 
     /**

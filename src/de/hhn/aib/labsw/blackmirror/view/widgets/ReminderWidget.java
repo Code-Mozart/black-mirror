@@ -103,9 +103,9 @@ public class ReminderWidget extends AbstractWidget {
 
             panelMain.add(list, c);
         } else {
-            JLabel noEventsText = new JLabel(resources.getString("noEvents"));
-            noEventsText.setBackground(Color.BLACK);
-            noEventsText.setForeground(Color.WHITE);
+            JLabel noRemindersText = new JLabel(resources.getString("noReminders"));
+            noRemindersText.setBackground(Color.BLACK);
+            noRemindersText.setForeground(Color.WHITE);
 
             panelMain.add(noEventsText, c);
         }

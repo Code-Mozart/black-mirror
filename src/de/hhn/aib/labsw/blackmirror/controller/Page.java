@@ -50,7 +50,7 @@ public class Page {
      */
     protected void deleteWidgetByIndex(int widgetIndex) throws IndexOutOfBoundsException {
         if (widgetIndex < 0) {
-            throw new IndexOutOfBoundsException("Index has to be higher than 0.");
+            throw new IndexOutOfBoundsException("Index has to be 0 or higher than 0.");
         } else if (widgetIndex >= widgetsOnPage.size()) {
             throw new IndexOutOfBoundsException("Index has to be lower than the size of the list - 1.");
         } else {

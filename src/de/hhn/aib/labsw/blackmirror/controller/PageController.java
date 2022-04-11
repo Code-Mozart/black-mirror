@@ -38,7 +38,7 @@ public class PageController {
      */
     protected void addPageAtIndex(int pageIndex, ArrayList<AbstractWidget> widgetsOnPage) throws IndexOutOfBoundsException {
         if (pageIndex < 0) {
-            throw new IndexOutOfBoundsException("Index has to be higher than 0.");
+            throw new IndexOutOfBoundsException("Index has to be 0 or higher than 0.");
         } else if (pageIndex >= pages.size()) {
             throw new IndexOutOfBoundsException("Index has to be lower than the size of the list - 1.");
         } else {
@@ -68,7 +68,7 @@ public class PageController {
      */
     protected void deletePageAtIndex(int pageIndex) throws NoSuchElementException {
         if (pageIndex < 0) {
-            throw new IndexOutOfBoundsException("Index has to be higher than 0.");
+            throw new IndexOutOfBoundsException("Index has to be 0 or higher than 0.");
         } else if (pageIndex >= pages.size()) {
             throw new IndexOutOfBoundsException("Index has to be lower than the size of the list - 1.");
         } else {
@@ -85,11 +85,11 @@ public class PageController {
      */
     protected void movePage(int pageIndex, int newPageIndex) throws NoSuchElementException {
         if (pageIndex < 0) {
-            throw new IndexOutOfBoundsException("PageIndex has to be higher than 0.");
+            throw new IndexOutOfBoundsException("PageIndex has to be 0 or higher than 0.");
         } else if (pageIndex >= pages.size()) {
             throw new IndexOutOfBoundsException("PageIndex has to be lower than the size of the list - 1.");
         } else if (newPageIndex < 0) {
-            throw new IndexOutOfBoundsException("NewPageIndex has to be higher than 0.");
+            throw new IndexOutOfBoundsException("NewPageIndex has to be 0 or higher than 0.");
         } else if (newPageIndex >= pages.size()) {
             throw new IndexOutOfBoundsException("NewPageIndex has to be lower than the size of the list - 1.");
         } else {
@@ -141,8 +141,8 @@ public class PageController {
      */
     protected void goToAnyPage(int pageIndex) throws IndexOutOfBoundsException {
         if (pageIndex < 0) {
-            throw new IndexOutOfBoundsException("Index has to be higher than 0");
-        } else if (pageIndex > (pages.size() - 1)) {
+            throw new IndexOutOfBoundsException("Index has to be 0 or higher than 0");
+        } else if (pageIndex >= pages.size()) {
             throw new IndexOutOfBoundsException("Index has to be lower than " + pages.size());
         } else {
             getCurrentPage().setWidgetsInvisible();

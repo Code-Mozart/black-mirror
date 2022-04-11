@@ -115,12 +115,12 @@ public class PageController {
      * Activates & Deactivates the standby-mode. While the Standby-Mode is activated,  the navigation is deactivated.
      */
     protected void changeMode() {
-        isStandby = !isStandby;
         if (isStandby) {
             getCurrentPage().setWidgetsInvisible();
         } else {
             getCurrentPage().setWidgetsVisible();
         }
+        isStandby = !isStandby;
     }
 
     /**

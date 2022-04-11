@@ -30,7 +30,6 @@ public class Main {
                 KeyEvent ke = (KeyEvent) event;
                 if (ke.getID() != KeyEvent.KEY_PRESSED) return;
                 switch (ke.getKeyCode()) {
-                    case KeyEvent.VK_ESCAPE -> pageController.changeMode();
                     case KeyEvent.VK_LEFT -> pageController.goToPreviousPage();
                     case KeyEvent.VK_RIGHT -> pageController.goToNextPage();
                 }
@@ -48,22 +47,33 @@ public class Main {
         widgets.add(new CalendarWidget());
         widgets.add(new EmailNotificationWidget());
         widgets.add(new ReminderWidget());
-        widgets.add(new ClockWidget());
 
         widgets.get(0).setPosition(AbstractWidget.Position.TOP_LEFT);
         widgets.get(1).setPosition(AbstractWidget.Position.TOP_RIGHT);
         widgets.get(2).setPosition(AbstractWidget.Position.BOTTOM_LEFT);
         widgets.get(3).setPosition(AbstractWidget.Position.BOTTOM_RIGHT);
-        widgets.get(4).setPosition(AbstractWidget.Position.CENTER);
 
         //@Team Use this method to add a new page, with a ArrayList of widgets -Niklas
         pageController.addPage(widgets);
 
         widgets = new ArrayList<>();
         widgets.add(new WeatherWidget());
+        widgets.get(0).setPosition(AbstractWidget.Position.TOP_LEFT);
         pageController.addPage(widgets);
 
-        pageController.addPage(new ArrayList<>());
+        widgets = new ArrayList<>();
+        widgets.add(new ClockWidget());
+        widgets.add(new EmailNotificationWidget());
+        widgets.get(0).setPosition(AbstractWidget.Position.TOP_LEFT);
+        widgets.get(1).setPosition(AbstractWidget.Position.TOP_RIGHT);
+        pageController.addPage(widgets);
+
+        widgets = new ArrayList<>();
+        widgets.add(new CalendarWidget());
+        widgets.add(new ReminderWidget());
+        widgets.get(0).setPosition(AbstractWidget.Position.BOTTOM_LEFT);
+        widgets.get(1).setPosition(AbstractWidget.Position.BOTTOM_RIGHT);
+        pageController.addPage(widgets);
 
         pageController.getCurrentPage().setWidgetsVisible(); //Sets all widgets on the default page visible.
         new SecondsTimer(this::onNextSecond);

@@ -43,6 +43,11 @@ public class Main {
 
         // @Team add your widgets here to test them -Markus
         //widgets.add(new HelloWorldWidget());
+        widgets.add(new HelloWorldWidget());
+        widgets.get(0).setPosition(AbstractWidget.Position.CENTER);
+        pageController.addPage(widgets);
+
+        widgets = new ArrayList<>();
         widgets.add(new WeatherWidget());
         widgets.add(new CalendarWidget());
         widgets.add(new EmailNotificationWidget());

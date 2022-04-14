@@ -1,67 +1,90 @@
 package de.hhn.aib.labsw.blackmirror.controller.API;
 
-import com.fasterxml.jackson.core.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
-import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.java_websocket.WebSocket;
+import org.java_websocket.handshake.ClientHandshake;
+import org.java_websocket.server.WebSocketServer;
 
-import javax.websocket.*;
-import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
-@ServerEndpoint(value = "/MirorrAPI")
-public class MirrorApiServer {
-    static ArrayList<Session> sessions = new ArrayList<>();
-    static ObjectMapper mapper = new ObjectMapper();
-    static HashMap<String, ArrayList<subscriberItem>> listeners;
+public class MirrorApiServer extends WebSocketServer {
+    ArrayList<WebSocket> sessions = new ArrayList<>();
+    ObjectMapper mapper = new ObjectMapper();
+    HashMap<String, ArrayList<ApiListener>> listeners = new HashMap<>();
+    private static MirrorApiServer instance = null;
 
-    @OnOpen
-    public void onOpen(Session session) throws IOException {
-        // Get session and WebSocket connection
-        sessions.add(session);
+    private MirrorApiServer(){
+        instance = this;
     }
 
-    @OnMessage
-    public void onMessage(Session session, String message) throws IOException {
+    public static MirrorApiServer getInstance(){
+        if(instance == null){
+            instance = new MirrorApiServer();
+        }
+        return instance;
+    }
+
+    @Override
+    public void onOpen(WebSocket session,ClientHandshake clientHandshake) {
+        // Get session and WebSocket connection
+        sessions.add(session);
+        System.out.print("new Connection!: ");
+        System.out.println(session.getRemoteSocketAddress().getAddress().toString());
+
+        TestClass t = new TestClass();
+        t.lat = 14.1241;
+        t.lon = 2.2112;
+        this.publish("location",t);
+    }
+
+    @Override
+    public void onMessage(WebSocket session, String message) {
         // Handle new messages
-        ObjectNode jsonNode = mapper.valueToTree(message);
-        String topic = jsonNode.get("topic").asText();
-        ArrayList<ApiListener> listenersList = listeners.get(topic);
-        if(listenersList != null){
-            listenersList.forEach(element->{
-                try {
-                    mapper.treeToValue(jsonNode,TestClass.class);
-                } catch (JsonProcessingException e) {
-                    e.printStackTrace();
-                }
-            });
+        System.out.println(message);
+        try {
+            JsonNode jsonNode = mapper.readTree(message);
+            String topic = jsonNode.get("topic").textValue();
+            if(jsonNode.get("payload") == null){
+                throw new IllegalArgumentException("wrong json format");
+            }
+            ArrayList<ApiListener> listenersList = listeners.get(topic);
+            if(listenersList != null){
+                listenersList.forEach(element->{
+                    element.dataReceived(topic, jsonNode);
+                });
+            }
+            System.out.println(mapper.treeToValue(jsonNode.get("payload"),TestClass.class));
+        }
+        catch(Exception e){
+            System.out.println(e.getMessage());
         }
     }
 
-    @OnClose
-    public void onClose(Session session) throws IOException {
+    @Override
+    public void onClose(WebSocket session, int code, String reason, boolean remote) {
         // WebSocket connection closes
         sessions.remove(session);
     }
 
-    @OnError
-    public void onError(Session session, Throwable throwable) {
+    @Override
+    public void onError(WebSocket session, Exception ex) {
         // Do error handling here
     }
 
-    public static <T> void subscribe(String topic, ApiListener<T> listener){
-        ArrayList<subscriberItem> listenerList = listeners.get(topic);
+    @Override
+    public void onStart() {
+        System.out.println("Server started");
+    }
+
+    public void subscribe(String topic, ApiListener listener){
+        ArrayList<ApiListener> listenerList = listeners.get(topic);
         if(listenerList == null){
             listenerList = new ArrayList<>();
-            subscriberItem item = new subscriberItem();
-            item.listener = listener;
-            item.listenerClass = T;
             listenerList.add(listener);
             listeners.put(topic,listenerList);
         }
@@ -70,21 +93,31 @@ public class MirrorApiServer {
         }
     }
 
-    public static void publish(String topic, Object payload) {
+    public void publish(String topic, Object payload) {
         SendPackage sendPackage = new SendPackage();
         sendPackage.topic = topic;
         sendPackage.payload = mapper.valueToTree(payload);
         sessions.forEach(session -> {
             try {
-                session.getBasicRemote().sendText(mapper.writeValueAsString(sendPackage));
+                session.send(mapper.writeValueAsString(sendPackage));
             }
             catch(IOException e){
                 System.out.println(e.getMessage());
             }
         });
     }
-    static class subscriberItem{
-        ApiListener listener;
-        Class listenerClass;
+
+    public void publish(String topic, JsonNode payload) {
+        SendPackage sendPackage = new SendPackage();
+        sendPackage.topic = topic;
+        sendPackage.payload = payload;
+        sessions.forEach(session -> {
+            try {
+                session.send(mapper.writeValueAsString(sendPackage));
+            }
+            catch(IOException e){
+                System.out.println(e.getMessage());
+            }
+        });
     }
 }

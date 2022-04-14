@@ -1,6 +1,7 @@
 package de.hhn.aib.labsw.blackmirror.controller.API;
 
-public interface ApiListener<T> {
-    Class<T> theClass;
-    public void dataReceived(String topic, T t);
+import com.fasterxml.jackson.databind.JsonNode;
+
+public interface ApiListener {
+    public void dataReceived(String topic, JsonNode object);
 }

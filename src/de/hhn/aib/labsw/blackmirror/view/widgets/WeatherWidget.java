@@ -1,8 +1,11 @@
 package de.hhn.aib.labsw.blackmirror.view.widgets;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import de.hhn.aib.labsw.blackmirror.model.WeatherSet;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import javax.swing.*;
 import java.awt.*;
@@ -94,25 +97,25 @@ public class WeatherWidget extends AbstractWidget {
      *
      * @param data the weather data received as JSON
      */
-    private void updateData(JSONObject data) {
-        JSONArray times = data.getJSONObject("hourly").getJSONArray("time");
-        JSONArray weathercodes = data.getJSONObject("hourly").getJSONArray("weathercode");
-        JSONArray temperatures = data.getJSONObject("hourly").getJSONArray("temperature_2m");
-        JSONArray precipitations = data.getJSONObject("hourly").getJSONArray("precipitation");
-        JSONArray windspeeds = data.getJSONObject("hourly").getJSONArray("windspeed_10m");
-        JSONArray humidities = data.getJSONObject("hourly").getJSONArray("relativehumidity_2m");
-        JSONArray pressures = data.getJSONObject("hourly").getJSONArray("pressure_msl");
+    private void updateData(JsonNode data) {
+        ArrayNode times = (ArrayNode) data.get("hourly").get("time");
+        ArrayNode weathercodes = (ArrayNode) data.get("hourly").get("weathercode");
+        ArrayNode temperatures = (ArrayNode) data.get("hourly").get("temperature_2m");
+        ArrayNode precipitations = (ArrayNode) data.get("hourly").get("precipitation");
+        ArrayNode windspeeds = (ArrayNode) data.get("hourly").get("windspeed_10m");
+        ArrayNode humidities = (ArrayNode) data.get("hourly").get("relativehumidity_2m");
+        ArrayNode pressures = (ArrayNode) data.get("hourly").get("pressure_msl");
 
         ArrayList<WeatherSet> weatherSets = new ArrayList<>();
-        for (int i = 0; i < times.length(); i++) {
+        for (int i = 0; i < times.size(); i++) {
             WeatherSet temp = new WeatherSet();
-            temp.setTemperature(temperatures.getDouble(i));
-            temp.setPrecipitation(precipitations.getDouble(i));
-            temp.setWeathercode(weathercodes.getInt(i));
-            temp.setWindspeed(windspeeds.getDouble(i));
-            temp.setHumidity(humidities.getInt(i));
-            temp.setPressure(pressures.getDouble(i));
-            temp.setTimestamp(LocalDateTime.parse(times.getString(i), DATEFORMAT));
+            temp.setTemperature(temperatures.get(i).asDouble());
+            temp.setPrecipitation(precipitations.get(i).asDouble());
+            temp.setWeathercode(weathercodes.get(i).asInt());
+            temp.setWindspeed(windspeeds.get(i).asDouble());
+            temp.setHumidity(humidities.get(i).asInt());
+            temp.setPressure(pressures.get(i).asDouble());
+            temp.setTimestamp(LocalDateTime.parse(times.get(i).textValue(), DATEFORMAT));
             weatherSets.add(temp);
         }
         this.weatherSets = weatherSets;
@@ -150,8 +153,13 @@ public class WeatherWidget extends AbstractWidget {
                 HttpClient client = HttpClient.newHttpClient();
                 HttpRequest req = HttpRequest.newBuilder(URI.create(String.format(Locale.US,ADDRESS,LAT, LON))).header("accept", "application/json").build();
                 CompletableFuture<HttpResponse<String>> futureResult = client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
-                updateData(new JSONObject(futureResult.get().body()));
+                ObjectMapper mapper = new ObjectMapper();
+                updateData(mapper.readTree(futureResult.get().body()));
             } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            } catch (JsonMappingException e) {
+                e.printStackTrace();
+            } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
         }

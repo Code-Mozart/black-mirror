@@ -2,6 +2,7 @@ package de.hhn.aib.labsw.blackmirror.controller;
 
 import de.hhn.aib.labsw.blackmirror.controller.API.MirrorApiServer;
 import de.hhn.aib.labsw.blackmirror.controller.API.TestClass;
+import de.hhn.aib.labsw.blackmirror.model.ApiDataModels.Location;
 import de.hhn.aib.labsw.blackmirror.view.widgets.*;
 
 import java.util.ArrayList;
@@ -23,11 +24,10 @@ public class Main {
 
     public Main() {
         MirrorApiServer server = MirrorApiServer.getInstance();
-        TestClass test = new TestClass();
-        test.lat = 19.4251;
-        test.lon = 21.2141;
+        server.start();
 
-        server.publish("location",test);
+        new TestClass("location");
+        new TestClass("location2");
 
         // @Team add your widgets here to test them -Markus
         //widgets.add(new HelloWorldWidget());

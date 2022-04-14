@@ -1,5 +1,7 @@
 package de.hhn.aib.labsw.blackmirror.controller;
 
+import de.hhn.aib.labsw.blackmirror.controller.API.MirrorApiServer;
+import de.hhn.aib.labsw.blackmirror.controller.API.TestClass;
 import de.hhn.aib.labsw.blackmirror.view.widgets.*;
 
 import java.util.ArrayList;
@@ -20,6 +22,12 @@ public class Main {
     private PageController pageController = new PageController();
 
     public Main() {
+        TestClass test = new TestClass();
+        test.lat = 19.4251;
+        test.lon = 21.2141;
+
+        MirrorApiServer.publish("location",test);
+/*
         // @Team add your widgets here to test them -Markus
         //widgets.add(new HelloWorldWidget());
         widgets.add(new WeatherWidget());
@@ -39,6 +47,8 @@ public class Main {
 
         pageController.getCurrentPage().setWidgetsVisible(); //Sets all widgets on the default page visible.
         new SecondsTimer(this::onNextSecond);
+
+ */
     }
 
     private void onNextSecond() {

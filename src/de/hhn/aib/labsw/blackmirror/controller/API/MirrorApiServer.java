@@ -10,17 +10,30 @@ import org.java_websocket.server.WebSocketServer;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
+/**
+ * MirrorApiServer provides an easy to use Interface to the App.
+ */
 public class MirrorApiServer extends WebSocketServer {
+    //https://mvnrepository.com/artifact/org.java-websocket/Java-WebSocket/1.5.3
+
     ArrayList<WebSocket> sessions = new ArrayList<>();
     ObjectMapper mapper = new ObjectMapper();
     HashMap<String, ArrayList<TopicListener>> listeners = new HashMap<>();
     private static MirrorApiServer instance = null;
 
+    /**
+     * private constructor (singleton pattern)
+     */
     private MirrorApiServer(){
         instance = this;
     }
 
+    /**
+     * get the instance of the server
+     * @return the instance of the server
+     */
     public static MirrorApiServer getInstance(){
         if(instance == null){
             instance = new MirrorApiServer();
@@ -28,6 +41,10 @@ public class MirrorApiServer extends WebSocketServer {
         return instance;
     }
 
+    /**
+     * get an instance of an object mapper to convert objects into jsonNodes and vice versa
+     * @return the ObjectMapper used in the MirrorApiServer
+     */
     public ObjectMapper getMapper() {
         return mapper;
     }
@@ -49,14 +66,15 @@ public class MirrorApiServer extends WebSocketServer {
             }
             ArrayList<TopicListener> listenersList = listeners.get(topic);
             if(listenersList != null){
-                listenersList.forEach(element->{
+                Iterator<TopicListener> topicIterator = listenersList.iterator();
+                while(topicIterator.hasNext()) {
+                    TopicListener element = topicIterator.next();
                     try {
                         element.dataReceived(topic, jsonNode);
+                    } catch (NullPointerException e) {
+                        topicIterator.remove();
                     }
-                    catch(NullPointerException e){
-                        listenersList.remove(element);
-                    }
-                });
+                }
             }
         }
         catch(Exception e){
@@ -83,6 +101,11 @@ public class MirrorApiServer extends WebSocketServer {
         System.out.println("Server started");
     }
 
+    /**
+     * subscribe to updates on a specific topic. You can subscribe to multiple topics at the same time
+     * @param topic the topic you want to subscribe to.
+     * @param listener the object that wants to subscribe. In most cases this will probably be "this"
+     */
     public void subscribe(String topic, TopicListener listener){
         ArrayList<TopicListener> listenerList = listeners.get(topic);
         if(listenerList == null){
@@ -95,6 +118,11 @@ public class MirrorApiServer extends WebSocketServer {
         }
     }
 
+    /**
+     * send a message to the app
+     * @param topic the topic of the message
+     * @param payload payload of the message as object that will be converted to Json
+     */
     public void publish(String topic, Object payload) {
         SendPackage sendPackage = new SendPackage();
         sendPackage.topic = topic;
@@ -109,6 +137,11 @@ public class MirrorApiServer extends WebSocketServer {
         });
     }
 
+    /**
+     * send a message to the app
+     * @param topic the topic of the message
+     * @param payload payload of the message as JsonNode
+     */
     public void publish(String topic, JsonNode payload) {
         SendPackage sendPackage = new SendPackage();
         sendPackage.topic = topic;

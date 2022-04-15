@@ -1,7 +1,6 @@
 package de.hhn.aib.labsw.blackmirror.view.widgets;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -155,11 +154,7 @@ public class WeatherWidget extends AbstractWidget {
                 CompletableFuture<HttpResponse<String>> futureResult = client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
                 ObjectMapper mapper = new ObjectMapper();
                 updateData(mapper.readTree(futureResult.get().body()));
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            } catch (JsonMappingException e) {
-                e.printStackTrace();
-            } catch (JsonProcessingException e) {
+            } catch (InterruptedException | ExecutionException | JsonProcessingException e) {
                 e.printStackTrace();
             }
         }

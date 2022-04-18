@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.hhn.aib.labsw.blackmirror.controller.API.MirrorApi;
 import de.hhn.aib.labsw.blackmirror.controller.API.TopicListener;
+import de.hhn.aib.labsw.blackmirror.model.ApiDataModels.Location;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
@@ -18,15 +19,40 @@ import java.util.*;
  */
 public class MirrorApiWebsockets extends WebSocketServer implements MirrorApi {
     //https://mvnrepository.com/artifact/org.java-websocket/Java-WebSocket/1.5.3
+    //contains all the sessions active at the moment
     List<WebSocket> sessions = new ArrayList<>();
+
+    //Used to translate Json<->POJO
     ObjectMapper mapper = new ObjectMapper();
+
+    //maps listerners to their corresponding topics
     Map<String, List<TopicListener>> listeners = new HashMap<>();
 
+    //used for singleton
     private static MirrorApiWebsockets instance = null;
+
+    /**
+     * initialise the server
+     */
+    public void init(){
+        instance.start();
+    }
+
+    /**
+     * stop the server
+     */
+    public void finish(){
+        try {
+            instance.stop();
+        } catch (InterruptedException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 
     /**
      * private constructor (singleton pattern)
      * singleton pattern is necessary because multiple instances could conflict with each other
+     * SINGLETON PATTERN MAY CHANGE IN THE FUTURE
      */
     private MirrorApiWebsockets(){
         instance = this;
@@ -61,18 +87,22 @@ public class MirrorApiWebsockets extends WebSocketServer implements MirrorApi {
     @Override
     public void onMessage(WebSocket session, String message) {
         try {
+            //try to parse the string into JSON
             JsonNode jsonNode = mapper.readTree(message);
             String topic = jsonNode.get("topic").textValue();
             if(jsonNode.get("payload") == null){
                 throw new IllegalArgumentException("wrong json format");
             }
+
+            //notify each listener for the topic if the JSON is valid
             List<TopicListener> listenersList = listeners.get(topic);
             if(listenersList != null){
+                //Iterater is being used to delete dead references
                 Iterator<TopicListener> topicIterator = listenersList.iterator();
                 while(topicIterator.hasNext()) {
                     TopicListener element = topicIterator.next();
                     try {
-                        element.dataReceived(topic, jsonNode);
+                        element.dataReceived(topic, jsonNode.get("payload"));
                     } catch (NullPointerException e) {
                         topicIterator.remove();
                     }
@@ -86,7 +116,6 @@ public class MirrorApiWebsockets extends WebSocketServer implements MirrorApi {
 
     @Override
     public void onClose(WebSocket session, int code, String reason, boolean remote) {
-        // WebSocket connection closes
         System.out.print("Connection closed: ");
         System.out.println(session.getRemoteSocketAddress().getAddress().toString());
         sessions.remove(session);
@@ -121,14 +150,24 @@ public class MirrorApiWebsockets extends WebSocketServer implements MirrorApi {
     }
 
     /**
+     * unsubscribe to updates on a specific topic. Subscriptions to other topics remain active
+     * @param topic the topic you want to unsubscribe to.
+     * @param listener the object that wants to unsubscribe. In most cases this will probably be "this"
+     */
+    public void unsubscribe(String topic, TopicListener listener){
+        List<TopicListener> listenerList = listeners.get(topic);
+        if(listenerList != null){
+            listenerList.remove(listener);
+        }
+    }
+
+    /**
      * send a message to the app
      * @param topic the topic of the message
      * @param payload payload of the message as object that will be converted to Json
      */
     public void publish(String topic, Object payload) {
-        SendPackage sendPackage = new SendPackage();
-        sendPackage.topic = topic;
-        sendPackage.payload = mapper.valueToTree(payload);
+        SendPackage sendPackage = new SendPackage(topic,mapper.valueToTree(payload));
         sessions.forEach(session -> {
             try {
                 session.send(mapper.writeValueAsString(sendPackage));
@@ -145,9 +184,7 @@ public class MirrorApiWebsockets extends WebSocketServer implements MirrorApi {
      * @param payload payload of the message as JsonNode
      */
     public void publish(String topic, JsonNode payload) {
-        SendPackage sendPackage = new SendPackage();
-        sendPackage.topic = topic;
-        sendPackage.payload = payload;
+        SendPackage sendPackage = new SendPackage(topic,mapper.valueToTree(payload));
         sessions.forEach(session -> {
             try {
                 session.send(mapper.writeValueAsString(sendPackage));

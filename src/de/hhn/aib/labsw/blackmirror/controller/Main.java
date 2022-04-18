@@ -1,8 +1,8 @@
 package de.hhn.aib.labsw.blackmirror.controller;
 
-import de.hhn.aib.labsw.blackmirror.controller.API.MirrorApiServer;
-import de.hhn.aib.labsw.blackmirror.controller.API.TestClass;
-import de.hhn.aib.labsw.blackmirror.model.ApiDataModels.Location;
+import com.fasterxml.jackson.databind.JsonNode;
+import de.hhn.aib.labsw.blackmirror.controller.API.TopicListener;
+import de.hhn.aib.labsw.blackmirror.controller.API.websockets.MirrorApiWebsockets;
 import de.hhn.aib.labsw.blackmirror.view.widgets.*;
 
 import java.util.ArrayList;
@@ -23,11 +23,8 @@ public class Main {
     private PageController pageController = new PageController();
 
     public Main() {
-        MirrorApiServer server = MirrorApiServer.getInstance();
+        MirrorApiWebsockets server = MirrorApiWebsockets.getInstance();
         server.start();
-
-        new TestClass("location");
-        new TestClass("location2");
 
         // @Team add your widgets here to test them -Markus
         //widgets.add(new HelloWorldWidget());

@@ -1,32 +1,34 @@
-package de.hhn.aib.labsw.blackmirror.controller.API;
+package de.hhn.aib.labsw.blackmirror.controller.API.websockets;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.hhn.aib.labsw.blackmirror.model.ApiDataModels.Location;
+import de.hhn.aib.labsw.blackmirror.controller.API.MirrorApi;
+import de.hhn.aib.labsw.blackmirror.controller.API.TopicListener;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.*;
 
 /**
  * MirrorApiServer provides an easy to use Interface to the App.
+ * Author: Luis Gutzeit
+ * Version: 1.0
  */
-public class MirrorApiServer extends WebSocketServer {
+public class MirrorApiWebsockets extends WebSocketServer implements MirrorApi {
     //https://mvnrepository.com/artifact/org.java-websocket/Java-WebSocket/1.5.3
-
-    ArrayList<WebSocket> sessions = new ArrayList<>();
+    List<WebSocket> sessions = new ArrayList<>();
     ObjectMapper mapper = new ObjectMapper();
-    HashMap<String, ArrayList<TopicListener>> listeners = new HashMap<>();
-    private static MirrorApiServer instance = null;
+    Map<String, List<TopicListener>> listeners = new HashMap<>();
+
+    private static MirrorApiWebsockets instance = null;
 
     /**
      * private constructor (singleton pattern)
+     * singleton pattern is necessary because multiple instances could conflict with each other
      */
-    private MirrorApiServer(){
+    private MirrorApiWebsockets(){
         instance = this;
     }
 
@@ -34,9 +36,9 @@ public class MirrorApiServer extends WebSocketServer {
      * get the instance of the server
      * @return the instance of the server
      */
-    public static MirrorApiServer getInstance(){
+    public static MirrorApiWebsockets getInstance(){
         if(instance == null){
-            instance = new MirrorApiServer();
+            instance = new MirrorApiWebsockets();
         }
         return instance;
     }
@@ -64,7 +66,7 @@ public class MirrorApiServer extends WebSocketServer {
             if(jsonNode.get("payload") == null){
                 throw new IllegalArgumentException("wrong json format");
             }
-            ArrayList<TopicListener> listenersList = listeners.get(topic);
+            List<TopicListener> listenersList = listeners.get(topic);
             if(listenersList != null){
                 Iterator<TopicListener> topicIterator = listenersList.iterator();
                 while(topicIterator.hasNext()) {
@@ -107,7 +109,7 @@ public class MirrorApiServer extends WebSocketServer {
      * @param listener the object that wants to subscribe. In most cases this will probably be "this"
      */
     public void subscribe(String topic, TopicListener listener){
-        ArrayList<TopicListener> listenerList = listeners.get(topic);
+        List<TopicListener> listenerList = listeners.get(topic);
         if(listenerList == null){
             listenerList = new ArrayList<>();
             listenerList.add(listener);

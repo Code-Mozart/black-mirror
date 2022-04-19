@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * Definition of the API methods
  * Author: Luis Gutzeit
- * Version: 1.1
+ * Version: 1.1 - 19.04.2022
  */
 public interface MirrorApi {
     ObjectMapper getMapper();

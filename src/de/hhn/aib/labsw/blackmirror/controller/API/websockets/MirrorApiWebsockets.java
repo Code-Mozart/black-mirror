@@ -15,7 +15,7 @@ import java.util.*;
 /**
  * MirrorApiServer provides an easy to use Interface to the App.
  * Author: Luis Gutzeit
- * Version: 1.0
+ * Version: 1.1 - 19.04.2022
  */
 public class MirrorApiWebsockets extends WebSocketServer implements MirrorApi {
     //https://mvnrepository.com/artifact/org.java-websocket/Java-WebSocket/1.5.3

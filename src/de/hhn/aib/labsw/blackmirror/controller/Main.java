@@ -1,5 +1,11 @@
 package de.hhn.aib.labsw.blackmirror.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import de.hhn.aib.labsw.blackmirror.controller.API.MirrorApi;
+import de.hhn.aib.labsw.blackmirror.controller.API.TopicListener;
+import de.hhn.aib.labsw.blackmirror.controller.API.websockets.MirrorApiWebsockets;
+import de.hhn.aib.labsw.blackmirror.model.ApiDataModels.Location;
 import de.hhn.aib.labsw.blackmirror.view.widgets.*;
 
 import java.util.ArrayList;
@@ -20,6 +26,9 @@ public class Main {
     private PageController pageController = new PageController();
 
     public Main() {
+        MirrorApi server = MirrorApiWebsockets.getInstance();
+        server.init();
+
         // @Team add your widgets here to test them -Markus
         //widgets.add(new HelloWorldWidget());
         widgets.add(new WeatherWidget());
@@ -40,7 +49,6 @@ public class Main {
         pageController.getCurrentPage().setWidgetsVisible(); //Sets all widgets on the default page visible.
         new SecondsTimer(this::onNextSecond);
     }
-
     private void onNextSecond() {
         pageController.getCurrentPage().onNextSecond();
     }

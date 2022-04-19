@@ -1,5 +1,11 @@
 package de.hhn.aib.labsw.blackmirror.view.widgets;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import de.hhn.aib.labsw.blackmirror.controller.API.MirrorApi;
+import de.hhn.aib.labsw.blackmirror.controller.API.TopicListener;
+import de.hhn.aib.labsw.blackmirror.controller.API.websockets.MirrorApiWebsockets;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -9,8 +15,10 @@ import java.awt.*;
  * @author Markus Marewitz
  * @version 2022-03-24
  */
-public abstract class AbstractWidget extends JDialog {
-    public static enum Position {
+public abstract class AbstractWidget extends JDialog implements TopicListener{
+    private final MirrorApi api = MirrorApiWebsockets.getInstance();
+
+    public enum Position {
         TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT, CENTER
     }
 
@@ -34,5 +42,27 @@ public abstract class AbstractWidget extends JDialog {
             case CENTER -> this.setLocation(screen.width / 2 - this.getWidth() / 2,
                     screen.height / 2 - this.getHeight() / 2);
         }
+    }
+
+    void subscribe(String topic, TopicListener listener){
+        api.subscribe(topic,listener);
+    }
+    void unsubscribe(String topic, TopicListener listener){
+        api.unsubscribe(topic,listener);
+    }
+    void publish(String topic, Object payload){
+        api.publish(topic,payload);
+    }
+    void publish(String topic, JsonNode payload){
+        api.publish(topic,payload);
+    }
+
+    ObjectMapper getMapper(){
+        return api.getMapper();
+    }
+
+    @Override
+    public void dataReceived(String topic, JsonNode object) {
+
     }
 }

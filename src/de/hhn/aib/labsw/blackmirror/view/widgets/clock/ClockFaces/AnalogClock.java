@@ -1,6 +1,7 @@
-package de.hhn.aib.labsw.blackmirror.view.widgets.clock;
+package de.hhn.aib.labsw.blackmirror.view.widgets.clock.ClockFaces;
 
 import de.hhn.aib.labsw.blackmirror.view.widgets.AbstractWidget;
+import de.hhn.aib.labsw.blackmirror.view.widgets.clock.ClockFace;
 
 import javax.swing.*;
 import java.awt.*;

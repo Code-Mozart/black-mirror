@@ -3,8 +3,7 @@ package de.hhn.aib.labsw.blackmirror.controller;
 import de.hhn.aib.labsw.blackmirror.controller.API.MirrorApi;
 import de.hhn.aib.labsw.blackmirror.controller.API.websockets.MirrorApiWebsockets;
 import de.hhn.aib.labsw.blackmirror.view.widgets.*;
-import de.hhn.aib.labsw.blackmirror.view.widgets.clock.AnalogClock;
-import de.hhn.aib.labsw.blackmirror.view.widgets.clock.ClockFaceTypes;
+import de.hhn.aib.labsw.blackmirror.view.widgets.clock.ClockFaceType;
 import de.hhn.aib.labsw.blackmirror.view.widgets.clock.ClockWidget;
 
 import java.util.ArrayList;
@@ -34,7 +33,7 @@ public class Main {
         widgets.add(new CalendarWidget());
         widgets.add(new EmailNotificationWidget());
         widgets.add(new ReminderWidget());
-        widgets.add(new ClockWidget(ClockFaceTypes.ANALOG));
+        widgets.add(new ClockWidget(ClockFaceType.ANALOG));
 
         widgets.get(0).setPosition(AbstractWidget.Position.TOP_LEFT);
         widgets.get(1).setPosition(AbstractWidget.Position.TOP_RIGHT);

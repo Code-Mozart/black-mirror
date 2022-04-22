@@ -20,15 +20,10 @@ import java.util.concurrent.TimeUnit;
  */
 
 public class AnalogClock implements ClockFace {
-    DrawPanel panel;
-
-    public AnalogClock() {
-        panel = new DrawPanel();
-    }
 
     @Override
     public JPanel getClockFace() {
-        return panel;
+        return new DrawPanel();
     }
 
     static class DrawPanel extends JPanel {

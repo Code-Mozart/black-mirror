@@ -18,8 +18,6 @@ public class ClockWidget extends AbstractWidget {
         getContentPane().setBackground(Color.BLACK);
 
         setType(type);
-
-        panel = face.getClockFace();
         this.add(panel);
 
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
@@ -27,7 +25,6 @@ public class ClockWidget extends AbstractWidget {
     }
 
     private void update(){
-        panel = face.getClockFace();
         this.repaint();
     }
 
@@ -37,5 +34,6 @@ public class ClockWidget extends AbstractWidget {
             //case DIGITAL -> new DigitalClock();
             default -> null;
         };
+        panel = face.getClockFace();
     }
 }

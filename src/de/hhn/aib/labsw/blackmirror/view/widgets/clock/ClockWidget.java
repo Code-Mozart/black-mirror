@@ -2,6 +2,7 @@ package de.hhn.aib.labsw.blackmirror.view.widgets.clock;
 
 import de.hhn.aib.labsw.blackmirror.view.widgets.AbstractWidget;
 import de.hhn.aib.labsw.blackmirror.view.widgets.clock.ClockFaces.AnalogClock;
+import de.hhn.aib.labsw.blackmirror.view.widgets.clock.ClockFaces.DigitalClock;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,7 +32,7 @@ public class ClockWidget extends AbstractWidget {
     public void setType(ClockFaceType type){
         face = switch(type) {
             case ANALOG -> new AnalogClock();
-            //case DIGITAL -> new DigitalClock();
+            case DIGITAL -> new DigitalClock();
             default -> null;
         };
         panel = face.getClockFace();

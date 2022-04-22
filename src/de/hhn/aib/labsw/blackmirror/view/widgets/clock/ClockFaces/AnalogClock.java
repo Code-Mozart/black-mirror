@@ -52,7 +52,6 @@ public class AnalogClock implements ClockFace {
             g.setColor(Color.BLACK);
             g.fillOval(35, spacing + 10, 330, 330);
 
-
             size = 400 - spacing;
             centerX = 400 / 2;
             centerY = 400 / 2 + 10;

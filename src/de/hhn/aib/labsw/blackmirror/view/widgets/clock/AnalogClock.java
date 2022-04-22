@@ -1,8 +1,10 @@
-package de.hhn.aib.labsw.blackmirror.view.widgets;
+package de.hhn.aib.labsw.blackmirror.view.widgets.clock;
+
+import de.hhn.aib.labsw.blackmirror.view.widgets.AbstractWidget;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Calendar;
+import java.time.LocalTime;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -16,33 +18,19 @@ import java.util.concurrent.TimeUnit;
  * 2022-04-19: fixed error with stuttering. Do not draw directly on dialogs or frames... Create a panel and draw on it instead!
  */
 
-public class ClockWidget extends AbstractWidget {
-    private Calendar cal;
-    private final DrawPanel panel;
+public class AnalogClock implements ClockFace {
+    DrawPanel panel;
 
-
-    Runnable refresh = new Runnable() {
-        @Override
-        public void run() {
-            cal = Calendar.getInstance();
-            panel.repaint();
-        }
-    };
-
-    /**
-     * Constructor clock widget
-     */
-    public ClockWidget() {
-        setBounds(700, 100, 400, 430);
-        getContentPane().setBackground(Color.BLACK);
+    public AnalogClock() {
         panel = new DrawPanel();
-        this.add(panel);
-
-        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-        executor.scheduleAtFixedRate(refresh, 0, 500, TimeUnit.MILLISECONDS);
     }
 
-    class DrawPanel extends JPanel {
+    @Override
+    public JPanel getClockFace() {
+        return panel;
+    }
+
+    static class DrawPanel extends JPanel {
         private static final int spacing = 35;
         private static final float radPerSecMin = (float) (Math.PI / 30.0);
         private static final float radPerNum = (float) (Math.PI / -6);
@@ -80,10 +68,10 @@ public class ClockWidget extends AbstractWidget {
             drawNumberClock(g);
 
             //get system time
-            cal = Calendar.getInstance();
-            int hour = cal.get(Calendar.HOUR);
-            int minute = cal.get(Calendar.MINUTE);
-            int second = cal.get(Calendar.SECOND);
+            LocalTime time = LocalTime.now();
+            int hour = time.getHour();
+            int minute = time.getMinute();
+            int second = time.getSecond();
 
             //draw hands
             drawHands(g, hour, minute, second);

@@ -15,7 +15,7 @@ public class ClockWidget extends AbstractWidget {
     JPanel panel;
 
     public ClockWidget(ClockFaceType type){
-        setBounds(700, 100, 400, 430);
+        setBounds(700, 100, 400, 300);
         getContentPane().setBackground(Color.BLACK);
 
         setType(type);

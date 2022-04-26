@@ -25,13 +25,12 @@ public class DigitalClock implements ClockFace {
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
             g.setColor(Color.WHITE);
-            Locale.setDefault(Locale.US);
             g.setFont(new Font("Arial", Font.PLAIN,46));
             String time = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).format(LocalTime.now());
             if(LocalTime.now().getSecond() % 2 == 0){
                 time = time.replace(":"," ");
             }
-            g.drawString(time,(getWidth()/2)-(getFontMetrics(getFont()).stringWidth(time)),(getHeight()/2)-(getFontMetrics(getFont()).getHeight()/2));
+            g.drawString(time,(getWidth()/2)-(g.getFontMetrics().stringWidth(time)/2),(getHeight()/2)+(g.getFontMetrics().getHeight()/2));
         }
     }
 }

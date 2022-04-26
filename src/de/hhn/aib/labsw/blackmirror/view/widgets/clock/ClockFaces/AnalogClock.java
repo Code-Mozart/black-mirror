@@ -165,10 +165,20 @@ public class AnalogClock implements ClockFace {
             double rminute = ((minute + (second / 60)) * 6) * (Math.PI) / 180;
             double rhours = ((hour + (minute / 60)) * 30) * (Math.PI) / 180;
 
+
+            if (g instanceof Graphics2D g2d) {
+                ((Graphics2D) g).setStroke(new BasicStroke(1));
+            }
             g.setColor(Color.WHITE);
             g.drawLine(centerX, centerY, centerX + (int) (150 * Math.cos(rsecond - (Math.PI / 2))), centerY + (int) (150 * Math.sin(rsecond - (Math.PI / 2))));
             g.setColor(Color.WHITE);
+            if (g instanceof Graphics2D g2d) {
+                ((Graphics2D) g).setStroke(new BasicStroke(2));
+            }
             g.drawLine(centerX, centerY, centerX + (int) (120 * Math.cos(rminute - (Math.PI / 2))), centerY + (int) (120 * Math.sin(rminute - (Math.PI / 2))));
+            if (g instanceof Graphics2D g2d) {
+                ((Graphics2D) g).setStroke(new BasicStroke(3));
+            }
             g.drawLine(centerX, centerY, centerX + (int) (90 * Math.cos(rhours - (Math.PI / 2))), centerY + (int) (90 * Math.sin(rhours - (Math.PI / 2))));
         }
     }

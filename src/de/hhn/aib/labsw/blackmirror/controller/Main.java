@@ -33,7 +33,7 @@ public class Main {
         widgets.add(new CalendarWidget());
         widgets.add(new EmailNotificationWidget());
         widgets.add(new ReminderWidget());
-        widgets.add(new ClockWidget(ClockFaceType.DIGITAL));
+        widgets.add(new ClockWidget(ClockFaceType.ANALOG));
 
         widgets.get(0).setPosition(AbstractWidget.Position.TOP_LEFT);
         widgets.get(1).setPosition(AbstractWidget.Position.TOP_RIGHT);

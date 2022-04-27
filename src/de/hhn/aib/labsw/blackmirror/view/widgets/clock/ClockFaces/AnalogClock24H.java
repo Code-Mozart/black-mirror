@@ -7,32 +7,45 @@ import java.awt.*;
 import java.time.LocalTime;
 
 /**
- * Analog clock widget Black Mirror
- * Help: https://github.com/nguyenphu27/Java-Project/tree/master/ClockGui
+ * Analog 24h clock 24h widget Black Mirror
  *
- * @author Lukas Michalsky, Luis Gutzeit
+ * @author Luis Gutzeit
  * @version 2022-04-27
- * 2022-04-19: fixed error with stuttering.
- * 2022-04-27: completly rewrote the clock face from scratch
+ * 2022-04-27: created 24 clock based on normal 12h clock
  */
 
 public class AnalogClock24H implements ClockFace {
 
+    /**
+     * return the panel that contains the clock
+     *
+     * @return the panel with the clock drawn on it
+     */
     @Override
     public JPanel getClockFace() {
         return new DrawPanel();
     }
 
+    /**
+     * special panel on which the clock can be drawn
+     */
     static class DrawPanel extends JPanel {
         private int size;
         private int centerX;
         private int centerY;
 
+        /**
+         * constructor, set background to black
+         */
         public DrawPanel() {
             this.setBackground(Color.BLACK);
         }
 
-        //draw the new Image
+        /**
+         * draws the clock
+         *
+         * @param g graphics object of the panel
+         */
         @Override
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
@@ -54,109 +67,205 @@ public class AnalogClock24H implements ClockFace {
             drawCenterPoint(g);
         }
 
+        /**
+         * draw the center point of the clock
+         *
+         * @param g the graphics object to draw on to
+         */
         private void drawCenterPoint(Graphics g) {
             int diameter = (int) (size * 0.075);
             g.setColor(Color.GRAY);
             g.fillOval(centerX - diameter / 2, centerY - diameter / 2, diameter, diameter);
         }
 
+        /**
+         * draw the hour hand
+         *
+         * @param g the graphics object to draw on to
+         */
         private void drawHourHand(Graphics g) {
             Graphics2D g2 = (Graphics2D) g;
+
+            //get the time
             int value = LocalTime.now().getHour();
+
+            //calculate hand length based on panel size
             double handLength = (size / 2.0) * 0.53;
+
+            //calculate outer end point of the line
             int x2 = (int) (Math.sin((value / 24.0) * 2 * Math.PI) * handLength);
             int y2 = (int) (Math.cos((value / 24.0) * 2 * Math.PI) * handLength);
+
+            //set graphics stuff and draw the hand
             g2.setColor(Color.WHITE);
             g2.setStroke(new BasicStroke(5));
             g2.drawLine(centerX, centerY, centerX + x2, centerY - y2);
         }
 
+        /**
+         * draw the minute hand
+         *
+         * @param g the graphics object to draw on to
+         */
         private void drawMinuteHand(Graphics g) {
             Graphics2D g2 = (Graphics2D) g;
+
+            //get the time
             int value = LocalTime.now().getMinute();
+
+            //calculate hand length based on panel size
             double handLength = (size / 2.0) * 0.63;
+
+            //calculate outer end point of the line
             int x2 = (int) (Math.sin((value / 60.0) * 2 * Math.PI) * handLength);
             int y2 = (int) (Math.cos((value / 60.0) * 2 * Math.PI) * handLength);
+
+            //set graphics stuff and and draw the hand
             g2.setColor(Color.WHITE);
             g2.setStroke(new BasicStroke(3));
             g2.drawLine(centerX, centerY, centerX + x2, centerY - y2);
         }
 
+        /**
+         * draw the seconds hand
+         *
+         * @param g the graphics object to draw on to
+         */
         private void drawSecondsHand(Graphics g) {
             Graphics2D g2 = (Graphics2D) g;
+            //get the time
             int value = LocalTime.now().getSecond();
+
+            //calculate the hand length based on panel size
             double handLength = (size / 2.0) * 0.7;
+
+            //calulate the end point of the line
             int x2 = (int) (Math.sin((value / 60.0) * 2 * Math.PI) * handLength);
             int y2 = (int) (Math.cos((value / 60.0) * 2 * Math.PI) * handLength);
+
+            //set the color, stroke and draw the line
             g2.setColor(Color.WHITE);
             g2.setStroke(new BasicStroke(2));
             g2.drawLine(centerX, centerY, centerX + x2, centerY - y2);
         }
 
+        /**
+         * draw the lines indicating hours
+         *
+         * @param g the graphics object to draw on to
+         */
         private void drawLines(Graphics g) {
             Graphics2D g2 = (Graphics2D) g;
-            double lineStartHour = (size / 2.0) * 0.7;
-            double lineEnd = (size / 2.0) * 0.8;
-            for (int i = 0; i < 24; i++) {
-                int x1 = (int) (Math.sin((i / 24.0) * 2 * Math.PI) * lineStartHour);
-                int y1 = (int) (Math.cos((i / 24.0) * 2 * Math.PI) * lineStartHour);
 
+            //calculate the start and end distance of the marks
+            double lineStart = (size / 2.0) * 0.7;
+            double lineEnd = (size / 2.0) * 0.8;
+
+            //draw each mark
+            for (int i = 0; i < 24; i++) {
+                //calc mark beginning coordinates
+                int x1 = (int) (Math.sin((i / 24.0) * 2 * Math.PI) * lineStart);
+                int y1 = (int) (Math.cos((i / 24.0) * 2 * Math.PI) * lineStart);
+
+                //calc mark ending coordinates
                 int x2 = (int) (Math.sin((i / 24.0) * 2 * Math.PI) * lineEnd);
                 int y2 = (int) (Math.cos((i / 24.0) * 2 * Math.PI) * lineEnd);
 
+                //draw line
                 g2.setColor(Color.GRAY);
                 g2.drawLine(centerX + x1, centerY - y1, centerX + x2, centerY - y2);
             }
         }
 
+        /**
+         * draw the line indicating minutes and seconds
+         *
+         * @param g the graphics object to draw on to
+         */
         private void drawMinuteLines(Graphics g) {
             Graphics2D g2 = (Graphics2D) g;
+
+            //calculate the length of the marks
             double lineStartHour = (size / 2.0) * 0.5;
             double lineEnd = (size / 2.0) * 0.6;
+
+            //draw the marks
             for (int i = 0; i < 60; i++) {
+                //calc mark beginning coordinates
                 int x1 = (int) (Math.sin((i / 60.0) * 2 * Math.PI) * lineStartHour);
                 int y1 = (int) (Math.cos((i / 60.0) * 2 * Math.PI) * lineStartHour);
 
+                //calc mark ending coordinates
                 int x2 = (int) (Math.sin((i / 60.0) * 2 * Math.PI) * lineEnd);
                 int y2 = (int) (Math.cos((i / 60.0) * 2 * Math.PI) * lineEnd);
 
+                //set color and draw
                 g2.setColor(Color.GRAY);
                 g2.drawLine(centerX + x1, centerY - y1, centerX + x2, centerY - y2);
             }
         }
 
+        /**
+         * draw the numbers indicating hours
+         *
+         * @param g the graphics object to draw on to
+         */
         private void drawNumbers(Graphics g) {
             Graphics2D g2 = (Graphics2D) g;
+
+            //calculate the distance of the numbers from middle
             double numberPos = (size / 2.0) * 0.85;
+
+            //draw each number
             for (int i = 1; i <= 24; i++) {
+
+                //get the number and calculate its coordinates
                 String num = Integer.toString(i);
                 int x = (int) (Math.sin((i / 24.0) * 2 * Math.PI) * numberPos);
                 int y = (int) (Math.cos((i / 24.0) * 2 * Math.PI) * numberPos);
 
+                //set the font and color
                 g2.setFont(new Font("calibri", Font.PLAIN, (int) (size * 0.065)));
                 g2.setColor(Color.GRAY);
 
+                //calculate correction factor
+                //this is necessary because the coordinates given with draw string are the lower left corner of the string, not the middle
                 double numXCorrection = (Math.sin((i / 24.0) * 2 * Math.PI) * (g2.getFontMetrics().stringWidth(num) / 2.0)) - (g2.getFontMetrics().stringWidth(num) / 2.0);
                 double numYCorrection = (Math.cos((i / 24.0) * 2 * Math.PI) * (g2.getFontMetrics().getAscent() / 2.0)) - (g2.getFontMetrics().getAscent() / 2.0);
 
+                //draw the String
                 g2.drawString(num, centerX + (x + (int) numXCorrection), centerY - (y + (int) numYCorrection));
             }
         }
 
+        /**
+         * draw the numbers indicating minutes and seconds
+         *
+         * @param g the graphics object to draw on to
+         */
         private void drawMinuteNumbers(Graphics g) {
             Graphics2D g2 = (Graphics2D) g;
+
+            //calculate the distance of the numbers from middle
             double numberPos = (size / 2.0) * 0.4;
+
+            //draw each number
             for (int i = 1; i <= 12; i++) {
-                String num = Integer.toString(i*5);
+                //get the number (each is a multiple of 5) and calculate its position
+                String num = Integer.toString(i * 5);
                 int x = (int) (Math.sin((i / 12.0) * 2 * Math.PI) * numberPos);
                 int y = (int) (Math.cos((i / 12.0) * 2 * Math.PI) * numberPos);
 
+                //set font and color
                 g2.setFont(new Font("calibri", Font.PLAIN, (int) (size * 0.035)));
                 g2.setColor(Color.GRAY);
 
+                //calculate correction factor
+                //this is necessary because the coordinates given with draw string are the lower left corner of the string, not the middle
                 double numXCorrection = (Math.sin((i / 12.0) * 2 * Math.PI) * (g2.getFontMetrics().stringWidth(num) / 2.0)) - (g2.getFontMetrics().stringWidth(num) / 2.0);
                 double numYCorrection = (Math.cos((i / 12.0) * 2 * Math.PI) * (g2.getFontMetrics().getAscent() / 2.0)) - (g2.getFontMetrics().getAscent() / 2.0);
 
+                //draw the String
                 g2.drawString(num, centerX + (x + (int) numXCorrection), centerY - (y + (int) numYCorrection));
             }
         }

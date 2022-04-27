@@ -1,22 +1,19 @@
 package de.hhn.aib.labsw.blackmirror.view.widgets.clock.ClockFaces;
 
-import de.hhn.aib.labsw.blackmirror.view.widgets.AbstractWidget;
 import de.hhn.aib.labsw.blackmirror.view.widgets.clock.ClockFace;
 
 import javax.swing.*;
 import java.awt.*;
 import java.time.LocalTime;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Analog clock widget Black Mirror
  * Help: https://github.com/nguyenphu27/Java-Project/tree/master/ClockGui
  *
  * @author Lukas Michalsky, Luis Gutzeit
- * @version 2022-04-19
- * 2022-04-19: fixed error with stuttering. Do not draw directly on dialogs or frames... Create a panel and draw on it instead!
+ * @version 2022-04-27
+ * 2022-04-19: fixed error with stuttering.
+ * 2022-04-27: completly rewrote the clock face from scratch
  */
 
 public class AnalogClock implements ClockFace {
@@ -27,9 +24,6 @@ public class AnalogClock implements ClockFace {
     }
 
     static class DrawPanel extends JPanel {
-        private static final int spacing = 35;
-        private static final float radPerSecMin = (float) (Math.PI / 30.0);
-        private static final float radPerNum = (float) (Math.PI / -6);
         private int size;
         private int centerX;
         private int centerY;
@@ -39,147 +33,102 @@ public class AnalogClock implements ClockFace {
         }
 
         //draw the new Image
-        //in java swing everything is automatically double buffered
-        //do not overwrite paint(), swing components should override paintComponent() instead...
         @Override
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
+            centerX = getWidth() / 2;
+            centerY = getHeight() / 2;
+            size = Math.min(getWidth(), getHeight());
+
             if (g instanceof Graphics2D g2d) {
                 g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             }
 
-            //border clock
-            g.setColor(Color.BLACK);
-            g.fillOval(35, spacing + 10, 330, 330);
-
-            size = 400 - spacing;
-            centerX = 400 / 2;
-            centerY = 400 / 2 + 10;
-
-            //clock face
-            drawClockFace(g);
-
-            //number clock face
-            drawNumberClock(g);
-
-            //get system time
-            LocalTime time = LocalTime.now();
-            int hour = time.getHour();
-            int minute = time.getMinute();
-            int second = time.getSecond();
-
-            //draw hands
-            drawHands(g, hour, minute, second);
-
-            //draw point clock
-            g.setColor(Color.WHITE);
-            g.fillOval(centerX - 5, centerY - 5, 10, 10);
-            g.setColor(Color.WHITE);
-            g.fillOval(centerX - 3, centerY - 3, 6, 6);
+            drawNumbers(g);
+            drawLines(g);
+            drawHourHand(g);
+            drawMinuteHand(g);
+            drawSecondsHand(g);
+            drawCenterPoint(g);
         }
 
-        /**
-         * Methode drawing clock face
-         *
-         * @param g drawing on this graphic
-         */
-        private void drawClockFace(Graphics g) {
+        private void drawCenterPoint(Graphics g) {
+            int diameter = (int) (size * 0.075);
+            g.setColor(Color.GRAY);
+            g.fillOval(centerX - diameter / 2, centerY - diameter / 2, diameter, diameter);
+        }
 
-            // tick marks
-            for (int sec = 0; sec < 60; sec++) {
-                int ticStart;
-                if (sec % 5 == 0) {
-                    ticStart = size / 2 - 10;
+        private void drawHourHand(Graphics g) {
+            Graphics2D g2 = (Graphics2D) g;
+            int value = LocalTime.now().getHour();
+            double handLength = (size / 2.0) * 0.5;
+            int x2 = (int) (Math.sin((value / 12.0) * 2 * Math.PI) * handLength);
+            int y2 = (int) (Math.cos((value / 12.0) * 2 * Math.PI) * handLength);
+            g2.setColor(Color.WHITE);
+            g2.setStroke(new BasicStroke(4));
+            g2.drawLine(centerX, centerY, centerX + x2, centerY - y2);
+        }
+
+        private void drawMinuteHand(Graphics g) {
+            Graphics2D g2 = (Graphics2D) g;
+            int value = LocalTime.now().getMinute();
+            double handLength = (size / 2.0) * 0.6;
+            int x2 = (int) (Math.sin((value / 60.0) * 2 * Math.PI) * handLength);
+            int y2 = (int) (Math.cos((value / 60.0) * 2 * Math.PI) * handLength);
+            g2.setColor(Color.WHITE);
+            g2.setStroke(new BasicStroke(3));
+            g2.drawLine(centerX, centerY, centerX + x2, centerY - y2);
+        }
+
+        private void drawSecondsHand(Graphics g) {
+            Graphics2D g2 = (Graphics2D) g;
+            int value = LocalTime.now().getSecond();
+            double handLength = (size / 2.0) * 0.7;
+            int x2 = (int) (Math.sin((value / 60.0) * 2 * Math.PI) * handLength);
+            int y2 = (int) (Math.cos((value / 60.0) * 2 * Math.PI) * handLength);
+            g2.setColor(Color.WHITE);
+            g2.setStroke(new BasicStroke(2));
+            g2.drawLine(centerX, centerY, centerX + x2, centerY - y2);
+        }
+
+        private void drawLines(Graphics g) {
+            Graphics2D g2 = (Graphics2D) g;
+            double lineStart = (size / 2.0) * 0.75;
+            double lineStartHour = (size / 2.0) * 0.7;
+            double lineEnd = (size / 2.0) * 0.8;
+            for (int i = 0; i < 60; i++) {
+                int x1, y1;
+                if (i % 5 == 0) {
+                    x1 = (int) (Math.sin((i / 60.0) * 2 * Math.PI) * lineStartHour);
+                    y1 = (int) (Math.cos((i / 60.0) * 2 * Math.PI) * lineStartHour);
                 } else {
-                    ticStart = size / 2 - 5;
+                    x1 = (int) (Math.sin((i / 60.0) * 2 * Math.PI) * lineStart);
+                    y1 = (int) (Math.cos((i / 60.0) * 2 * Math.PI) * lineStart);
                 }
-                drawRadius(g, centerX, centerY, radPerSecMin * sec, ticStart - 20, size / 2 - 20);
+                int x2 = (int) (Math.sin((i / 60.0) * 2 * Math.PI) * lineEnd);
+                int y2 = (int) (Math.cos((i / 60.0) * 2 * Math.PI) * lineEnd);
 
+                g2.setColor(Color.GRAY);
+                g2.drawLine(centerX + x1, centerY - y1, centerX + x2, centerY - y2);
             }
         }
 
-        /**
-         * Methode drawing size of clock face
-         *
-         * @param g         drawing on this graphic
-         * @param x         x-value middle of clock
-         * @param y         y-value middle of clock
-         * @param angle     angle of second marks
-         * @param minRadius start point of second marks
-         * @param maxRadius end point of second marks
-         */
-        private void drawRadius(Graphics g, int x, int y, double angle,
-                                int minRadius, int maxRadius) {
-            float sine = (float) Math.sin(angle);
-            float cosine = (float) Math.cos(angle);
-            int dxmin = (int) (minRadius * sine);
-            int dymin = (int) (minRadius * cosine);
-            int dxmax = (int) (maxRadius * sine);
-            int dymax = (int) (maxRadius * cosine);
-            g.setColor(Color.WHITE);
-            g.drawLine(x + dxmin, y + dymin, x + dxmax, y + dymax);
-        }
+        private void drawNumbers(Graphics g) {
+            Graphics2D g2 = (Graphics2D) g;
+            double numberPos = (size / 2.0) * 0.85;
+            for (int i = 1; i <= 12; i++) {
+                String num = Integer.toString(i);
+                int x = (int) (Math.sin((i / 12.0) * 2 * Math.PI) * numberPos);
+                int y = (int) (Math.cos((i / 12.0) * 2 * Math.PI) * numberPos);
 
+                g2.setFont(new Font("calibri", Font.PLAIN, (int) (size*0.075)));
+                g2.setColor(Color.GRAY);
 
-        /**
-         * Methode drawing numbers of the clock
-         *
-         * @param g drawing on this graphic
-         */
-        private void drawNumberClock(Graphics g) {
+                double numXCorrection = (Math.sin((i / 12.0) * 2 * Math.PI) * (g2.getFontMetrics().stringWidth(num) / 2.0))-(g2.getFontMetrics().stringWidth(num) / 2.0);
+                double numYCorrection = (Math.cos((i / 12.0) * 2 * Math.PI) * (g2.getFontMetrics().getAscent() / 2.0))-(g2.getFontMetrics().getAscent() / 2.0);
 
-            for (int num = 12; num > 0; num--) {
-                drawnum(g, radPerNum * num, num);
+                g2.drawString(num, centerX + (x + (int) numXCorrection), centerY - (y + (int) numYCorrection));
             }
-        }
-
-        /**
-         * Methode drawing numbers on the right point on the clock face
-         *
-         * @param g     drawing on this graphic
-         * @param angle angle position of number
-         * @param n     number for clock face position
-         */
-        private void drawnum(Graphics g, float angle, int n) {
-
-            float sine = (float) Math.sin(angle);
-            float cosine = (float) Math.cos(angle);
-            int dx = (int) ((size / 2 - 20 - 25) * -sine);
-            int dy = (int) ((size / 2 - 20 - 25) * -cosine);
-
-            g.drawString("" + n, dx + centerX - 5, dy + centerY + 5);
-        }
-
-
-        /**
-         * Methode drawing clock hands
-         *
-         * @param g      drawing on this graphic
-         * @param hour   current hour
-         * @param minute current minute
-         * @param second current second
-         */
-        private void drawHands(Graphics g, double hour, double minute, double second) {
-
-            double rsecond = (second * 6) * (Math.PI) / 180;
-            double rminute = ((minute + (second / 60)) * 6) * (Math.PI) / 180;
-            double rhours = ((hour + (minute / 60)) * 30) * (Math.PI) / 180;
-
-
-            if (g instanceof Graphics2D g2d) {
-                ((Graphics2D) g).setStroke(new BasicStroke(1));
-            }
-            g.setColor(Color.WHITE);
-            g.drawLine(centerX, centerY, centerX + (int) (150 * Math.cos(rsecond - (Math.PI / 2))), centerY + (int) (150 * Math.sin(rsecond - (Math.PI / 2))));
-            g.setColor(Color.WHITE);
-            if (g instanceof Graphics2D g2d) {
-                ((Graphics2D) g).setStroke(new BasicStroke(2));
-            }
-            g.drawLine(centerX, centerY, centerX + (int) (120 * Math.cos(rminute - (Math.PI / 2))), centerY + (int) (120 * Math.sin(rminute - (Math.PI / 2))));
-            if (g instanceof Graphics2D g2d) {
-                ((Graphics2D) g).setStroke(new BasicStroke(3));
-            }
-            g.drawLine(centerX, centerY, centerX + (int) (90 * Math.cos(rhours - (Math.PI / 2))), centerY + (int) (90 * Math.sin(rhours - (Math.PI / 2))));
         }
     }
 }

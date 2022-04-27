@@ -16,7 +16,7 @@ public class DigitalClock implements ClockFace {
         return new ClockPanel();
     }
 
-    static class ClockPanel extends JPanel{
+    static class ClockPanel extends JPanel {
         public ClockPanel() {
             this.setBackground(Color.BLACK);
         }
@@ -25,12 +25,22 @@ public class DigitalClock implements ClockFace {
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
             g.setColor(Color.WHITE);
-            g.setFont(new Font("Arial", Font.PLAIN,46));
             String time = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).format(LocalTime.now());
-            if(LocalTime.now().getSecond() % 2 == 0){
-                time = time.replace(":"," ");
+            int size = 5;
+            while (true) {
+                g.setFont(new Font("Arial", Font.PLAIN, size));
+                if (g.getFontMetrics().stringWidth(time) > (getWidth() * 0.75) ||
+                        g.getFontMetrics().getHeight() > (getHeight() * 0.75)) {
+                    break;
+                } else {
+                    size++;
+                }
             }
-            g.drawString(time,(getWidth()/2)-(g.getFontMetrics().stringWidth(time)/2),(getHeight()/2)+(g.getFontMetrics().getHeight()/2));
+
+            if (LocalTime.now().getSecond() % 2 == 0) {
+                time = time.replace(":", " ");
+            }
+            g.drawString(time, (getWidth() / 2) - (g.getFontMetrics().stringWidth(time) / 2), (getHeight() / 2) + (g.getFontMetrics().getAscent() / 2));
         }
     }
 }

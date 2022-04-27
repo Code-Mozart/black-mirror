@@ -67,7 +67,7 @@ public class AnalogClock24H implements ClockFace {
             int x2 = (int) (Math.sin((value / 24.0) * 2 * Math.PI) * handLength);
             int y2 = (int) (Math.cos((value / 24.0) * 2 * Math.PI) * handLength);
             g2.setColor(Color.WHITE);
-            g2.setStroke(new BasicStroke(4));
+            g2.setStroke(new BasicStroke(5));
             g2.drawLine(centerX, centerY, centerX + x2, centerY - y2);
         }
 

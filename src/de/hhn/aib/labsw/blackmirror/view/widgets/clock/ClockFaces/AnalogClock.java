@@ -16,6 +16,63 @@ import java.time.LocalTime;
  */
 
 public class AnalogClock implements ClockFace {
+    //Colors
+    private Color numColor = Color.WHITE;
+    private Color markColor = Color.GRAY;
+    private Color centerColor = Color.GRAY;
+    private Color secondHandColor = Color.RED;
+    private Color minuteHandColor = Color.WHITE;
+    private Color hourHandColor = Color.WHITE;
+
+    //Getters and Setters
+    public Color getNumColor() {
+        return numColor;
+    }
+
+    public void setNumColor(Color numColor) {
+        this.numColor = numColor;
+    }
+
+    public Color getMarkColor() {
+        return markColor;
+    }
+
+    public void setMarkColor(Color markColor) {
+        this.markColor = markColor;
+    }
+
+    public Color getCenterColor() {
+        return centerColor;
+    }
+
+    public void setCenterColor(Color centerColor) {
+        this.centerColor = centerColor;
+    }
+
+    public Color getSecondHandColor() {
+        return secondHandColor;
+    }
+
+    public void setSecondHandColor(Color secondHandColor) {
+        this.secondHandColor = secondHandColor;
+    }
+
+    public Color getMinuteHandColor() {
+        return minuteHandColor;
+    }
+
+    public void setMinuteHandColor(Color minuteHandColor) {
+        this.minuteHandColor = minuteHandColor;
+    }
+
+    public Color getHourHandColor() {
+        return hourHandColor;
+    }
+
+    public void setHourHandColor(Color hourHandColor) {
+        this.hourHandColor = hourHandColor;
+    }
+
 
     /**
      * get the clock panel
@@ -29,7 +86,7 @@ public class AnalogClock implements ClockFace {
     /**
      * draw panel that contains the clock
      */
-    static class DrawPanel extends JPanel {
+    class DrawPanel extends JPanel {
         private int size;
         private int centerX;
         private int centerY;
@@ -67,7 +124,7 @@ public class AnalogClock implements ClockFace {
          */
         private void drawCenterPoint(Graphics g) {
             int diameter = (int) (size * 0.075);
-            g.setColor(Color.GRAY);
+            g.setColor(centerColor);
             g.fillOval(centerX - diameter / 2, centerY - diameter / 2, diameter, diameter);
         }
 
@@ -89,7 +146,7 @@ public class AnalogClock implements ClockFace {
             int y2 = (int) (Math.cos((value / 12.0) * 2 * Math.PI) * handLength);
 
             //set color and draw;
-            g2.setColor(Color.WHITE);
+            g2.setColor(hourHandColor);
             g2.setStroke(new BasicStroke(4));
             g2.drawLine(centerX, centerY, centerX + x2, centerY - y2);
         }
@@ -112,7 +169,7 @@ public class AnalogClock implements ClockFace {
             int y2 = (int) (Math.cos((value / 60.0) * 2 * Math.PI) * handLength);
 
             //set color,stroke and draw
-            g2.setColor(Color.WHITE);
+            g2.setColor(minuteHandColor);
             g2.setStroke(new BasicStroke(3));
             g2.drawLine(centerX, centerY, centerX + x2, centerY - y2);
         }
@@ -135,7 +192,7 @@ public class AnalogClock implements ClockFace {
             int y2 = (int) (Math.cos((value / 60.0) * 2 * Math.PI) * handLength);
 
             //set color, stroke and draw
-            g2.setColor(Color.WHITE);
+            g2.setColor(secondHandColor);
             g2.setStroke(new BasicStroke(2));
             g2.drawLine(centerX, centerY, centerX + x2, centerY - y2);
         }
@@ -165,7 +222,7 @@ public class AnalogClock implements ClockFace {
                 int y2 = (int) (Math.cos((i / 60.0) * 2 * Math.PI) * lineEnd);
 
                 //set color and draw
-                g2.setColor(Color.GRAY);
+                g2.setColor(markColor);
                 g2.drawLine(centerX + x1, centerY - y1, centerX + x2, centerY - y2);
             }
         }
@@ -188,7 +245,7 @@ public class AnalogClock implements ClockFace {
 
                 //set font and color
                 g2.setFont(new Font("calibri", Font.PLAIN, (int) (size*0.065)));
-                g2.setColor(Color.GRAY);
+                g2.setColor(numColor);
 
                 //calculate correction factor
                 //drawString coordinates are bottom left and not center

@@ -1,12 +1,10 @@
 package de.hhn.aib.labsw.blackmirror.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import de.hhn.aib.labsw.blackmirror.controller.API.MirrorApi;
-import de.hhn.aib.labsw.blackmirror.controller.API.TopicListener;
 import de.hhn.aib.labsw.blackmirror.controller.API.websockets.MirrorApiWebsockets;
-import de.hhn.aib.labsw.blackmirror.model.ApiDataModels.Location;
 import de.hhn.aib.labsw.blackmirror.view.widgets.*;
+import de.hhn.aib.labsw.blackmirror.view.widgets.clock.ClockFaceType;
+import de.hhn.aib.labsw.blackmirror.view.widgets.clock.ClockWidget;
 
 import java.util.ArrayList;
 
@@ -35,7 +33,7 @@ public class Main {
         widgets.add(new CalendarWidget());
         widgets.add(new EmailNotificationWidget());
         widgets.add(new ReminderWidget());
-        widgets.add(new ClockWidget());
+        widgets.add(new ClockWidget(ClockFaceType.DIGITAL));
 
         widgets.get(0).setPosition(AbstractWidget.Position.TOP_LEFT);
         widgets.get(1).setPosition(AbstractWidget.Position.TOP_RIGHT);

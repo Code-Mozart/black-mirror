@@ -20,17 +20,17 @@ public class WeatherSet {
     private double precipitation;
 
     //Static icons
-    private static final ImageIcon clearIcon = new ImageIcon("icons/clear.png");
-    private static final ImageIcon msunnyIcon = new ImageIcon("icons/mostlysunny.png");
-    private static final ImageIcon mcloudyIcon = new ImageIcon("icons/mostlycloudy.png");
-    private static final ImageIcon cloudyIcon = new ImageIcon("icons/cloudy.png");
-    private static final ImageIcon fogIcon = new ImageIcon("icons/fog.png");
-    private static final ImageIcon drizzleIcon = new ImageIcon("icons/chancerain.png");
-    private static final ImageIcon rainIcon = new ImageIcon("icons/rain.png");
-    private static final ImageIcon hailIcon = new ImageIcon("icons/flurries.png");
-    private static final ImageIcon snowIcon = new ImageIcon("icons/chancesnow.png");
-    private static final ImageIcon sleetIcon = new ImageIcon("icons/chancesleet.png");
-    private static final ImageIcon stormIcon = new ImageIcon("icons/tstorms.png");
+    private static final ImageIcon clearIcon = new ImageIcon(WeatherSet.class.getResource("icons/clear.png"));
+    private static final ImageIcon msunnyIcon = new ImageIcon(WeatherSet.class.getResource("icons/mostlysunny.png"));
+    private static final ImageIcon mcloudyIcon = new ImageIcon(WeatherSet.class.getResource("icons/mostlycloudy.png"));
+    private static final ImageIcon cloudyIcon = new ImageIcon(WeatherSet.class.getResource("icons/cloudy.png"));
+    private static final ImageIcon fogIcon = new ImageIcon(WeatherSet.class.getResource("icons/fog.png"));
+    private static final ImageIcon drizzleIcon = new ImageIcon(WeatherSet.class.getResource("icons/chancerain.png"));
+    private static final ImageIcon rainIcon = new ImageIcon(WeatherSet.class.getResource("icons/rain.png"));
+    private static final ImageIcon hailIcon = new ImageIcon(WeatherSet.class.getResource("icons/flurries.png"));
+    private static final ImageIcon snowIcon = new ImageIcon(WeatherSet.class.getResource("icons/chancesnow.png"));
+    private static final ImageIcon sleetIcon = new ImageIcon(WeatherSet.class.getResource("icons/chancesleet.png"));
+    private static final ImageIcon stormIcon = new ImageIcon(WeatherSet.class.getResource("icons/tstorms.png"));
 
     // HashMap to convert weather codes to string
     private static final HashMap<Integer,String> codeMap = new HashMap<>();

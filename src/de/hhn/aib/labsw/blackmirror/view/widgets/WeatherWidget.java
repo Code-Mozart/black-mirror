@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import de.hhn.aib.labsw.blackmirror.model.ApiDataModels.Location;
 import de.hhn.aib.labsw.blackmirror.model.WeatherSet;
 
 import javax.swing.*;
@@ -47,6 +48,7 @@ public class WeatherWidget extends AbstractWidget {
         initGUI();
         setSize(600,400);
         updateExecutor.scheduleAtFixedRate(new WeatherWidget.WeatherReceiver(), 0, 15, TimeUnit.MINUTES);
+        this.subscribe("location", this);
     }
 
     /**
@@ -88,6 +90,34 @@ public class WeatherWidget extends AbstractWidget {
         else{
             LAT = lat;
             LON = lon;
+        }
+    }
+
+    @Override
+    public void dataReceived(String topic, JsonNode object) {
+
+        //debug
+        System.out.println("new data received!");
+        System.out.println("current GPS data:");
+        System.out.println("lat is: " + this.LAT);
+        System.out.println("lon is: " + this.LON);
+
+        if(topic.equals("location")) {
+            try {
+                Location loc = (Location) nodeToObject(object, Class.forName("de.hhn.aib.labsw.blackmirror.model.ApiDataModels.Location"));
+                setGPSLocation(loc.lat(), loc.lon());
+            } catch (ClassNotFoundException | JsonProcessingException ex) {
+                ex.printStackTrace();
+            }
+
+            //debug
+            System.out.println("new GPS data: ");
+            System.out.println("lat is: " + this.LAT);
+            System.out.println("lon is: " + this.LON);
+
+            //
+            updateExecutor.execute(new WeatherReceiver());
+            //updateExecutor.scheduleAtFixedRate(new WeatherWidget.WeatherReceiver(), 0, 15, TimeUnit.MINUTES);
         }
     }
 

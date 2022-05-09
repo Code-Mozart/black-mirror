@@ -58,7 +58,7 @@ public class MirrorApiWebsockets extends WebSocketServer implements MirrorApi {
      * SINGLETON PATTERN MAY CHANGE IN THE FUTURE
      */
     private MirrorApiWebsockets(){
-        super(new InetSocketAddress("localhost",PORT));
+        super(new InetSocketAddress(PORT));
         instance = this;
     }
 

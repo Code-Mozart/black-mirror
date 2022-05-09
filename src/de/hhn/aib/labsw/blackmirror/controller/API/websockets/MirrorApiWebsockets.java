@@ -10,6 +10,7 @@ import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.util.*;
 
 /**
@@ -18,6 +19,8 @@ import java.util.*;
  * Version: 1.1 - 19.04.2022
  */
 public class MirrorApiWebsockets extends WebSocketServer implements MirrorApi {
+    private static final int PORT=2306;
+
     //https://mvnrepository.com/artifact/org.java-websocket/Java-WebSocket/1.5.3
     //contains all the sessions active at the moment
     List<WebSocket> sessions = new ArrayList<>();
@@ -55,6 +58,7 @@ public class MirrorApiWebsockets extends WebSocketServer implements MirrorApi {
      * SINGLETON PATTERN MAY CHANGE IN THE FUTURE
      */
     private MirrorApiWebsockets(){
+        super(new InetSocketAddress("localhost",PORT));
         instance = this;
     }
 
@@ -130,6 +134,7 @@ public class MirrorApiWebsockets extends WebSocketServer implements MirrorApi {
     @Override
     public void onStart() {
         System.out.println("Server started");
+        System.out.println(this.getAddress());
     }
 
     /**

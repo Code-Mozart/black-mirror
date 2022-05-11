@@ -2,10 +2,7 @@ package de.hhn.aib.labsw.blackmirror.controller;
 
 import de.hhn.aib.labsw.blackmirror.controller.API.MirrorApi;
 import de.hhn.aib.labsw.blackmirror.controller.API.websockets.MirrorApiWebsockets;
-import de.hhn.aib.labsw.blackmirror.controller.widgets.AbstractWidgetController;
-import de.hhn.aib.labsw.blackmirror.controller.widgets.ClockWidgetController;
-import de.hhn.aib.labsw.blackmirror.controller.widgets.HelloWorldWidgetController;
-import de.hhn.aib.labsw.blackmirror.controller.widgets.WeatherWidgetController;
+import de.hhn.aib.labsw.blackmirror.controller.widgets.*;
 import de.hhn.aib.labsw.blackmirror.view.widgets.*;
 import de.hhn.aib.labsw.blackmirror.view.widgets.clock.ClockFaceType;
 import de.hhn.aib.labsw.blackmirror.view.widgets.clock.ClockWidget;
@@ -34,10 +31,12 @@ public class Main {
         ArrayList<AbstractWidgetController> widgets = new ArrayList<>();
         widgets.add(new ClockWidgetController(ClockFaceType.ANALOG));
         widgets.add(new WeatherWidgetController());
+        widgets.add(new CalendarWidgetController());
 
         int i = 0;
         widgets.get(i++).getWidget().setPosition(AbstractWidget.Position.TOP_LEFT);
         widgets.get(i++).getWidget().setPosition(AbstractWidget.Position.TOP_RIGHT);
+        widgets.get(i++).getWidget().setPosition(AbstractWidget.Position.BOTTOM_RIGHT);
 
         //@Team Use this method to add a new page, with a ArrayList of widgets -Niklas
         pageController.addPage(widgets);

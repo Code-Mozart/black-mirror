@@ -4,8 +4,6 @@ import de.hhn.aib.labsw.blackmirror.util.SwingUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.time.DayOfWeek;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -27,25 +25,24 @@ public class CalendarWidget extends AbstractWidget {
     public CalendarWidget() {
         this.setSize(500, 100);
         initComponents();
-//        onNextSecond();
+        update();
     }
 
-//    /**
-//     * Checks every second if it is the next day in which case it updates the UI.
-//     */
-//    @Override
-//    public void onNextSecond() {
-//        ZonedDateTime now = ZonedDateTime.now();
-//        DateTimeFormatter formatter = DateTimeFormatter
-//                .ofLocalizedDate(FormatStyle.FULL)
-//                .withLocale(Locale.getDefault());
-//        String dateString = formatter.format(now);
-//        label.setText(dateString);
-//        int i = 0;
-//        for (CalendarDayComponent cdc : dayComponents) {
-//            cdc.setDay(now.plusDays(i++));
-//        }
-//    }
+    /**
+     * Checks every second if it is the next day in which case it updates the UI.
+     */
+    public void update() {
+        ZonedDateTime now = ZonedDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter
+                .ofLocalizedDate(FormatStyle.FULL)
+                .withLocale(Locale.getDefault());
+        String dateString = formatter.format(now);
+        label.setText(dateString);
+        int i = 0;
+        for (CalendarDayComponent cdc : dayComponents) {
+            cdc.setDay(now.plusDays(i++));
+        }
+    }
 
     private void initComponents() {
         JPanel panelMain = new JPanel(new BorderLayout());
@@ -103,6 +100,7 @@ public class CalendarWidget extends AbstractWidget {
 
         /**
          * Sets the day this sheet displays and updates the UI respectively.
+         *
          * @param date The date of the day that should be displayed by this sheet.
          */
         public void setDay(ZonedDateTime date) {

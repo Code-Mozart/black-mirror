@@ -9,41 +9,80 @@ import de.hhn.aib.labsw.blackmirror.model.WeatherSet;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.concurrent.*;
 
 /**
  * This widget displays the weather information for a given location.
  * The location can be updated with the setGPSLocation method
  */
 public class WeatherWidget extends AbstractWidget {
-    private static final String ADDRESS = "https://api.open-meteo.com/v1/forecast?latitude=%02.4f&longitude=%02.4f&hourly=temperature_2m,relativehumidity_2m,apparent_temperature,pressure_msl,precipitation,weathercode,windspeed_10m&timezone=Europe/Berlin";
-    private static final DateTimeFormatter DATEFORMAT = new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd'T'HH:mm").parseDefaulting(ChronoField.SECOND_OF_MINUTE, 0).toFormatter();
-
     ResourceBundle resources = ResourceBundle.getBundle("WeatherWidget", Locale.getDefault());
 
     //Linked List with the weather sets
-    ArrayList<WeatherSet> weatherSets = null;
-
-    //Scheduler runs the data update automatically every 15 Minutes
-    ScheduledExecutorService updateExecutor = Executors.newSingleThreadScheduledExecutor();
-
-    //Location for which the weather data should be downloaded
-    private double LAT = 49.066;
-    private double LON = 9.220;
+    List<WeatherSet> weatherSets = null;
 
     private final WeatherPanel[] weatherPanels = new WeatherPanel[5];
+
+    //Static icons
+    private static final ImageIcon clearIcon = new ImageIcon(WeatherSet.class.getResource("/icons/clear.png"));
+    private static final ImageIcon msunnyIcon = new ImageIcon(WeatherSet.class.getResource("/icons/mostlysunny.png"));
+    private static final ImageIcon mcloudyIcon = new ImageIcon(WeatherSet.class.getResource("/icons/mostlycloudy.png"));
+    private static final ImageIcon cloudyIcon = new ImageIcon(WeatherSet.class.getResource("/icons/cloudy.png"));
+    private static final ImageIcon fogIcon = new ImageIcon(WeatherSet.class.getResource("/icons/fog.png"));
+    private static final ImageIcon drizzleIcon = new ImageIcon(WeatherSet.class.getResource("/icons/chancerain.png"));
+    private static final ImageIcon rainIcon = new ImageIcon(WeatherSet.class.getResource("/icons/rain.png"));
+    private static final ImageIcon hailIcon = new ImageIcon(WeatherSet.class.getResource("/icons/flurries.png"));
+    private static final ImageIcon snowIcon = new ImageIcon(WeatherSet.class.getResource("/icons/chancesnow.png"));
+    private static final ImageIcon sleetIcon = new ImageIcon(WeatherSet.class.getResource("/icons/chancesleet.png"));
+    private static final ImageIcon stormIcon = new ImageIcon(WeatherSet.class.getResource("/icons/tstorms.png"));
+
+    private static final HashMap<Integer, Icon> iconMap = new HashMap<>();
+    static{
+        iconMap.put(0,clearIcon);
+        iconMap.put(1,msunnyIcon);
+        iconMap.put(2,mcloudyIcon);
+        iconMap.put(3,cloudyIcon);
+        iconMap.put(45,fogIcon);
+        iconMap.put(48,fogIcon);
+        iconMap.put(51,drizzleIcon);
+        iconMap.put(53,drizzleIcon);
+        iconMap.put(55,drizzleIcon);
+        iconMap.put(56,drizzleIcon);
+        iconMap.put(57,drizzleIcon);
+        iconMap.put(61,drizzleIcon);
+        iconMap.put(63,rainIcon);
+        iconMap.put(65,rainIcon);
+        iconMap.put(66,drizzleIcon);
+        iconMap.put(67,rainIcon);
+        iconMap.put(71,snowIcon);
+        iconMap.put(73,snowIcon);
+        iconMap.put(75,snowIcon);
+        iconMap.put(77,hailIcon);
+        iconMap.put(80,drizzleIcon);
+        iconMap.put(81,rainIcon);
+        iconMap.put(82,rainIcon);
+        iconMap.put(85,snowIcon);
+        iconMap.put(86,snowIcon);
+        iconMap.put(95,stormIcon);
+        iconMap.put(96,stormIcon);
+        iconMap.put(99,stormIcon);
+    }
+
+    /**
+     * Convert a given weather code to the relevant icon
+     * @param code code to be converted
+     * @return weather code as icon
+     */
+    public static Icon convertCodeToIcon(int code){
+        return iconMap.get(code);
+    }
 
     public WeatherWidget() {
         initGUI();
@@ -81,83 +120,9 @@ public class WeatherWidget extends AbstractWidget {
     }
 
     /**
-     * set the location for which the weather information should be downloaded
-     * @throws IllegalArgumentException when coordinates invalid
-     */
-    public void setGPSLocation(double lat, double lon) {
-        if(lat > 90 || lat < -90 || lon > 180 || lon < -180){
-            throw new IllegalArgumentException("invalid coordinates!");
-        }
-        else{
-            LAT = lat;
-            LON = lon;
-        }
-    }
-
-    @Override
-    public void dataReceived(String topic, JsonNode object) {
-
-        //debug
-        System.out.println("new data received!");
-        System.out.println("current GPS data:");
-        System.out.println("lat is: " + this.LAT);
-        System.out.println("lon is: " + this.LON);
-
-        if(topic.equals("location")) {
-            try {
-                Location loc = (Location) nodeToObject(object, Class.forName("de.hhn.aib.labsw.blackmirror.model.ApiDataModels.Location"));
-                setGPSLocation(loc.lat(), loc.lon());
-            } catch (ClassNotFoundException | JsonProcessingException ex) {
-                ex.printStackTrace();
-            }
-
-            //debug
-            System.out.println("new GPS data: ");
-            System.out.println("lat is: " + this.LAT);
-            System.out.println("lon is: " + this.LON);
-
-            //
-            updateExecutor.execute(new WeatherReceiver());
-            //updateExecutor.scheduleAtFixedRate(new WeatherWidget.WeatherReceiver(), 0, 15, TimeUnit.MINUTES);
-        }
-    }
-
-    /**
-     * converts the given JSON Object to a List of weather sets
-     *
-     * @param data the weather data received as JSON
-     */
-    private void updateData(JsonNode data) {
-        ArrayNode times = (ArrayNode) data.get("hourly").get("time");
-        ArrayNode weathercodes = (ArrayNode) data.get("hourly").get("weathercode");
-        ArrayNode temperatures = (ArrayNode) data.get("hourly").get("temperature_2m");
-        ArrayNode precipitations = (ArrayNode) data.get("hourly").get("precipitation");
-        ArrayNode windspeeds = (ArrayNode) data.get("hourly").get("windspeed_10m");
-        ArrayNode humidities = (ArrayNode) data.get("hourly").get("relativehumidity_2m");
-        ArrayNode pressures = (ArrayNode) data.get("hourly").get("pressure_msl");
-
-        ArrayList<WeatherSet> weatherSets = new ArrayList<>();
-        for (int i = 0; i < times.size(); i++) {
-            WeatherSet temp = new WeatherSet();
-            temp.setTemperature(temperatures.get(i).asDouble());
-            temp.setPrecipitation(precipitations.get(i).asDouble());
-            temp.setWeathercode(weathercodes.get(i).asInt());
-            temp.setWindspeed(windspeeds.get(i).asDouble());
-            temp.setHumidity(humidities.get(i).asInt());
-            temp.setPressure(pressures.get(i).asDouble());
-            temp.setTimestamp(LocalDateTime.parse(times.get(i).textValue(), DATEFORMAT));
-            weatherSets.add(temp);
-        }
-        this.weatherSets = weatherSets;
-
-        //GUI stuff must run on UI thread...
-        SwingUtilities.invokeLater(this::updateGUI);
-    }
-
-    /**
      * updates the gui to display the new data
      */
-    private void updateGUI() {
+    public void updateGUI(List<WeatherSet> weatherSets) {
         for(int i = 0;i<weatherPanels.length;i++){
             switch (i) {
                 case 0 -> weatherPanels[i].setData(resources.getString("header_current"), weatherSets.get(LocalDateTime.now().getHour()));
@@ -166,27 +131,6 @@ public class WeatherWidget extends AbstractWidget {
                 case 3 -> weatherPanels[i].setData(resources.getString("header_03"), weatherSets.get(16));
                 case 4 -> weatherPanels[i].setData(resources.getString("header_04"), weatherSets.get(20));
                 default -> weatherPanels[i].setData("no header", weatherSets.get(32));
-            }
-        }
-    }
-
-    /**
-     * weather receiver that downloads new information automatically when called
-     */
-    class WeatherReceiver extends Thread {
-        /**
-         * connect to the server and download the json file.
-         */
-        @Override
-        public void run() {
-            try {
-                HttpClient client = HttpClient.newHttpClient();
-                HttpRequest req = HttpRequest.newBuilder(URI.create(String.format(Locale.US,ADDRESS,LAT, LON))).header("accept", "application/json").build();
-                CompletableFuture<HttpResponse<String>> futureResult = client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
-                ObjectMapper mapper = new ObjectMapper();
-                updateData(mapper.readTree(futureResult.get().body()));
-            } catch (InterruptedException | ExecutionException | IOException e) {
-                e.printStackTrace();
             }
         }
     }
@@ -227,7 +171,7 @@ public class WeatherWidget extends AbstractWidget {
 
         public void setData(String headerText, WeatherSet set){
             header.setText(headerText);
-            icon.setIcon(set.getCodeAsIcon());
+            icon.setIcon(convertCodeToIcon(set.getWeathercode()));
             temperature.setText("%01.1f °C".formatted(set.getTemperature()));
             wind.setText("%01.1f Km/h".formatted(set.getWindspeed()));
             pressure.setText("%04.1f hPa".formatted(set.getPressure()));

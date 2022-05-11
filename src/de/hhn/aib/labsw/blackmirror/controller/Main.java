@@ -2,6 +2,10 @@ package de.hhn.aib.labsw.blackmirror.controller;
 
 import de.hhn.aib.labsw.blackmirror.controller.API.MirrorApi;
 import de.hhn.aib.labsw.blackmirror.controller.API.websockets.MirrorApiWebsockets;
+import de.hhn.aib.labsw.blackmirror.controller.widgets.AbstractWidgetController;
+import de.hhn.aib.labsw.blackmirror.controller.widgets.ClockWidgetController;
+import de.hhn.aib.labsw.blackmirror.controller.widgets.HelloWorldWidgetController;
+import de.hhn.aib.labsw.blackmirror.controller.widgets.WeatherWidgetController;
 import de.hhn.aib.labsw.blackmirror.view.widgets.*;
 import de.hhn.aib.labsw.blackmirror.view.widgets.clock.ClockFaceType;
 import de.hhn.aib.labsw.blackmirror.view.widgets.clock.ClockWidget;
@@ -13,33 +17,27 @@ import java.util.ArrayList;
  *
  * @author Markus Marewitz
  * @author Niklas Binder
- * @version 2022-03-26
+ * @version 2022-05-11
  */
 public class Main {
     public static void main(String[] args) {
         new Main();
     }
 
-    private ArrayList<AbstractWidget> widgets = new ArrayList<>();
-    private PageController pageController = new PageController();
+    private final PageController pageController = new PageController();
 
     public Main() {
         MirrorApi server = MirrorApiWebsockets.getInstance();
         server.init();
 
         // @Team add your widgets here to test them -Markus
-        //widgets.add(new HelloWorldWidget());
-        widgets.add(new WeatherWidget());
-        widgets.add(new CalendarWidget());
-        widgets.add(new EmailNotificationWidget());
-        widgets.add(new ReminderWidget());
-        widgets.add(new ClockWidget(ClockFaceType.DIGITAL));
+        ArrayList<AbstractWidgetController> widgets = new ArrayList<>();
+        widgets.add(new ClockWidgetController(ClockFaceType.ANALOG));
+        widgets.add(new WeatherWidgetController());
 
-        widgets.get(0).setPosition(AbstractWidget.Position.TOP_LEFT);
-        widgets.get(1).setPosition(AbstractWidget.Position.TOP_RIGHT);
-        widgets.get(2).setPosition(AbstractWidget.Position.BOTTOM_LEFT);
-        widgets.get(3).setPosition(AbstractWidget.Position.BOTTOM_RIGHT);
-        widgets.get(4).setPosition(AbstractWidget.Position.CENTER);
+        int i = 0;
+        widgets.get(i++).getWidget().setPosition(AbstractWidget.Position.TOP_LEFT);
+        widgets.get(i++).getWidget().setPosition(AbstractWidget.Position.TOP_RIGHT);
 
         //@Team Use this method to add a new page, with a ArrayList of widgets -Niklas
         pageController.addPage(widgets);

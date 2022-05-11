@@ -30,13 +30,13 @@ public class ReminderWidget extends AbstractWidget {
         initComponents();
     }
 
-    @Override
-    public void onNextSecond() {
-        if (now.getDayOfMonth() != ZonedDateTime.now().getDayOfMonth()) {
-            initComponents();
-        }
-        now = ZonedDateTime.now();
-    }
+//    @Override
+//    public void onNextSecond() {
+//        if (now.getDayOfMonth() != ZonedDateTime.now().getDayOfMonth()) {
+//            initComponents();
+//        }
+//        now = ZonedDateTime.now();
+//    }
 
     /**
      * Initiates all UI-components such as the label and the list.

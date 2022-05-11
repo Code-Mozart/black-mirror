@@ -9,6 +9,7 @@ import de.hhn.aib.labsw.blackmirror.model.WeatherSet;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -184,7 +185,7 @@ public class WeatherWidget extends AbstractWidget {
                 CompletableFuture<HttpResponse<String>> futureResult = client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
                 ObjectMapper mapper = new ObjectMapper();
                 updateData(mapper.readTree(futureResult.get().body()));
-            } catch (InterruptedException | ExecutionException | JsonProcessingException e) {
+            } catch (InterruptedException | ExecutionException | IOException e) {
                 e.printStackTrace();
             }
         }

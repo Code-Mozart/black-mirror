@@ -61,7 +61,7 @@ public class ReminderWidget extends AbstractWidget {
 
         JLabel iconLabel = new JLabel("", SwingConstants.CENTER);
         // icon author @mallorysartwork
-        ImageIcon remindIcon = new ImageIcon("icons/reminder_icon.jpg");
+        ImageIcon remindIcon = new ImageIcon(getClass().getResource("/icons/reminder_icon.jpg"));
         iconLabel.setIcon(remindIcon);
 
         reminderLabel.setVerticalAlignment(SwingConstants.NORTH);

@@ -2,7 +2,8 @@ package de.hhn.aib.labsw.blackmirror.view.widgets;
 
 import de.hhn.aib.labsw.blackmirror.util.EmailReceiver;
 
-import javax.mail.MessagingException;
+import javax.mail.*;
+//import jakarta.mail.*;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Locale;
@@ -38,7 +39,7 @@ public class EmailNotificationWidget extends AbstractWidget {
 
         JLabel iconLabel = new JLabel("", SwingConstants.CENTER);
         // icon author "Vecteezy.com"
-        ImageIcon mailIcon = new ImageIcon("icons/mail.png");
+        ImageIcon mailIcon = new ImageIcon(getClass().getResource("/icons/mail.png"));
         iconLabel.setIcon(mailIcon);
 
         textLabel = new JLabel("", SwingConstants.CENTER);

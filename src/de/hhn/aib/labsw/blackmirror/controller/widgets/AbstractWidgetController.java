@@ -11,7 +11,7 @@ import de.hhn.aib.labsw.blackmirror.view.widgets.AbstractWidget;
  * @author Luis Gutzeit
  * @version 2022-05-10
  */
-public abstract class AbstractWidgetController implements TopicListener {
+public abstract class AbstractWidgetController implements TopicListener, AutoCloseable {
     private final MirrorApi api = MirrorApiWebsockets.getInstance();
 
     protected final void subscribe(String topic) {
@@ -48,5 +48,10 @@ public abstract class AbstractWidgetController implements TopicListener {
      * A method hook to be called every second.
      */
     public void onNextSecond() {
+    }
+
+    @Override
+    public void close() throws Exception {
+
     }
 }

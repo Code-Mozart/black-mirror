@@ -1,5 +1,6 @@
 package de.hhn.aib.labsw.blackmirror.controller;
 
+import de.hhn.aib.labsw.blackmirror.controller.widgets.AbstractWidgetController;
 import de.hhn.aib.labsw.blackmirror.view.widgets.AbstractWidget;
 
 import java.util.ArrayList;
@@ -9,11 +10,12 @@ import java.util.NoSuchElementException;
  * PageController Class to hold all pages and provide all necessary methods.
  *
  * @author Niklas Binder
- * @version 2022-07-04
+ * @author Markus Marewitz
+ * @version 2022-05-11
  */
 public class PageController {
     private ArrayList<Page> pages = new ArrayList<>();
-    ;
+
     private int pageIndex = 0;
     private boolean isStandby = false;
 
@@ -25,7 +27,7 @@ public class PageController {
      *
      * @param widgetsOnPage Widgets to be shown on the new page.
      */
-    protected void addPage(ArrayList<AbstractWidget> widgetsOnPage) {
+    protected void addPage(ArrayList<AbstractWidgetController> widgetsOnPage) {
         pages.add(new Page(widgetsOnPage));
     }
 
@@ -36,7 +38,7 @@ public class PageController {
      * @param widgetsOnPage Widgets to be shown on the new page.
      * @throws IndexOutOfBoundsException Exception if pageIndex is lower than 0 or higher than the size of the list - 1.
      */
-    protected void addPageAtIndex(int pageIndex, ArrayList<AbstractWidget> widgetsOnPage) throws IndexOutOfBoundsException {
+    protected void addPageAtIndex(int pageIndex, ArrayList<AbstractWidgetController> widgetsOnPage) throws IndexOutOfBoundsException {
         if (pageIndex < 0) {
             throw new IndexOutOfBoundsException("Index has to be 0 or higher than 0.");
         } else if (pageIndex >= pages.size()) {

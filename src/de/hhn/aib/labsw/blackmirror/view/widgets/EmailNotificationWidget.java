@@ -1,6 +1,6 @@
 package de.hhn.aib.labsw.blackmirror.view.widgets;
 
-import de.hhn.aib.labsw.blackmirror.util.EmailReceiver;
+import de.hhn.aib.labsw.blackmirror.controller.widgets.EmailNotificationController;
 
 import javax.mail.*;
 //import jakarta.mail.*;
@@ -17,7 +17,7 @@ import java.util.ResourceBundle;
  */
 public class EmailNotificationWidget extends AbstractWidget {
 
-    private final EmailReceiver receiver;
+    private final EmailNotificationController receiver;
     private final ResourceBundle resources = ResourceBundle.getBundle("EmailNotificationWidget", Locale.getDefault());
     private final JLabel textLabel;
 
@@ -50,7 +50,7 @@ public class EmailNotificationWidget extends AbstractWidget {
         panel.add(textLabel);
         this.add(panel);
 
-        receiver = new EmailReceiver();
+        receiver = new EmailNotificationController();
 
         // todo: user data should later be obtained from db
         // hotmail imap server: imap-mail.outlook.com
@@ -84,19 +84,19 @@ public class EmailNotificationWidget extends AbstractWidget {
         }
     }
 
-    /**
-     * Checks every 30 seconds for new mail
-     */
-    @Override
-    public void onNextSecond() {
-        counter += 1;
-        if (counter % 30 == 0) {
-            try {
-                drawUnreadEmails();
-            } catch (MessagingException e) {
-                e.printStackTrace();
-            }
-            counter = 0;
-        }
-    }
+//    /**
+//     * Checks every 30 seconds for new mail
+//     */
+//    @Override
+//    public void onNextSecond() {
+//        counter += 1;
+//        if (counter % 30 == 0) {
+//            try {
+//                drawUnreadEmails();
+//            } catch (MessagingException e) {
+//                e.printStackTrace();
+//            }
+//            counter = 0;
+//        }
+//    }
 }

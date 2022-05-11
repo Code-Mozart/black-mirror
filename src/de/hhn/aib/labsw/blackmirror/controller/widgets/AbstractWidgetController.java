@@ -5,19 +5,20 @@ import de.hhn.aib.labsw.blackmirror.controller.API.TopicListener;
 import de.hhn.aib.labsw.blackmirror.controller.API.websockets.MirrorApiWebsockets;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import de.hhn.aib.labsw.blackmirror.view.widgets.AbstractWidget;
 
 /**
  * @author Luis Gutzeit
  * @version 2022-05-10
  */
-public class AbstractWidgetController implements TopicListener {
+public abstract class AbstractWidgetController implements TopicListener {
     private final MirrorApi api = MirrorApiWebsockets.getInstance();
 
-    protected final void subscribe(String topic, TopicListener listener) {
-        api.subscribe(topic, listener);
+    protected final void subscribe(String topic) {
+        api.subscribe(topic, this);
     }
-    protected final void unsubscribe(String topic, TopicListener listener) {
-        api.unsubscribe(topic, listener);
+    protected final void unsubscribe(String topic) {
+        api.unsubscribe(topic, this);
     }
     protected final void publish(String topic, Object payload) {
         api.publish(topic, payload);
@@ -39,5 +40,13 @@ public class AbstractWidgetController implements TopicListener {
      */
     protected <T> T nodeToObject(JsonNode node, Class<T> tClass) throws JsonProcessingException {
         return api.getMapper().treeToValue(node, tClass);
+    }
+
+    public abstract AbstractWidget getWidget();
+
+    /**
+     * A method hook to be called every second.
+     */
+    public void onNextSecond() {
     }
 }

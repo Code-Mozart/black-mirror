@@ -1,6 +1,8 @@
-package de.hhn.aib.labsw.blackmirror.util;
+package de.hhn.aib.labsw.blackmirror.controller.widgets;
 
 import com.sun.mail.imap.IMAPStore;
+import de.hhn.aib.labsw.blackmirror.view.widgets.AbstractWidget;
+import de.hhn.aib.labsw.blackmirror.view.widgets.EmailNotificationWidget;
 
 import javax.mail.*;
 import java.util.Locale;
@@ -8,12 +10,12 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 
 /**
+ * Controller class for {@link EmailNotificationWidget}.
  * @author Philipp Herda
- * @version 2022-04-04
- * Simple utility class to login to a mail provider via imap
- * Ensure a login() call before every checkForMail() call
+ * @author Markus Marewitz
+ * @version 2022-05-11
  */
-public class EmailReceiver {
+public class EmailNotificationController extends AbstractWidgetController {
 
     protected IMAPStore imapStore;
     private final ResourceBundle resources = ResourceBundle.getBundle("EmailNotificationWidget", Locale.getDefault());
@@ -73,5 +75,10 @@ public class EmailReceiver {
         imapStore.close();
 
         return newMsgs;
+    }
+
+    @Override
+    public AbstractWidget getWidget() {
+        return null;
     }
 }

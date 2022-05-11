@@ -1,5 +1,6 @@
 package de.hhn.aib.labsw.blackmirror.controller;
 
+import de.hhn.aib.labsw.blackmirror.controller.widgets.AbstractWidgetController;
 import de.hhn.aib.labsw.blackmirror.view.widgets.AbstractWidget;
 
 import java.util.ArrayList;
@@ -9,14 +10,15 @@ import java.util.NoSuchElementException;
  * Class to hold all widgets on one page.
  *
  * @author Niklas Binder
- * @version 2022-07-26
+ * @author Markus Marewitz
+ * @version 2022-05-11
  */
 public class Page {
 
-    private ArrayList<AbstractWidget> widgetsOnPage;
+    private ArrayList<AbstractWidgetController> widgetsOnPage;
 
-    public Page(ArrayList<AbstractWidget> widgetsOnPage) {
-        this.widgetsOnPage = widgetsOnPage;
+    public Page(ArrayList<AbstractWidgetController> widgetsOnPage) {
+        this.widgetsOnPage = new ArrayList<>(widgetsOnPage);
     }
 
     /**
@@ -24,7 +26,7 @@ public class Page {
      *
      * @param newWidget Widget to be added
      */
-    protected void addWidget(AbstractWidget newWidget) {
+    protected void addWidget(AbstractWidgetController newWidget) {
         widgetsOnPage.add(newWidget);
     }
 
@@ -34,7 +36,7 @@ public class Page {
      * @param widget Widget to be deleted
      * @throws NoSuchElementException Exception thrown if the given widget is not in the list.
      */
-    protected void deleteWidget(AbstractWidget widget) throws NoSuchElementException {
+    protected void deleteWidget(AbstractWidgetController widget) throws NoSuchElementException {
         if (!widgetsOnPage.contains(widget)) {
             throw new NoSuchElementException("The given widget doesn`t exist.");
         } else {
@@ -62,14 +64,14 @@ public class Page {
      * Method to set all widgets in the widgets ArrayList invisible.
      */
     protected void setWidgetsInvisible() {
-        widgetsOnPage.forEach(w -> w.setVisible(false)); //Sets each widget invisible
+        widgetsOnPage.forEach(w -> w.getWidget().setVisible(false)); //Sets each widget invisible
     }
 
     /**
      * Method to set all widgets in the widgets ArrayList visible.
      */
     protected void setWidgetsVisible() {
-        widgetsOnPage.forEach(w -> w.setVisible(true)); //Sets each widget visible
+        widgetsOnPage.forEach(w -> w.getWidget().setVisible(true)); //Sets each widget visible
     }
 
     /**
@@ -77,6 +79,6 @@ public class Page {
      * Method coded from Markus Marewitz.
      */
     protected void onNextSecond() {
-        widgetsOnPage.forEach(AbstractWidget::onNextSecond);
+        widgetsOnPage.forEach(AbstractWidgetController::onNextSecond);
     }
 }

@@ -27,25 +27,25 @@ public class CalendarWidget extends AbstractWidget {
     public CalendarWidget() {
         this.setSize(500, 100);
         initComponents();
-        onNextSecond();
+//        onNextSecond();
     }
 
-    /**
-     * Checks every second if it is the next day in which case it updates the UI.
-     */
-    @Override
-    public void onNextSecond() {
-        ZonedDateTime now = ZonedDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter
-                .ofLocalizedDate(FormatStyle.FULL)
-                .withLocale(Locale.getDefault());
-        String dateString = formatter.format(now);
-        label.setText(dateString);
-        int i = 0;
-        for (CalendarDayComponent cdc : dayComponents) {
-            cdc.setDay(now.plusDays(i++));
-        }
-    }
+//    /**
+//     * Checks every second if it is the next day in which case it updates the UI.
+//     */
+//    @Override
+//    public void onNextSecond() {
+//        ZonedDateTime now = ZonedDateTime.now();
+//        DateTimeFormatter formatter = DateTimeFormatter
+//                .ofLocalizedDate(FormatStyle.FULL)
+//                .withLocale(Locale.getDefault());
+//        String dateString = formatter.format(now);
+//        label.setText(dateString);
+//        int i = 0;
+//        for (CalendarDayComponent cdc : dayComponents) {
+//            cdc.setDay(now.plusDays(i++));
+//        }
+//    }
 
     private void initComponents() {
         JPanel panelMain = new JPanel(new BorderLayout());

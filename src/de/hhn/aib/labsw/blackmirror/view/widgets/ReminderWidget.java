@@ -18,7 +18,6 @@ import java.util.List;
  * @version 03-04-2022
  */
 public class ReminderWidget extends AbstractWidget {
-    private JLabel reminderLabel;
     private ZonedDateTime now;
     private List<Reminder> reminders;
 
@@ -30,8 +29,7 @@ public class ReminderWidget extends AbstractWidget {
         initComponents();
     }
 
-    @Override
-    public void onNextSecond() {
+    public void update() {
         if (now.getDayOfMonth() != ZonedDateTime.now().getDayOfMonth()) {
             initComponents();
         }
@@ -51,7 +49,7 @@ public class ReminderWidget extends AbstractWidget {
         c.gridy = 0;
         c.insets = new Insets(5,5,5,5);
 
-        reminderLabel = new JLabel(resources.getString("reminderTitle"));
+        JLabel reminderLabel = new JLabel(resources.getString("reminderTitle"));
         reminderLabel.setFont(new Font(reminderLabel.getFont().getName(), Font.BOLD, 16));
         reminderLabel.setForeground(Color.WHITE);
         Font font = reminderLabel.getFont();
@@ -96,7 +94,7 @@ public class ReminderWidget extends AbstractWidget {
                 reminderStr.add("...");
             }
 
-            JList list = new JList(reminderStr.toArray());
+            JList<String> list = new JList(reminderStr.toArray());
             list.setBackground(Color.BLACK);
             list.setForeground(Color.WHITE);
             list.setFont(new Font(list.getFont().getName(), list.getFont().getStyle(), 13));
@@ -138,7 +136,7 @@ public class ReminderWidget extends AbstractWidget {
         if (eventDesc.length() > 30) {
             eventDesc = eventDesc.substring(0, 29) + "...";
         }
-        return "- "+r.getDesc();
+        return "- "+eventDesc;
     }
 }
 

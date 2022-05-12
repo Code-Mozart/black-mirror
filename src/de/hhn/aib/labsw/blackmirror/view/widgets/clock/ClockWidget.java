@@ -20,13 +20,10 @@ public class ClockWidget extends AbstractWidget {
 
         setType(type);
         this.add(panel);
-
-        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-        executor.scheduleAtFixedRate(this::update, 0, 500, TimeUnit.MILLISECONDS);
     }
 
-    private void update(){
-        this.repaint();
+    public void update() {
+        panel.repaint();
     }
 
     public void setType(ClockFaceType type){

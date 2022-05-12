@@ -1,8 +1,10 @@
 package de.hhn.aib.labsw.blackmirror.controller.widgets;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import de.hhn.aib.labsw.blackmirror.model.ApiDataModels.Location;
 import de.hhn.aib.labsw.blackmirror.model.WeatherSet;
 import de.hhn.aib.labsw.blackmirror.view.widgets.AbstractWidget;
 import de.hhn.aib.labsw.blackmirror.view.widgets.WeatherWidget;
@@ -42,6 +44,7 @@ public class WeatherWidgetController extends AbstractWidgetController {
     public WeatherWidgetController() {
         this.widget = new WeatherWidget();
         scheduledUpdate = Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(new WeatherReceiver(),0,15,TimeUnit.MINUTES);
+        subscribe("location");
     }
 
     @Override
@@ -121,4 +124,20 @@ public class WeatherWidgetController extends AbstractWidgetController {
         }
     }
 
+    @Override
+    public void dataReceived(String topic, JsonNode object) {
+        super.dataReceived(topic, object);
+
+        if(topic.equals("location")) {
+            try {
+                Location loc = nodeToObject(object, Location.class);
+                setGPSLocation(loc.lat(), loc.lon());
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+            WeatherReceiver receiver = new WeatherReceiver();
+            receiver.start();
+        }
+
+    }
 }

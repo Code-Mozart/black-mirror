@@ -17,8 +17,14 @@ import java.util.ResourceBundle;
  */
 public class EmailNotificationController extends AbstractWidgetController {
 
-    protected IMAPStore imapStore;
+    protected IMAPStore imapStore = null;
     private final ResourceBundle resources = ResourceBundle.getBundle("EmailNotificationWidget", Locale.getDefault());
+
+    private final EmailNotificationWidget widget;
+
+    public EmailNotificationController() {
+        widget = new EmailNotificationWidget();
+    }
 
     /**
      * Opens a connection to the mail provider
@@ -79,6 +85,6 @@ public class EmailNotificationController extends AbstractWidgetController {
 
     @Override
     public AbstractWidget getWidget() {
-        return null;
+        return widget;
     }
 }

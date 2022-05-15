@@ -2,11 +2,13 @@ package de.hhn.aib.labsw.blackmirror.controller;
 
 import de.hhn.aib.labsw.blackmirror.controller.API.MirrorApi;
 import de.hhn.aib.labsw.blackmirror.controller.API.websockets.MirrorApiWebsockets;
-import de.hhn.aib.labsw.blackmirror.view.widgets.clock.ClockFaceType;
 import de.hhn.aib.labsw.blackmirror.controller.widgets.*;
 import de.hhn.aib.labsw.blackmirror.view.widgets.AbstractWidget;
+import de.hhn.aib.labsw.blackmirror.view.widgets.clock.ClockFaceType;
 
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Main class containing the entry point and controlling the program.
@@ -31,7 +33,7 @@ public class Main {
         widgets.add(new ClockWidgetController(ClockFaceType.ANALOG));
         widgets.add(new WeatherWidgetController());
         widgets.add(new CalendarWidgetController());
-        widgets.add(new ReminderWidgetController());
+        widgets.add(new EmailNotificationController());
 
         int i = 0;
         widgets.get(i++).getWidget().setPosition(AbstractWidget.Position.TOP_LEFT);
@@ -44,9 +46,15 @@ public class Main {
 
         pageController.getCurrentPage().setWidgetsVisible(); //Sets all widgets on the default page visible.
         new SecondsTimer(this::onNextSecond);
+        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(
+                this::onRegularUpdate, 0L, 30L, TimeUnit.SECONDS);
     }
 
     private void onNextSecond() {
         pageController.getCurrentPage().onNextSecond();
+    }
+
+    private void onRegularUpdate() {
+        pageController.getCurrentPage().onRegularUpdate();
     }
 }

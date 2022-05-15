@@ -54,6 +54,12 @@ public abstract class AbstractWidgetController implements TopicListener, AutoClo
     public void onNextSecond() {
     }
 
+    /**
+     * A method hook to be called regularly.
+     */
+    public void onRegularUpdate() {
+    }
+
     @Override
     public void close() throws Exception {
     }

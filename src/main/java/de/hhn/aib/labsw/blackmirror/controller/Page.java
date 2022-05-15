@@ -74,10 +74,16 @@ public class Page {
     }
 
     /**
-     * Updates all visible widgets on the page every second.
-     * Method coded from Markus Marewitz.
+     * Runs the update happening each second for each visible widget on this page.
+     * @see AbstractWidgetController#onNextSecond()
      */
     protected void onNextSecond() {
         widgetsOnPage.forEach(AbstractWidgetController::onNextSecond);
     }
+
+    /**
+     * Runs the regular update on each visible widget on this page.
+     * @see AbstractWidgetController#onRegularUpdate()
+     */
+    protected void onRegularUpdate() { widgetsOnPage.forEach(AbstractWidgetController::onRegularUpdate); }
 }

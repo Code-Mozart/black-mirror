@@ -137,4 +137,5 @@ public class WeatherWidgetController extends AbstractWidgetController {
             receiver.start();
         }
     }
+
 }

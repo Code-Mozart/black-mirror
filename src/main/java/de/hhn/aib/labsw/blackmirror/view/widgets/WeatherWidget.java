@@ -1,10 +1,4 @@
 package de.hhn.aib.labsw.blackmirror.view.widgets;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import de.hhn.aib.labsw.blackmirror.model.ApiDataModels.Location;
 import de.hhn.aib.labsw.blackmirror.model.WeatherSet;
 
 import javax.swing.*;

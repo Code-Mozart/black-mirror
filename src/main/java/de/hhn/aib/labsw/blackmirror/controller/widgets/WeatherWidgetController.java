@@ -39,8 +39,6 @@ public class WeatherWidgetController extends AbstractWidgetController {
     private double LAT = 49.066;
     private double LON = 9.220;
 
-
-
     public WeatherWidgetController() {
         this.widget = new WeatherWidget();
         scheduledUpdate = Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(new WeatherReceiver(),0,15,TimeUnit.MINUTES);
@@ -138,6 +136,5 @@ public class WeatherWidgetController extends AbstractWidgetController {
             WeatherReceiver receiver = new WeatherReceiver();
             receiver.start();
         }
-
     }
 }

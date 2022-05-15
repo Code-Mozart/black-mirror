@@ -32,12 +32,14 @@ public class Main {
         widgets.add(new WeatherWidgetController());
         widgets.add(new CalendarWidgetController());
         widgets.add(new ReminderWidgetController());
+        widgets.add(new ClockWidgetController(ClockFaceType.DIGITAL));
 
         int i = 0;
         widgets.get(i++).getWidget().setPosition(AbstractWidget.Position.TOP_LEFT);
         widgets.get(i++).getWidget().setPosition(AbstractWidget.Position.TOP_RIGHT);
         widgets.get(i++).getWidget().setPosition(AbstractWidget.Position.BOTTOM_RIGHT);
         widgets.get(i++).getWidget().setPosition(AbstractWidget.Position.BOTTOM_LEFT);
+        widgets.get(i++).getWidget().setPosition(AbstractWidget.Position.CENTER);
 
         //@Team Use this method to add a new page, with a ArrayList of widgets -Niklas
         pageController.addPage(widgets);

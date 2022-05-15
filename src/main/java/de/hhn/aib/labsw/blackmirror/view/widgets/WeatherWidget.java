@@ -84,8 +84,6 @@ public class WeatherWidget extends AbstractWidget {
     public WeatherWidget() {
         initGUI();
         setSize(600,400);
-        updateExecutor.scheduleAtFixedRate(new WeatherWidget.WeatherReceiver(), 0, 15, TimeUnit.MINUTES);
-        this.subscribe("location", this);
     }
 
     /**

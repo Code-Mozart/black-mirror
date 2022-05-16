@@ -1,7 +1,5 @@
 package de.hhn.aib.labsw.blackmirror.view.widgets;
 
-import de.hhn.aib.labsw.blackmirror.controller.widgets.EmailNotificationController;
-
 import javax.mail.*;
 //import jakarta.mail.*;
 import javax.swing.*;
@@ -56,5 +54,9 @@ public class EmailNotificationWidget extends AbstractWidget {
             default -> resources.getString("youHave") + " " + count + " " + resources.getString("newMails");
         };
         textLabel.setText(newMsgs);
+    }
+
+    public void drawLoginFailed() {
+        textLabel.setText(resources.getString("failedToConnect"));
     }
 }

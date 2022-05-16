@@ -1,21 +1,30 @@
 package de.hhn.aib.labsw.blackmirror.controller.widgets;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.TreeNode;
+import com.fasterxml.jackson.databind.JsonNode;
 import de.hhn.aib.labsw.blackmirror.controller.API.MirrorApi;
 import de.hhn.aib.labsw.blackmirror.controller.API.TopicListener;
 import de.hhn.aib.labsw.blackmirror.controller.API.websockets.MirrorApiWebsockets;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import de.hhn.aib.labsw.blackmirror.view.widgets.AbstractWidget;
 
 /**
  * @author Luis Gutzeit
- * @version 2022-05-10
+ * @author Markus Marewitz
+ * @version 2022-05-16
  */
 public abstract class AbstractWidgetController implements TopicListener, AutoCloseable {
+    public static final int INVALID_ID = -1;
+
     private final MirrorApi api = MirrorApiWebsockets.getInstance();
+    private int id = INVALID_ID;
 
     protected final void subscribe(String topic) {
         api.subscribe(topic, this);
+    }
+
+    protected final void subscribeWithID(String topic) {
+        subscribe((getID() != INVALID_ID) ? (topic + "/" + getID()) : topic);
     }
 
     protected final void unsubscribe(String topic) {
@@ -41,12 +50,26 @@ public abstract class AbstractWidgetController implements TopicListener, AutoClo
      * @param tClass Class of which an instance should be created
      * @return instance of the provided class filled with data from the json node
      * @throws JsonProcessingException when json could not be parsed
+     * @see com.fasterxml.jackson.databind.ObjectMapper#treeToValue(TreeNode, Class)
      */
     protected <T> T nodeToObject(JsonNode node, Class<T> tClass) throws JsonProcessingException {
         return api.getMapper().treeToValue(node, tClass);
     }
 
     public abstract AbstractWidget getWidget();
+
+    protected int getID() {
+        return id;
+    }
+
+    /**
+     * Sets the ID of the widget depending on its page and position on this page.
+     * @throws UnsupportedOperationException Not yet used. Can later be used
+     * to sync the id's of widgets between app and mirror
+     */
+    public void setID(int id) {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
 
     /**
      * A method hook to be called every second.

@@ -1,16 +1,21 @@
 package de.hhn.aib.labsw.blackmirror.controller.widgets;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.sun.mail.imap.IMAPStore;
+import de.hhn.aib.labsw.blackmirror.controller.API.websockets.MirrorApiWebsockets;
+import de.hhn.aib.labsw.blackmirror.model.ApiDataModels.EmailLoginData;
 import de.hhn.aib.labsw.blackmirror.view.widgets.AbstractWidget;
 import de.hhn.aib.labsw.blackmirror.view.widgets.EmailNotificationWidget;
 
-import javax.mail.Folder;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Store;
+import javax.mail.*;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.ResourceBundle;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Controller class for {@link EmailNotificationWidget}.
@@ -21,15 +26,17 @@ import java.util.ResourceBundle;
  */
 public class EmailNotificationController extends AbstractWidgetController {
 
+    public static final String EMAIL_DATA_TOPIC = "emailData";
+
     protected IMAPStore imapStore = null;
     private final ResourceBundle resources = ResourceBundle.getBundle("lang/EmailNotificationWidget", Locale.getDefault());
 
     private final EmailNotificationWidget widget;
 
-    private final String host;
-    private final String port;
-    private final String username;
-    private final String password;
+    private String host;
+    private int port;
+    private String username;
+    private String password;
 
     public EmailNotificationController() {
         widget = new EmailNotificationWidget();
@@ -40,11 +47,29 @@ public class EmailNotificationController extends AbstractWidgetController {
         // gmail.com imap server: imap.gmail.com
         // Project Mail: "blackmirror.labswp@gmail.com", "labSWPproject" (error: app not a "secure app" for google)
         host = "imap.web.de";
-        port = "993";
+        port = 993;
         username = "blackmirror.labswp@web.de";
-        password = "labSWPproject";
+        password = "wrongPsw";
+
+        // for test purposes
+        // todo: remove
+        ScheduledFuture<?> fut = Executors.newSingleThreadScheduledExecutor().schedule(this::testUseNewLoginData, 7, TimeUnit.SECONDS);
+
+        subscribeWithID(EMAIL_DATA_TOPIC);
 
         update();
+    }
+
+    private void testUseNewLoginData() {
+        try {
+            JsonNode node = MirrorApiWebsockets.getInstance().getMapper().valueToTree(
+                    new EmailLoginData("imap.web.de", 993,
+                            "blackmirror.labswp@web.de", "labSWPproject")
+            );
+            dataReceived(EMAIL_DATA_TOPIC, node);
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -56,18 +81,24 @@ public class EmailNotificationController extends AbstractWidgetController {
      * @param password pw for the user
      * @throws MessagingException if connection failed
      */
-    public void login(String host, String port, String username, String password) throws MessagingException {
+    public boolean login(String host, int port, String username, String password) throws MessagingException {
         Properties properties = new Properties();
         properties.put("mail.store.protocol", "imaps");
-        properties.put("mail.imaps.port", port);
+        properties.put("mail.imaps.port", String.valueOf(port));
         properties.put("mail.imaps.starttls.enable", "true");
 
         Session mailSession = Session.getDefaultInstance(properties);
 
         Store store = mailSession.getStore("imaps");
-        store.connect(host, username, password);
+        try {
+            store.connect(host, username, password);
+        } catch (AuthenticationFailedException e) {
+            return false;
+        }
 
         this.imapStore = (IMAPStore) store;
+
+        return true;
     }
 
     /**
@@ -99,12 +130,50 @@ public class EmailNotificationController extends AbstractWidgetController {
 
     private void update() {
         try {
-            login(host, port, username, password);
-            int count = getUnreadMessagesCount();
-            widget.drawUnreadEmails(count);
+            if (login(host, port, username, password)) {
+                int count = getUnreadMessagesCount();
+                widget.drawUnreadEmails(count);
+            } else {
+                widget.drawLoginFailed();
+            }
         } catch (MessagingException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void dataReceived(String topic, JsonNode object) {
+        assert Objects.equals(topic, EMAIL_DATA_TOPIC);
+        try {
+            EmailLoginData loginData = getLoginDataFromJSON(object);
+
+            this.host = loginData.host();
+            this.port = loginData.port();
+            this.username = loginData.username();
+            this.password = loginData.password();
+
+            update();
+        } catch (JsonProcessingException | IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public EmailLoginData getLoginDataFromJSON(JsonNode object) throws JsonProcessingException {
+        EmailLoginData loginData = nodeToObject(object, EmailLoginData.class);
+
+        if (loginData.host() == null) throw new IllegalArgumentException("host must not be null");
+        if (loginData.host().isEmpty()) throw new IllegalArgumentException("host must not be empty");
+
+        if (object.get("port").isNull()) throw new IllegalArgumentException("port must not be null");
+        if (loginData.port() < 0 || loginData.port() > 0xFFFF)
+            throw new IllegalArgumentException("port must be between 0 and 65535");
+
+        if (loginData.username() == null) throw new IllegalArgumentException("username must not be null");
+        if (loginData.username().isEmpty()) throw new IllegalArgumentException("username must not be empty");
+
+        if (loginData.password() == null) throw new IllegalArgumentException("password must not be null");
+
+        return loginData;
     }
 
     @Override

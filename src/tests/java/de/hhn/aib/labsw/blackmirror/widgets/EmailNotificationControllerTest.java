@@ -23,7 +23,7 @@ class EmailNotificationControllerTest {
     void testEmailLoginDataReceivedValid() {
         Assertions.assertDoesNotThrow(() -> controller.getLoginDataFromJSON(
                 createLoginData("host", 1234, "username", "password")),
-                "port number should be allowed to be 0");
+                "method throws although login data is correct");
     }
 
     @org.junit.jupiter.api.Test
@@ -51,7 +51,7 @@ class EmailNotificationControllerTest {
 
         Assertions.assertThrows(IllegalArgumentException.class, () -> controller.getLoginDataFromJSON(
                         createLoginData("host", -1, "username", "password")),
-                "port numbers greater than 65535 should not be allowed");
+                "negative port numbers should not be allowed");
 
         ObjectNode json = (ObjectNode) createLoginData("host", 0xFFFF + 1, "username", "password");
         json.putNull("port");

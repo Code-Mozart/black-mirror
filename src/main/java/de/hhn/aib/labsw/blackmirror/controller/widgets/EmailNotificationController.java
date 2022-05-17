@@ -49,11 +49,7 @@ public class EmailNotificationController extends AbstractWidgetController {
         host = "imap.web.de";
         port = 993;
         username = "blackmirror.labswp@web.de";
-        password = "wrongPsw";
-
-        // for test purposes
-        // todo: remove
-        ScheduledFuture<?> fut = Executors.newSingleThreadScheduledExecutor().schedule(this::testUseNewLoginData, 7, TimeUnit.SECONDS);
+        password = "labSWPproject";
 
         subscribeWithID(EMAIL_DATA_TOPIC);
 
@@ -112,9 +108,7 @@ public class EmailNotificationController extends AbstractWidgetController {
      * @throws MessagingException if connection failed
      */
     private int getUnreadMessagesCount() throws MessagingException {
-        if (imapStore == null) {
-            throw new IllegalStateException(resources.getString("failedToConnect"));
-        }
+        Objects.requireNonNull(imapStore);
 
         // Folder name might be dependent on mail provider "INBOX" works on most
         Folder mailFolder = imapStore.getFolder("INBOX");

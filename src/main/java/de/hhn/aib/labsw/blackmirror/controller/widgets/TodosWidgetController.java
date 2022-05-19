@@ -1,5 +1,7 @@
 package de.hhn.aib.labsw.blackmirror.controller.widgets;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.hhn.aib.labsw.blackmirror.model.ToDoEntry;
 import de.hhn.aib.labsw.blackmirror.view.widgets.AbstractWidget;
 import de.hhn.aib.labsw.blackmirror.view.widgets.TodosWidget;
@@ -16,7 +18,7 @@ public class TodosWidgetController extends AbstractWidgetController {
     private List<ToDoEntry> entries = new ArrayList<>();
     private final TodosWidget widget;
 
-    public TodosWidgetController(){
+    public TodosWidgetController() {
         widget = new TodosWidget();
         widget.setEntries(entries);
 

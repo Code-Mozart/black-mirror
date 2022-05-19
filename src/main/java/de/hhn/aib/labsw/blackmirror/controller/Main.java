@@ -1,11 +1,21 @@
 package de.hhn.aib.labsw.blackmirror.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.hhn.aib.labsw.blackmirror.controller.API.MirrorApi;
 import de.hhn.aib.labsw.blackmirror.controller.API.websockets.MirrorApiWebsockets;
 import de.hhn.aib.labsw.blackmirror.controller.widgets.*;
+import de.hhn.aib.labsw.blackmirror.model.ApiDataModels.TodoData;
+import de.hhn.aib.labsw.blackmirror.model.ToDoEntry;
 import de.hhn.aib.labsw.blackmirror.view.widgets.AbstractWidget;
 
+import java.sql.Date;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
@@ -17,8 +27,19 @@ import java.util.concurrent.TimeUnit;
  * @version 2022-05-11
  */
 public class Main {
-    public static void main(String[] args) {
-        new Main();
+    public static void main(String[] args) throws JsonProcessingException {
+//        new Main();
+        ObjectMapper mapper = new ObjectMapper();
+        TodoData data = new TodoData(List.of(
+                new ToDoEntry(Date.from(Instant.now()), "Hallo Schaukelpferd"),
+                new ToDoEntry(Date.from(Instant.now()), "Hallo Affe"),
+                new ToDoEntry(Date.from(Instant.now()), "Hallo Welt")
+        ));
+        JsonNode json = mapper.valueToTree(data);
+        System.out.println(json);
+        TodoData data2 = mapper.treeToValue(json, TodoData.class);
+        System.out.println(data.equals(data2) ? "[v] Test passed" : "[X] Test failed");
+        System.out.println(data2);
     }
 
     private final PageController pageController = new PageController();

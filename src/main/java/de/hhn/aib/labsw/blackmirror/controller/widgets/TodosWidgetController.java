@@ -27,22 +27,6 @@ public class TodosWidgetController extends AbstractWidgetController {
         widget.setEntries(entries);
 
         subscribe(TODOS_TOPIC);
-
-        // for test purposes
-        Executors.newSingleThreadScheduledExecutor().schedule(
-                () -> this.dataReceived(
-                        TODOS_TOPIC, MirrorApiWebsockets.getInstance().getMapper().valueToTree(
-                                new TodoData(List.of(
-                                        new ToDoEntry(System.currentTimeMillis(), "Briefe abschicken"),
-                                        new ToDoEntry(System.currentTimeMillis(), "Programmieren für LabSw"),
-                                        new ToDoEntry(System.currentTimeMillis(), "Lustige Sachen machen"),
-                                        new ToDoEntry(System.currentTimeMillis(), "Karotten einkaufen"),
-                                        new ToDoEntry(System.currentTimeMillis(), "Den Müll rausbringen"),
-                                        new ToDoEntry(System.currentTimeMillis(), "{wird nicht mehr angezeigt}")
-                                ))
-                        )),
-                3, TimeUnit.SECONDS
-        );
     }
 
     @Override

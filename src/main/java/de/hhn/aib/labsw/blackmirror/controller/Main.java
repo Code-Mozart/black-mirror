@@ -27,19 +27,8 @@ import java.util.concurrent.TimeUnit;
  * @version 2022-05-11
  */
 public class Main {
-    public static void main(String[] args) throws JsonProcessingException {
-//        new Main();
-        ObjectMapper mapper = new ObjectMapper();
-        TodoData data = new TodoData(List.of(
-                new ToDoEntry(Date.from(Instant.now()), "Hallo Schaukelpferd"),
-                new ToDoEntry(Date.from(Instant.now()), "Hallo Affe"),
-                new ToDoEntry(Date.from(Instant.now()), "Hallo Welt")
-        ));
-        JsonNode json = mapper.valueToTree(data);
-        System.out.println(json);
-        TodoData data2 = mapper.treeToValue(json, TodoData.class);
-        System.out.println(data.equals(data2) ? "[v] Test passed" : "[X] Test failed");
-        System.out.println(data2);
+    public static void main(String[] args) {
+        new Main();
     }
 
     private final PageController pageController = new PageController();

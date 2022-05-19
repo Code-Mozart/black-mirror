@@ -65,6 +65,7 @@ public class TodosWidget extends AbstractWidget {
         panelMain.add(titleLabel, gbc);
 
         gbc.gridy = 2;
+
         noEntriesLabel = new JLabel(resources.getString("todoEmpty"));
         noEntriesLabel.setBackground(Color.BLACK);
         noEntriesLabel.setForeground(Color.WHITE);
@@ -75,6 +76,7 @@ public class TodosWidget extends AbstractWidget {
         todoList.setBackground(Color.BLACK);
         todoList.setForeground(Color.WHITE);
         todoList.setFont(new Font(todoList.getFont().getName(), todoList.getFont().getStyle(), 13));
+        panelMain.add(todoList, gbc);
 
         this.add(panelMain);
     }
@@ -95,11 +97,11 @@ public class TodosWidget extends AbstractWidget {
 
     public void setEntries(List<ToDoEntry> entries) {
         if (entries.isEmpty()) {
-            panelMain.remove(todoList);
-            panelMain.add(noEntriesLabel, gbc);
+            todoList.setVisible(false);
+            noEntriesLabel.setVisible(true);
         } else {
-            panelMain.remove(noEntriesLabel);
-            todoList.removeAll();
+            noEntriesLabel.setVisible(false);
+            todoListModel.removeAllElements();
 
             for (ToDoEntry entry : entries) {
                 todoListModel.addElement(formatTodo(entry));
@@ -109,7 +111,7 @@ public class TodosWidget extends AbstractWidget {
                     break;
                 }
             }
-            panelMain.add(todoList, gbc);
+            todoList.setVisible(true);
         }
     }
 }

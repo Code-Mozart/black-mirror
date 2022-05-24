@@ -27,13 +27,6 @@ public class TodosWidgetController extends AbstractWidgetController {
         widget = new TodosWidget();
         widget.setEntries(entries);
 
-        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(
-                () -> {
-                    entries.add(new ToDoEntry(System.currentTimeMillis(), "Entry " + (entries.size() + 1)));
-                    SwingUtilities.invokeLater(() -> widget.setEntries(entries));
-                }, 2, 2, TimeUnit.SECONDS
-        );
-
         subscribe(TODOS_TOPIC);
     }
 

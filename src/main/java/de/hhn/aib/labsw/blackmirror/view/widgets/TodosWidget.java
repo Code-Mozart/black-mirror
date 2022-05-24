@@ -17,6 +17,8 @@ import java.util.*;
  */
 public class TodosWidget extends AbstractWidget {
 
+    private static final int MAX_TODO_LIST_SIZE = 5;
+
     private final ResourceBundle resources = ResourceBundle.getBundle(
             "lang/TodosWidget", Locale.getDefault());
     private JLabel noEntriesLabel;
@@ -104,11 +106,15 @@ public class TodosWidget extends AbstractWidget {
             todoListModel.removeAllElements();
 
             for (ToDoEntry entry : entries) {
-                todoListModel.addElement(formatTodo(entry));
-
-                if (todoListModel.size() >= 5) {
-                    todoListModel.addElement("...");
+                if (todoListModel.size() == MAX_TODO_LIST_SIZE - 1) {
+                    if (entries.size() > MAX_TODO_LIST_SIZE) {
+                        todoListModel.addElement("...");
+                    } else {
+                        todoListModel.addElement(formatTodo(entry));
+                    }
                     break;
+                } else {
+                    todoListModel.addElement(formatTodo(entry));
                 }
             }
             todoList.setVisible(true);

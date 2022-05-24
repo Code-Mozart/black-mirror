@@ -2,7 +2,6 @@ package de.hhn.aib.labsw.blackmirror.controller.widgets;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import de.hhn.aib.labsw.blackmirror.controller.API.websockets.MirrorApiWebsockets;
 import de.hhn.aib.labsw.blackmirror.model.ApiDataModels.TodoData;
 import de.hhn.aib.labsw.blackmirror.model.ToDoEntry;
 import de.hhn.aib.labsw.blackmirror.view.widgets.AbstractWidget;
@@ -12,9 +11,6 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 public class TodosWidgetController extends AbstractWidgetController {
 
@@ -26,13 +22,6 @@ public class TodosWidgetController extends AbstractWidgetController {
     public TodosWidgetController() {
         widget = new TodosWidget();
         widget.setEntries(entries);
-
-        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(
-                () -> {
-                    entries.add(new ToDoEntry(System.currentTimeMillis(), "Entry " + (entries.size() + 1)));
-                    SwingUtilities.invokeLater(() -> widget.setEntries(entries));
-                }, 2, 2, TimeUnit.SECONDS
-        );
 
         subscribe(TODOS_TOPIC);
     }

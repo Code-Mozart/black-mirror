@@ -12,6 +12,7 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
@@ -25,6 +26,13 @@ public class TodosWidgetController extends AbstractWidgetController {
     public TodosWidgetController() {
         widget = new TodosWidget();
         widget.setEntries(entries);
+
+        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(
+                () -> {
+                    entries.add(new ToDoEntry(System.currentTimeMillis(), "Entry " + (entries.size() + 1)));
+                    SwingUtilities.invokeLater(() -> widget.setEntries(entries));
+                }, 2, 2, TimeUnit.SECONDS
+        );
 
         subscribe(TODOS_TOPIC);
     }

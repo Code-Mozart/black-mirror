@@ -2,6 +2,7 @@ package de.hhn.aib.labsw.blackmirror.controller;
 
 import de.hhn.aib.labsw.blackmirror.controller.widgets.AbstractWidgetController;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
@@ -19,6 +20,7 @@ public class PageController {
     private boolean isStandby = false;
 
     public PageController() {
+        new SecondsTimer(this::autoChangePageByTime);
     }
 
     /**
@@ -169,5 +171,27 @@ public class PageController {
      */
     protected Page getCurrentPage() {
         return pages.get(pageIndex);
+    }
+
+    /**
+     * Automatically changes once to default Pages depending on current time.
+     *  Time     Page
+     *  08 AM     0
+     *  16 AM     1
+     */
+    private void autoChangePageByTime() {
+        // at least 2 pages have to be initialised beforehand for this method to work properly
+        if(pages.size() >= 2) {
+            LocalDateTime now = LocalDateTime.now();
+
+            if (now.getHour() == 8 && now.getMinute() == 0 && now.getSecond() == 0) {
+                goToAnyPage(0);
+                return;
+            }
+
+            if (now.getHour() == 16 && now.getMinute() == 0 && now.getSecond() == 0) {
+                goToAnyPage(1);
+            }
+        }
     }
 }

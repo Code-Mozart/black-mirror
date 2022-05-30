@@ -324,3 +324,6 @@ obj/
 !/gradle/wrapper/gradle-wrapper.jar
 
 # End of https://www.toptal.com/developers/gitignore/api/java,kotlin,windows,macos,intellij,androidstudio
+
+# Ignore Gradle build output directory
+build

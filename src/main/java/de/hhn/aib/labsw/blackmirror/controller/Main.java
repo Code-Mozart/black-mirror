@@ -1,21 +1,13 @@
 package de.hhn.aib.labsw.blackmirror.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.hhn.aib.labsw.blackmirror.controller.API.MirrorApi;
 import de.hhn.aib.labsw.blackmirror.controller.API.websockets.MirrorApiWebsockets;
-import de.hhn.aib.labsw.blackmirror.controller.widgets.*;
-import de.hhn.aib.labsw.blackmirror.model.ApiDataModels.TodoData;
-import de.hhn.aib.labsw.blackmirror.model.ToDoEntry;
+import de.hhn.aib.labsw.blackmirror.controller.widgets.AbstractWidgetController;
+import de.hhn.aib.labsw.blackmirror.controller.widgets.EmailNotificationController;
+import de.hhn.aib.labsw.blackmirror.controller.widgets.TodosWidgetController;
 import de.hhn.aib.labsw.blackmirror.view.widgets.AbstractWidget;
 
-import java.sql.Date;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
@@ -53,6 +45,13 @@ public class Main {
 
         //@Team Use this method to add a new page, with a ArrayList of widgets -Niklas
         pageController.addPage(widgets);
+
+        // add another page
+        ArrayList<AbstractWidgetController> widgets1 = new ArrayList<>();
+        widgets1.add(new EmailNotificationController());
+        widgets1.get(0).getWidget().setPosition(AbstractWidget.Position.TOP_RIGHT);
+
+        pageController.addPage(widgets1);
 
         pageController.getCurrentPage().setWidgetsVisible(); //Sets all widgets on the default page visible.
         new SecondsTimer(this::onNextSecond);

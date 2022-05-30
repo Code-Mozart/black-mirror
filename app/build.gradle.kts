@@ -42,3 +42,9 @@ tasks.named<Test>("test") {
 tasks.withType(JavaCompile::class.java){
     options.encoding = "UTF-8"
 }
+
+tasks.withType(com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar::class.java){
+    archiveBaseName.set("Blackmirror")
+    archiveVersion.set("")
+    archiveClassifier.set("")
+}

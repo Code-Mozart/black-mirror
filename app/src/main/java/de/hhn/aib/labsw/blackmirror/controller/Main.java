@@ -1,7 +1,9 @@
 package de.hhn.aib.labsw.blackmirror.controller;
 
+import com.fazecast.jSerialComm.SerialPort;
 import de.hhn.aib.labsw.blackmirror.controller.API.MirrorApi;
 import de.hhn.aib.labsw.blackmirror.controller.API.websockets.MirrorApiWebsockets;
+import de.hhn.aib.labsw.blackmirror.controller.gesture.SerialGestureController;
 import de.hhn.aib.labsw.blackmirror.controller.widgets.*;
 import de.hhn.aib.labsw.blackmirror.view.widgets.AbstractWidget;
 import de.hhn.aib.labsw.blackmirror.view.widgets.clock.ClockFaceType;
@@ -26,6 +28,8 @@ public class Main {
 
     public Main() {
         MirrorApi server = MirrorApiWebsockets.getInstance();
+        //adjust this for the pi because it uses a different naming schema for serial ports
+        SerialGestureController c = new SerialGestureController(SerialPort.getCommPort("COM5"), pageController);
         server.init();
 
         // @Team add your widgets here to test them -Markus

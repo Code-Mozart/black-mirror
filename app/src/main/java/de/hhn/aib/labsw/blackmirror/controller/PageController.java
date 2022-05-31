@@ -106,7 +106,7 @@ public class PageController {
      * Navigates to the next page.
      * If it is on the last page, it navigates from the last page to the first page.
      */
-    protected void goToNextPage() {
+    public void goToNextPage() {
         if (!isStandby) {
             try {
                 goToAnyPage(pageIndex + 1);
@@ -123,7 +123,7 @@ public class PageController {
      * Navigates to the previous page.
      * If it is on the first page, it navigates from the first page to the last page.
      */
-    protected void goToPreviousPage() {
+    public void goToPreviousPage() {
         if (!isStandby) {
             try {
                 goToAnyPage(pageIndex - 1);

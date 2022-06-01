@@ -47,7 +47,7 @@ class SerialGestureController(
                             else -> {}
                         }
                     } catch (e: Exception) {
-                        println(e.message)
+                        /* no-op */
                     }
                 }
             }

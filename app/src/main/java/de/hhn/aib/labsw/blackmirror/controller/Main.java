@@ -29,7 +29,7 @@ public class Main {
     public Main() {
         MirrorApi server = MirrorApiWebsockets.getInstance();
         //adjust this for the pi because it uses a different naming schema for serial ports
-        SerialGestureController c = new SerialGestureController(SerialPort.getCommPort("COM5"), pageController);
+        SerialGestureController c = new SerialGestureController(SerialPort.getCommPort("COM3"), pageController);
         server.init();
 
         // @Team add your widgets here to test them -Markus
@@ -46,15 +46,22 @@ public class Main {
         widgets.get(i++).getWidget().setPosition(AbstractWidget.Position.BOTTOM_RIGHT);
         widgets.get(i++).getWidget().setPosition(AbstractWidget.Position.BOTTOM_LEFT);
 
+        ArrayList<AbstractWidgetController> widgetsPage2 = new ArrayList<>();
+        widgetsPage2.add(new TodosWidgetController());
+        widgetsPage2.add(new WeatherWidgetController());
+        widgetsPage2.add(new EmailNotificationController());
+        widgetsPage2.add(new CalendarWidgetController());
+        widgetsPage2.add(new ClockWidgetController(ClockFaceType.DIGITAL));
+
+        i = 0;
+        widgetsPage2.get(i++).getWidget().setPosition(AbstractWidget.Position.TOP_LEFT);
+        widgetsPage2.get(i++).getWidget().setPosition(AbstractWidget.Position.TOP_RIGHT);
+        widgetsPage2.get(i++).getWidget().setPosition(AbstractWidget.Position.BOTTOM_RIGHT);
+        widgetsPage2.get(i++).getWidget().setPosition(AbstractWidget.Position.BOTTOM_LEFT);
+
         //@Team Use this method to add a new page, with a ArrayList of widgets -Niklas
         pageController.addPage(widgets);
-
-        // add another page
-        ArrayList<AbstractWidgetController> widgets1 = new ArrayList<>();
-        widgets1.add(new EmailNotificationController());
-        widgets1.get(0).getWidget().setPosition(AbstractWidget.Position.TOP_RIGHT);
-
-        pageController.addPage(widgets1);
+        pageController.addPage(widgetsPage2);
 
         pageController.getCurrentPage().setWidgetsVisible(); //Sets all widgets on the default page visible.
         new SecondsTimer(this::onNextSecond);

@@ -15,6 +15,7 @@
             <stringArg name="classpath">
               <args>
                 <arg>$MODULE_DIR$/../../../app/build/classes/java/main</arg>
+                <arg>$MODULE_DIR$/../../../app/build/classes/kotlin/main</arg>
                 <arg>$MODULE_DIR$/../../../app/build/resources/main</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.sun.mail/jakarta.mail/2.0.1/96d3645f02a92bcc5e7ae1ff037151e44179f230/jakarta.mail-2.0.1.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-annotations/2.13.3/7198b3aac15285a49e218e08441c5f70af00fc51/jackson-annotations-2.13.3.jar</arg>
@@ -69,6 +70,12 @@
   <component name="NewModuleRootManager">
     <output-test url="file://$MODULE_DIR$/../../../app/build/classes/java/test" />
     <exclude-output />
+    <content url="file://$MODULE_DIR$/../../../app/src/test">
+      <sourceFolder url="file://$MODULE_DIR$/../../../app/src/test/java" isTestSource="true" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../app/src/test">
+      <sourceFolder url="file://$MODULE_DIR$/../../../app/src/test/java" isTestSource="true" />
+    </content>
     <content url="file://$MODULE_DIR$/../../../app/src/test">
       <sourceFolder url="file://$MODULE_DIR$/../../../app/src/test/java" isTestSource="true" />
     </content>

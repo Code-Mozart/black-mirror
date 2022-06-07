@@ -9,6 +9,9 @@ import de.hhn.aib.labsw.blackmirror.model.Gesture
 
 /**
  * controller handling Gestures
+ *
+ * @author Luis Gutzeit
+ * @version 07.06.2022
  */
 class SerialGestureController(
     private val port: SerialPort,

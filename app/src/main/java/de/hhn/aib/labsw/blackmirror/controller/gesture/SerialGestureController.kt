@@ -14,7 +14,7 @@ import de.hhn.aib.labsw.blackmirror.model.Gesture
  * @version 07.06.2022
  */
 class SerialGestureController(
-    private val port: SerialPort,
+    port: SerialPort,
     var pageController: PageController
 ) {
     init {
@@ -47,6 +47,8 @@ class SerialGestureController(
                         when (gesture) {
                             Gesture.LEFT -> pageController.goToPreviousPage()
                             Gesture.RIGHT -> pageController.goToNextPage()
+                            Gesture.DOWN -> if (pageController.mode == false) pageController.changeMode()
+                            Gesture.UP -> if (pageController.mode == true) pageController.changeMode()
                             else -> {}
                         }
                     } catch (e: Exception) {

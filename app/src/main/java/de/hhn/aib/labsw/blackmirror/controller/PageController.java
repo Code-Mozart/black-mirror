@@ -157,13 +157,22 @@ public class PageController {
     /**
      * Activates & Deactivates the standby-mode. While the Standby-Mode is activated,  the navigation is deactivated.
      */
-    protected void changeMode() {
+    public void changeMode() {
         isStandby = !isStandby;
         if (isStandby) {
             getCurrentPage().setWidgetsInvisible();
         } else {
             getCurrentPage().setWidgetsVisible();
         }
+    }
+
+    /**
+     * Gets the current mode of the mirror
+     *
+     * @return true when the mirror is in standby, else false
+     */
+    public Boolean getMode() {
+        return isStandby;
     }
 
     /**
@@ -175,13 +184,13 @@ public class PageController {
 
     /**
      * Automatically changes once to default Pages depending on current time.
-     *  Time     Page
-     *  08 AM     0
-     *  16 AM     1
+     * Time     Page
+     * 08 AM     0
+     * 16 AM     1
      */
     private void autoChangePageByTime() {
         // at least 2 pages have to be initialised beforehand for this method to work properly
-        if(pages.size() >= 2) {
+        if (pages.size() >= 2) {
             LocalDateTime now = LocalDateTime.now();
 
             if (now.getHour() == 8 && now.getMinute() == 0 && now.getSecond() == 0) {

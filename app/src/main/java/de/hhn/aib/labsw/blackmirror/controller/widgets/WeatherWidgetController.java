@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import de.hhn.aib.labsw.blackmirror.controller.API.TopicListener;
 import de.hhn.aib.labsw.blackmirror.model.ApiDataModels.Location;
 import de.hhn.aib.labsw.blackmirror.model.WeatherSet;
 import de.hhn.aib.labsw.blackmirror.view.widgets.AbstractWidget;
@@ -128,7 +129,7 @@ public class WeatherWidgetController extends AbstractWidgetController {
 
         if(topic.equals("location")) {
             try {
-                Location loc = nodeToObject(object, Location.class);
+                Location loc = TopicListener.nodeToObject(object, Location.class);
                 setGPSLocation(loc.lat(), loc.lon());
             } catch (JsonProcessingException e) {
                 e.printStackTrace();

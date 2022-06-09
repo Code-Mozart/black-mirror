@@ -1,10 +1,13 @@
 package de.hhn.aib.labsw.blackmirror.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import de.hhn.aib.labsw.blackmirror.controller.API.MirrorApi;
+import de.hhn.aib.labsw.blackmirror.controller.API.TopicListener;
+import de.hhn.aib.labsw.blackmirror.controller.API.websockets.MirrorApiWebsockets;
 import de.hhn.aib.labsw.blackmirror.controller.widgets.*;
 import de.hhn.aib.labsw.blackmirror.model.ApiDataModels.LayoutData;
 import de.hhn.aib.labsw.blackmirror.model.ApiDataModels.WidgetData;
-import de.hhn.aib.labsw.blackmirror.view.widgets.AbstractWidget;
 import de.hhn.aib.labsw.blackmirror.view.widgets.clock.ClockFaceType;
 
 import java.time.LocalDateTime;
@@ -19,7 +22,10 @@ import java.util.NoSuchElementException;
  * @author Philipp Herda
  * @version 2022-05-11
  */
-public class PageController extends AbstractWidgetController {
+public class PageController implements TopicListener {
+
+    private final MirrorApi api = MirrorApiWebsockets.getInstance();
+
     private ArrayList<Page> pages = new ArrayList<>();
     private static final String PAGE_UPDATE_TOPIC = "pageUpdate";
 
@@ -28,7 +34,7 @@ public class PageController extends AbstractWidgetController {
 
     public PageController() {
         new SecondsTimer(this::autoChangePageByTime);
-        subscribe(PAGE_UPDATE_TOPIC);
+        api.subscribe(PAGE_UPDATE_TOPIC, this);
     }
 
     /**
@@ -205,7 +211,6 @@ public class PageController extends AbstractWidgetController {
 
     @Override
     public void dataReceived(String topic, JsonNode object) {
-        super.dataReceived(topic, object);
 
         assert (topic.equals(PAGE_UPDATE_TOPIC)) : "Wrong topic received by PageController.";
 
@@ -217,7 +222,7 @@ public class PageController extends AbstractWidgetController {
         }
 
         try {
-            LayoutData data = nodeToObject(object, LayoutData.class);
+            LayoutData data = TopicListener.nodeToObject(object, LayoutData.class);
 
             // iterate the pages
             for (int i = 0; i < data.pages().size(); i++) {
@@ -247,6 +252,8 @@ public class PageController extends AbstractWidgetController {
                                 page.add(emailNotificationController);
                             }
                             case REMINDER -> {
+                                System.out.println("x: " + widget.x());
+                                System.out.println("y: " + widget.y());
                                 TodosWidgetController todosWidgetController = new TodosWidgetController();
                                 todosWidgetController.getWidget().setPosition(widget.x(), widget.y());
                                 page.add(todosWidgetController);
@@ -263,13 +270,8 @@ public class PageController extends AbstractWidgetController {
             }
             pageIndex = data.currentPageIndex();
             getCurrentPage().setWidgetsVisible();
-        } catch (/*JsonProcessingException*/ Exception e) {
+        } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public AbstractWidget getWidget() {
-        return null;
     }
 }

@@ -1,7 +1,5 @@
 package de.hhn.aib.labsw.blackmirror.controller.widgets;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.JsonNode;
 import de.hhn.aib.labsw.blackmirror.controller.API.MirrorApi;
 import de.hhn.aib.labsw.blackmirror.controller.API.TopicListener;
@@ -41,19 +39,6 @@ public abstract class AbstractWidgetController implements TopicListener, AutoClo
 
     @Override
     public void dataReceived(String topic, JsonNode object) {
-    }
-
-    /**
-     * converts a JsonNode into the instance of a java record/dataclass
-     *
-     * @param node   the node to be converted
-     * @param tClass Class of which an instance should be created
-     * @return instance of the provided class filled with data from the json node
-     * @throws JsonProcessingException when json could not be parsed
-     * @see com.fasterxml.jackson.databind.ObjectMapper#treeToValue(TreeNode, Class)
-     */
-    protected <T> T nodeToObject(JsonNode node, Class<T> tClass) throws JsonProcessingException {
-        return api.getMapper().treeToValue(node, tClass);
     }
 
     public abstract AbstractWidget getWidget();

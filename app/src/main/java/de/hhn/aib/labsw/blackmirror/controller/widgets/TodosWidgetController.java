@@ -2,6 +2,7 @@ package de.hhn.aib.labsw.blackmirror.controller.widgets;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import de.hhn.aib.labsw.blackmirror.controller.API.TopicListener;
 import de.hhn.aib.labsw.blackmirror.model.ApiDataModels.TodoData;
 import de.hhn.aib.labsw.blackmirror.model.ToDoEntry;
 import de.hhn.aib.labsw.blackmirror.view.widgets.AbstractWidget;
@@ -34,7 +35,7 @@ public class TodosWidgetController extends AbstractWidgetController {
         assert Objects.equals(topic, TODOS_TOPIC);
 
         try {
-            TodoData data = nodeToObject(object, TodoData.class);
+            TodoData data = TopicListener.nodeToObject(object, TodoData.class);
             entries = data.entries();
             SwingUtilities.invokeLater(() -> widget.setEntries(entries));
         } catch (JsonProcessingException e) {

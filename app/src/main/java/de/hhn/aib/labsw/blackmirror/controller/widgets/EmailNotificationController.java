@@ -3,19 +3,17 @@ package de.hhn.aib.labsw.blackmirror.controller.widgets;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sun.mail.imap.IMAPStore;
+import de.hhn.aib.labsw.blackmirror.controller.API.TopicListener;
 import de.hhn.aib.labsw.blackmirror.controller.API.websockets.MirrorApiWebsockets;
 import de.hhn.aib.labsw.blackmirror.model.ApiDataModels.EmailLoginData;
 import de.hhn.aib.labsw.blackmirror.view.widgets.AbstractWidget;
 import de.hhn.aib.labsw.blackmirror.view.widgets.EmailNotificationWidget;
-
 import jakarta.mail.*;
+
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.ResourceBundle;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Controller class for {@link EmailNotificationWidget}.
@@ -153,7 +151,7 @@ public class EmailNotificationController extends AbstractWidgetController {
     }
 
     public EmailLoginData getLoginDataFromJSON(JsonNode object) throws JsonProcessingException {
-        EmailLoginData loginData = nodeToObject(object, EmailLoginData.class);
+        EmailLoginData loginData = TopicListener.nodeToObject(object, EmailLoginData.class);
 
         if (loginData.host() == null) throw new IllegalArgumentException("host must not be null");
         if (loginData.host().isEmpty()) throw new IllegalArgumentException("host must not be empty");

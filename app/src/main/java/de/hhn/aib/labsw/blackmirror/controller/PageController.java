@@ -252,8 +252,6 @@ public class PageController implements TopicListener {
                                 page.add(emailNotificationController);
                             }
                             case REMINDER -> {
-                                System.out.println("x: " + widget.x());
-                                System.out.println("y: " + widget.y());
                                 TodosWidgetController todosWidgetController = new TodosWidgetController();
                                 todosWidgetController.getWidget().setPosition(widget.x(), widget.y());
                                 page.add(todosWidgetController);

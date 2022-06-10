@@ -161,9 +161,9 @@ public class WeatherWidget extends AbstractWidget {
         public void setData(String headerText, WeatherSet set){
             header.setText(headerText);
             icon.setIcon(convertCodeToIcon(set.getWeathercode()));
-            temperature.setText("%01.1f °C".formatted(set.getTemperature()));
-            wind.setText("%01.1f Km/h".formatted(set.getWindspeed()));
-            pressure.setText("%04.1f hPa".formatted(set.getPressure()));
+            temperature.setText("%01.0f °C".formatted(set.getTemperature()));
+            wind.setText("%01.0f Km/h".formatted(set.getWindspeed()));
+            pressure.setText("%04.0f hPa".formatted(set.getPressure()));
             humidity.setText("%d %%".formatted(set.getHumidity()));
         }
     }

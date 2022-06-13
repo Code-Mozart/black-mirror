@@ -4,6 +4,7 @@ import de.hhn.aib.labsw.blackmirror.util.SwingUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.time.DayOfWeek;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -105,6 +106,10 @@ public class CalendarWidget extends AbstractWidget {
          */
         public void setDay(ZonedDateTime date) {
             dayLabel.setText(date.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.getDefault()));
+            if(date.getDayOfWeek() == DayOfWeek.SUNDAY){
+                dayLabel.setForeground(new Color(255,65,0));
+                dateLabel.setForeground(new Color(255,65,0));
+            }
             dateLabel.setText(String.valueOf(date.getDayOfMonth()));
         }
     }

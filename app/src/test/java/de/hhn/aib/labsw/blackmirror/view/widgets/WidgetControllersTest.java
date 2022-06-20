@@ -8,6 +8,9 @@ import org.junit.jupiter.api.Test;
 
 public class WidgetControllersTest {
 
+    /**
+     *
+     */
     @Test
     void testCalendarWidget() {
         CalendarWidgetController calendar = new CalendarWidgetController();

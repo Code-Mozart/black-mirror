@@ -9,7 +9,9 @@ import org.junit.jupiter.api.Test;
 public class WidgetControllersTest {
 
     /**
+     * User can create an instance of a CalendarWidget by using the CalendarWidgetController.
      *
+     * @result fails if return value is either null or no instance of a CalendarWidget.
      */
     @Test
     void testCalendarWidget() {
@@ -20,6 +22,11 @@ public class WidgetControllersTest {
                 "CalendarWidgetController.getWidget() should return a CalendarWidget");
     }
 
+    /**
+     * User can create an instance of a EmailNotificationWidget by using the EmailNotificationController.
+     *
+     * @result fails if return value is either null or no instance of an EmailNotificationWidget.
+     */
     @Test
     void testEmailNotificationWidget() {
         EmailNotificationController emailNotifier = new EmailNotificationController();
@@ -29,6 +36,11 @@ public class WidgetControllersTest {
                 "EmailNotificationController.getWidget() should return a EmailNotificationWidget");
     }
 
+    /**
+     * User can create an instance of a ClockWidget by using the ClockWidgetController.
+     *
+     * @result fails if return value is either null or no instance of an ClockWidget.
+     */
     @Test
     void testClockWidget() {
         ClockWidgetController clock = new ClockWidgetController(ClockFaceType.DIGITAL);
@@ -38,6 +50,11 @@ public class WidgetControllersTest {
                 "ClockWidgetController.getWidget() should return a ClockWidget");
     }
 
+    /**
+     * User can create an instance of a TodosWidget by using the TodosWidgetController.
+     *
+     * @result fails if return value is either null or no instance of an TodosWidget.
+     */
     @Test
     void testReminderWidget() {
         TodosWidgetController reminder = new TodosWidgetController();
@@ -47,6 +64,11 @@ public class WidgetControllersTest {
                 "ReminderWidgetController.getWidget() should return a ReminderWidget");
     }
 
+    /**
+     * User can create an instance of a WeatherWidget by using the WeatherWidgetController.
+     *
+     * @result fails if return value is either null or no instance of an WeatherWidget.
+     */
     @Test
     void testWeatherWidget() {
         WeatherWidgetController reminder = new WeatherWidgetController();

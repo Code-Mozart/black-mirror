@@ -20,7 +20,7 @@ class EmailNotificationControllerTest {
     }
 
     /**
-     * Creates valid login data.
+     * User can pass their login data if it contains valid parameter values.
      *
      * @result fails if login data is null and creating failed.
      */
@@ -32,7 +32,7 @@ class EmailNotificationControllerTest {
     }
 
     /**
-     * Creates invalid login data and tests if dataReceived throws IllegalArgumentException.
+     * User cannot pass their email login data if the data contains any invalid data.
      *
      * @result fails if login data could be created and returned with invalid parameters.
      */
@@ -44,7 +44,8 @@ class EmailNotificationControllerTest {
     }
 
     /**
-     * Creates login data with different ports (between 0 and 65535).
+     * User can pass their email login data with valid port number values (must be in the range of
+     * 0-65535).
      *
      * @result fails if login data could not be created and returned.
      */
@@ -59,7 +60,8 @@ class EmailNotificationControllerTest {
     }
 
     /**
-     * Creates login data with invalid port values (above 65535 or negative or null).
+     * User cannot pass their email login data with invalid port number values (must be in the range of
+     * 0-65535).
      *
      * @result fails if one assert does not throw IllegalArgumentException.
      */
@@ -81,7 +83,7 @@ class EmailNotificationControllerTest {
     }
 
     /**
-     * Creates login data with invalid host values (null or empty).
+     * User cannot pass email login data with invalid host values (must not be null or empty).
      *
      * @result fails if one assert does not throw IllegalArgumentException.
      */
@@ -96,7 +98,7 @@ class EmailNotificationControllerTest {
     }
 
     /**
-     * Creates login data with invalid usernames (an empty String or null).
+     * User cannot pass email login data with invalid username values (must not be null or empty).
      *
      * @result fails if one assert does not throw IllegalArgumentException.
      */
@@ -111,7 +113,7 @@ class EmailNotificationControllerTest {
     }
 
     /**
-     * Creates login data with invalid password (null).
+     * User cannot pass email login data with invalid password values (must not be null).
      *
      * @result fails if no IllegalArgumentException is thrown.
      */

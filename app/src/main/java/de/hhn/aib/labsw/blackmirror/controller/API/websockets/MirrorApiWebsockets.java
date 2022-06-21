@@ -90,10 +90,7 @@ public class MirrorApiWebsockets extends WebSocketServer implements MirrorApi {
     @Override
     public void onMessage(WebSocket session, String message) {
         try {
-            if(message.equals("alive?")){
-                session.send("yes!");
-            }
-            else {
+            if(!message.equals("alive?")){
                 //try to parse the string into JSON
                 JsonNode jsonNode = mapper.readTree(message);
                 String topic = jsonNode.get("topic").textValue();

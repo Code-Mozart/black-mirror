@@ -90,24 +90,29 @@ public class MirrorApiWebsockets extends WebSocketServer implements MirrorApi {
     @Override
     public void onMessage(WebSocket session, String message) {
         try {
-            //try to parse the string into JSON
-            JsonNode jsonNode = mapper.readTree(message);
-            String topic = jsonNode.get("topic").textValue();
-            if(jsonNode.get("payload") == null){
-                throw new IllegalArgumentException("wrong json format");
+            if(message.equals("alive?")){
+                session.send("yes!");
             }
+            else {
+                //try to parse the string into JSON
+                JsonNode jsonNode = mapper.readTree(message);
+                String topic = jsonNode.get("topic").textValue();
+                if (jsonNode.get("payload") == null) {
+                    throw new IllegalArgumentException("wrong json format");
+                }
 
-            //notify each listener for the topic if the JSON is valid
-            List<TopicListener> listenersList = listeners.get(topic);
-            if(listenersList != null){
-                //Iterater is being used to delete dead references
-                Iterator<TopicListener> topicIterator = listenersList.iterator();
-                while(topicIterator.hasNext()) {
-                    TopicListener element = topicIterator.next();
-                    try {
-                        element.dataReceived(topic, jsonNode.get("payload"));
-                    } catch (NullPointerException e) {
-                        topicIterator.remove();
+                //notify each listener for the topic if the JSON is valid
+                List<TopicListener> listenersList = listeners.get(topic);
+                if (listenersList != null) {
+                    //Iterater is being used to delete dead references
+                    Iterator<TopicListener> topicIterator = listenersList.iterator();
+                    while (topicIterator.hasNext()) {
+                        TopicListener element = topicIterator.next();
+                        try {
+                            element.dataReceived(topic, jsonNode.get("payload"));
+                        } catch (NullPointerException e) {
+                            topicIterator.remove();
+                        }
                     }
                 }
             }

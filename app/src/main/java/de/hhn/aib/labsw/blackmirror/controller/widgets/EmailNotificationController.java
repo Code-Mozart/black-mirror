@@ -177,4 +177,9 @@ public class EmailNotificationController extends AbstractWidgetController {
     public void onRegularUpdate() {
         update();
     }
+
+    @Override
+    public void close() throws Exception {
+        widget.dispose();
+    }
 }

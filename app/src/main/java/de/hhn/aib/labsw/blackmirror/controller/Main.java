@@ -29,7 +29,10 @@ public class Main {
     public Main() {
         MirrorApi server = MirrorApiWebsockets.getInstance();
         //adjust this for the pi because it uses a different naming schema for serial ports
-        SerialGestureController c = new SerialGestureController(SerialPort.getCommPort("COM3"), pageController);
+        //SerialGestureController c = new SerialGestureController(SerialPort.getCommPort("COM3"), pageController);
+        SerialGestureController c = new SerialGestureController(SerialPort.getCommPort(
+                "/dev/serial/by-path/platform-3f980000.usb-usb-0:1.2:1.0"
+        ),pageController);
         server.init();
 
         // @Team add your widgets here to test them -Markus

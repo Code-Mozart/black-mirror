@@ -89,6 +89,9 @@ public class PageController implements TopicListener {
         } else if (pageIndex >= pages.size()) {
             throw new IndexOutOfBoundsException("Index has to be lower than the size of the list - 1.");
         } else {
+            for (AbstractWidgetController c : pages.get(pageIndex).getWidgetsOnPage()) {
+                c.getWidget().dispose();
+            }
             pages.remove(pageIndex);
         }
     }
@@ -235,7 +238,6 @@ public class PageController implements TopicListener {
 
             // iterate the pages
             for (int i = 0; i < data.pages().size(); i++) {
-
                 //create new page
                 ArrayList<AbstractWidgetController> page = new ArrayList();
 

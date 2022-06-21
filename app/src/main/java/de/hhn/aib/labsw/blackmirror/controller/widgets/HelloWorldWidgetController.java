@@ -18,4 +18,9 @@ public class HelloWorldWidgetController extends AbstractWidgetController {
     public AbstractWidget getWidget() {
         return widget;
     }
+
+    @Override
+    public void close() throws Exception {
+        widget.dispose();
+    }
 }

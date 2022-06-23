@@ -7,9 +7,17 @@ import de.hhn.aib.labsw.blackmirror.controller.API.websockets.MirrorApiWebsocket
 import de.hhn.aib.labsw.blackmirror.view.widgets.AbstractWidget;
 
 /**
+ * Base class for the widget controllers that...
+ * <ol>
+ *     <li>...acts as a common interface for all widget controllers</li>
+ *     <li>...provides derived widget controllers with an interface to communicate with the app.</li>
+ * </ol>
+ * Each widget controller controls one widget instance.
+ *
  * @author Luis Gutzeit
  * @author Markus Marewitz
- * @version 2022-05-16
+ * @version 2022-06-23
+ * @see AbstractWidget
  */
 public abstract class AbstractWidgetController implements TopicListener, AutoCloseable {
     public static final int INVALID_ID = -1;
@@ -17,23 +25,46 @@ public abstract class AbstractWidgetController implements TopicListener, AutoClo
     private final MirrorApi api = MirrorApiWebsockets.getInstance();
     private int id = INVALID_ID;
 
-    protected final void subscribe(String topic) {
+    /**
+     * Derived widget controllers should use this method to subscribe to a topic
+     * and receive corresponding messages from the app.
+     */
+    protected void subscribe(String topic) {
         api.subscribe(topic, this);
     }
 
-    protected final void subscribeWithID(String topic) {
+    /**
+     * Subscribes a topic with the id of this widget controller.
+     *
+     * @see #subscribe(String)
+     * @see #getID()
+     */
+    protected void subscribeWithID(String topic) {
         subscribe((getID() != INVALID_ID) ? (topic + "/" + getID()) : topic);
     }
 
-    protected final void unsubscribe(String topic) {
+    /**
+     * Unsubscribe a topic.
+     *
+     * @see #subscribe(String)
+     */
+    protected void unsubscribe(String topic) {
         api.unsubscribe(topic, this);
     }
 
-    protected final void publish(String topic, Object payload) {
+    /**
+     * Publishes a message under the specified topic.
+     *
+     * @param payload May be any {@link Object} as long as it is parseable to JSON.
+     */
+    protected void publish(String topic, Object payload) {
         api.publish(topic, payload);
     }
 
-    protected final void publish(String topic, JsonNode payload) {
+    /**
+     * Publishes the JSON string under the specified topic.
+     */
+    protected void publish(String topic, JsonNode payload) {
         api.publish(topic, payload);
     }
 
@@ -41,16 +72,25 @@ public abstract class AbstractWidgetController implements TopicListener, AutoClo
     public void dataReceived(String topic, JsonNode object) {
     }
 
+    /**
+     * @return The controlled widget which is an instance of a widget class derived from {@link AbstractWidget}.
+     */
     public abstract AbstractWidget getWidget();
 
+    /**
+     * The ID of a widget instance depends on its page and position on the mirror and can be used
+     * to uniquely identify it amongst other widget instances of the same widget type
+     * (e.g. to differentiate two clock widgets).
+     */
     protected int getID() {
         return id;
     }
 
     /**
      * Sets the ID of the widget depending on its page and position on this page.
+     *
      * @throws UnsupportedOperationException Not yet used. Can later be used
-     * to sync the id's of widgets between app and mirror
+     *                                       to sync the id's of widgets between app and mirror
      */
     public void setID(int id) {
         throw new UnsupportedOperationException("Not yet implemented");

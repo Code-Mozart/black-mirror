@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author Markus Marewitz
  * @author Niklas Binder
- * @version 2022-05-11
+ * @version 2022-06-23
  */
 public class Main {
     public static void main(String[] args) {
@@ -69,10 +69,16 @@ public class Main {
                 this::onRegularUpdate, 0L, 30L, TimeUnit.SECONDS);
     }
 
+    /**
+     * Called each second. See {@link SecondsTimer}.
+     */
     private void onNextSecond() {
         pageController.getCurrentPage().onNextSecond();
     }
 
+    /**
+     * Called regularly (currently every 30 seconds).
+     */
     private void onRegularUpdate() {
         pageController.getCurrentPage().onRegularUpdate();
     }

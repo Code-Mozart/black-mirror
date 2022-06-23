@@ -1,5 +1,7 @@
 package de.hhn.aib.labsw.blackmirror.view.widgets;
 
+import de.hhn.aib.labsw.blackmirror.controller.Page;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -7,18 +9,38 @@ import java.awt.*;
  * Common parent class from which all widgets should be derived.
  *
  * @author Markus Marewitz
- * @version 2022-03-24
+ * @version 2022-06-23
  */
 public abstract class AbstractWidget extends JDialog {
 
+    /**
+     * Predefined positions for the widgets on a {@link Page}.
+     *
+     * @deprecated Positions are now referenced by their respective row and column.
+     * @see #setPosition(Position)
+     */
+    @Deprecated(forRemoval = true, since = "2022-06-07")
     public enum Position {
         TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT, CENTER
     }
 
+    /**
+     * Performs the common initialization for all widgets:
+     * <ul>
+     *     <li>Makes the {@link JDialog} undecorated.</li>
+     * </ul>
+     */
     public AbstractWidget() {
         this.setUndecorated(true);
     }
 
+    /**
+     * Sets the position of this widget within a {@link Page}.
+     *
+     * @deprecated Positions are now referenced by their respective row and column
+     * so {@link #setPosition(int, int)} is preferred.
+     */
+    @Deprecated(forRemoval = true, since = "2022-06-07")
     public void setPosition(Position pos) {
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
         switch (pos) {
@@ -31,6 +53,10 @@ public abstract class AbstractWidget extends JDialog {
         }
     }
 
+    /**
+     * @param xPosition The column in which the widget should be placed, starting with {@code 0}.
+     * @param yPosition The row in which the widget should be placed, starting with {@code 0}.
+     */
     public void setPosition(int xPosition, int yPosition) {
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
         Point pos = new Point(xPosition, yPosition);

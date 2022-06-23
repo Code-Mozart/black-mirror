@@ -17,7 +17,7 @@ import java.util.Locale;
  * Calendar widget displaying the date and an overview of the coming week.
  *
  * @author Markus Marewitz
- * @version 2022-03-24
+ * @version 2022-06-23
  */
 public class CalendarWidget extends AbstractWidget {
     private JLabel label;
@@ -45,6 +45,9 @@ public class CalendarWidget extends AbstractWidget {
         }
     }
 
+    /**
+     * Initializes and layouts the swing components and prepares the UI to be shown to the user.
+     */
     private void initComponents() {
         JPanel panelMain = new JPanel(new BorderLayout());
         panelMain.setBackground(Color.BLACK);

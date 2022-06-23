@@ -18,7 +18,8 @@ import java.util.*;
  * Version: 1.1 - 19.04.2022
  */
 public class MirrorApiWebsockets extends WebSocketServer implements MirrorApi {
-    private static final int PORT=2306;
+    private static final int PORT = 80;
+//    private static final int PORT=2306;
 
     //https://mvnrepository.com/artifact/org.java-websocket/Java-WebSocket/1.5.3
     //contains all the sessions active at the moment

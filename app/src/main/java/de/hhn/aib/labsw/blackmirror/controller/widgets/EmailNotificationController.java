@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sun.mail.imap.IMAPStore;
 import de.hhn.aib.labsw.blackmirror.controller.API.TopicListener;
-import de.hhn.aib.labsw.blackmirror.controller.API.websockets.MirrorApiWebsockets;
 import de.hhn.aib.labsw.blackmirror.model.ApiDataModels.EmailLoginData;
 import de.hhn.aib.labsw.blackmirror.view.widgets.AbstractWidget;
 import de.hhn.aib.labsw.blackmirror.view.widgets.EmailNotificationWidget;
@@ -20,7 +19,7 @@ import java.util.ResourceBundle;
  *
  * @author Philipp Herda
  * @author Markus Marewitz
- * @version 2022-05-15
+ * @version 2022-06-23
  */
 public class EmailNotificationController extends AbstractWidgetController {
 
@@ -52,18 +51,6 @@ public class EmailNotificationController extends AbstractWidgetController {
         subscribeWithID(EMAIL_DATA_TOPIC);
 
         update();
-    }
-
-    private void testUseNewLoginData() {
-        try {
-            JsonNode node = MirrorApiWebsockets.getInstance().getMapper().valueToTree(
-                    new EmailLoginData("imap.web.de", 993,
-                            "blackmirror.labswp@web.de", "labSWPproject")
-            );
-            dataReceived(EMAIL_DATA_TOPIC, node);
-        } catch (RuntimeException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -120,6 +107,9 @@ public class EmailNotificationController extends AbstractWidgetController {
         return count;
     }
 
+    /**
+     * Tries to connect to the email server fetching it for new messages and updates the view.
+     */
     private void update() {
         try {
             if (login(host, port, username, password)) {
@@ -150,6 +140,23 @@ public class EmailNotificationController extends AbstractWidgetController {
         }
     }
 
+    /**
+     * Parses the received JSON to an {@link EmailLoginData} object and validates the data.
+     * Correct login data must satisfy the following conditions:
+     * <ul>
+     *     <li>The host name must not be empty nor {@code null}.</li>
+     *     <li>
+     *         The port must not be {@code null} and must be an integer
+     *         between {@code 0} and {@code 65535}, both inclusive.
+     *     </li>
+     *     <li>The username (email-address) must not be empty nor {@code null}.</li>
+     *     <li>The password must not be {@code null}.</li>
+     * </ul>
+     *
+     * @param object The JSON node containing the login data.
+     * @return An object containing the login data.
+     * @throws JsonProcessingException If the JSON node could not be parsed to an {@link EmailLoginData} object.
+     */
     public EmailLoginData getLoginDataFromJSON(JsonNode object) throws JsonProcessingException {
         EmailLoginData loginData = TopicListener.nodeToObject(object, EmailLoginData.class);
 

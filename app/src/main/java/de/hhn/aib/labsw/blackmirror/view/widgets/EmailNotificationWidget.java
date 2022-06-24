@@ -55,6 +55,9 @@ public class EmailNotificationWidget extends AbstractWidget {
         textLabel.setText(newMsgs);
     }
 
+    /**
+     * Displays a message on the panel if the login failed
+     */
     public void drawLoginFailed() {
         textLabel.setText(resources.getString("failedToConnect"));
     }

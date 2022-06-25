@@ -83,7 +83,7 @@ public class WeatherWidget extends AbstractWidget {
 
     public WeatherWidget() {
         initGUI();
-        setSize(600, 400);
+        //setSize(600, 400);
     }
 
     /**

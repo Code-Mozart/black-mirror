@@ -36,15 +36,19 @@ public class Main {
         ArrayList<AbstractWidgetController> widgets = new ArrayList<>();
         widgets.add(new TodosWidgetController());
         widgets.add(new ClockWidgetController(ClockFaceType.ANALOG));
+        widgets.add(new ClockWidgetController(ClockFaceType.DIGITAL));
         widgets.add(new WeatherWidgetController());
         widgets.add(new CalendarWidgetController());
         widgets.add(new EmailNotificationController());
 
         int i = 0;
-        widgets.get(i++).getWidget().setPosition(AbstractWidget.Position.TOP_LEFT);
-        widgets.get(i++).getWidget().setPosition(AbstractWidget.Position.TOP_RIGHT);
-        widgets.get(i++).getWidget().setPosition(AbstractWidget.Position.BOTTOM_RIGHT);
-        widgets.get(i++).getWidget().setPosition(AbstractWidget.Position.BOTTOM_LEFT);
+        widgets.get(i++).getWidget().setPosition(0,0);
+        widgets.get(i++).getWidget().setPosition(1,0);
+        widgets.get(i++).getWidget().setPosition(2,2);
+        widgets.get(i++).getWidget().setPosition(3,0);
+        widgets.get(i++).getWidget().setPosition(0,1);
+        widgets.get(i++).getWidget().setPosition(1,1);
+
 
         ArrayList<AbstractWidgetController> widgetsPage2 = new ArrayList<>();
         widgetsPage2.add(new TodosWidgetController());
@@ -53,15 +57,15 @@ public class Main {
         widgetsPage2.add(new CalendarWidgetController());
         widgetsPage2.add(new ClockWidgetController(ClockFaceType.DIGITAL));
 
-        i = 0;
+        /*i = 0;
         widgetsPage2.get(i++).getWidget().setPosition(AbstractWidget.Position.TOP_LEFT);
         widgetsPage2.get(i++).getWidget().setPosition(AbstractWidget.Position.TOP_RIGHT);
         widgetsPage2.get(i++).getWidget().setPosition(AbstractWidget.Position.BOTTOM_RIGHT);
-        widgetsPage2.get(i++).getWidget().setPosition(AbstractWidget.Position.BOTTOM_LEFT);
+        widgetsPage2.get(i++).getWidget().setPosition(AbstractWidget.Position.BOTTOM_LEFT);*/
 
         //@Team Use this method to add a new page, with a ArrayList of widgets -Niklas
         pageController.addPage(widgets);
-        pageController.addPage(widgetsPage2);
+        //pageController.addPage(widgetsPage2);
 
         pageController.getCurrentPage().setWidgetsVisible(); //Sets all widgets on the default page visible.
         new SecondsTimer(this::onNextSecond);

@@ -28,7 +28,7 @@ public class TodosWidget extends AbstractWidget {
     private GridBagConstraints gbc;
 
     public TodosWidget() {
-        this.setSize(300, 300);
+        //this.setSize(300, 300);
         initComponents();
     }
 

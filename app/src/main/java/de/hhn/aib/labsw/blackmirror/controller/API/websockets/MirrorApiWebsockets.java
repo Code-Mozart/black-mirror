@@ -119,19 +119,26 @@ public class MirrorApiWebsockets extends WebSocketServer implements MirrorApi {
         }
     }
 
+    /**
+     * system method--Do not call this yourself!
+     */
     @Override
     public void onClose(WebSocket session, int code, String reason, boolean remote) {
         System.out.print("Connection closed: ");
         System.out.println(session.getRemoteSocketAddress().getAddress().toString());
         sessions.remove(session);
     }
-
+    /**
+     * system method--Do not call this yourself!
+     */
     @Override
     public void onError(WebSocket session, Exception ex) {
         session.close();
         sessions.remove(session);
     }
-
+    /**
+     * system method--Do not call this yourself!
+     */
     @Override
     public void onStart() {
         System.out.println("Server started");

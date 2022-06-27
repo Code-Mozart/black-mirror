@@ -14,6 +14,14 @@ import java.util.NoSuchElementException;
  */
 public class Page {
 
+    /**
+     * gets all widgets of the page
+     * @return a List of all widgets
+     */
+    public ArrayList<AbstractWidgetController> getWidgetsOnPage() {
+        return widgetsOnPage;
+    }
+
     private ArrayList<AbstractWidgetController> widgetsOnPage;
 
     public Page(ArrayList<AbstractWidgetController> widgetsOnPage) {

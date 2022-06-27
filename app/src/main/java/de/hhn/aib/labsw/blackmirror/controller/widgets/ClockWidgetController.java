@@ -24,4 +24,9 @@ public class ClockWidgetController extends AbstractWidgetController {
     public void onNextSecond() {
         widget.update();
     }
+
+    @Override
+    public void close() throws Exception {
+        widget.dispose();
+    }
 }

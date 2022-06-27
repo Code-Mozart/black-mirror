@@ -100,6 +100,7 @@ public class WeatherWidgetController extends AbstractWidgetController {
     public void close() throws Exception {
         super.close();
         scheduledUpdate.cancel(true);
+        widget.dispose();
     }
 
     /**
@@ -138,5 +139,4 @@ public class WeatherWidgetController extends AbstractWidgetController {
             receiver.start();
         }
     }
-
 }

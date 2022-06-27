@@ -18,8 +18,8 @@ public class EmailNotificationWidget extends AbstractWidget {
     private final JLabel textLabel;
 
     public EmailNotificationWidget() {
-        this.setSize(400, 300);
-        this.setLocation(500, 300);
+        //this.setSize(400, 300);
+        //this.setLocation(500, 300);
 
         JPanel panel = new JPanel();
         panel.setBackground(Color.BLACK);

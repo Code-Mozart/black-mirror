@@ -17,32 +17,66 @@ public abstract class AbstractWidgetController implements TopicListener, AutoClo
     private final MirrorApi api = MirrorApiWebsockets.getInstance();
     private int id = INVALID_ID;
 
+    /**
+     * subscribe to a topic
+     * @param topic the topic to subscribe to
+     */
     protected final void subscribe(String topic) {
         api.subscribe(topic, this);
     }
 
+    /**
+     * subscribe to a topic with an id
+     * @param topic the topic to subscribe to
+     */
     protected final void subscribeWithID(String topic) {
         subscribe((getID() != INVALID_ID) ? (topic + "/" + getID()) : topic);
     }
 
+    /**
+     * unsubscribe from a topic
+     * @param topic the topic to unsubscribe from
+     */
     protected final void unsubscribe(String topic) {
         api.unsubscribe(topic, this);
     }
 
+    /**
+     * publish a new message
+     * @param topic the topic of the message
+     * @param payload the paylaod of the message
+     */
     protected final void publish(String topic, Object payload) {
         api.publish(topic, payload);
     }
-
+    /**
+     * publish a new message
+     * @param topic the topic of the message
+     * @param payload the paylaod of the message
+     */
     protected final void publish(String topic, JsonNode payload) {
         api.publish(topic, payload);
     }
 
+    /**
+     * override this method to handle new incoming messages
+     * @param topic the topic of the incoming message
+     * @param object the payload of the message
+     */
     @Override
     public void dataReceived(String topic, JsonNode object) {
     }
 
+    /**
+     * get the widget connected to this controller
+     * @return the widget of this controller
+     */
     public abstract AbstractWidget getWidget();
 
+    /**
+     * get the id of this controller
+     * @return the id of the controller
+     */
     protected int getID() {
         return id;
     }
@@ -68,6 +102,10 @@ public abstract class AbstractWidgetController implements TopicListener, AutoClo
     public void onRegularUpdate() {
     }
 
+    /**
+     * put stuff here that must be closed manually when the widget controller gets closed
+     * @throws Exception
+     */
     @Override
     public void close() throws Exception {
     }

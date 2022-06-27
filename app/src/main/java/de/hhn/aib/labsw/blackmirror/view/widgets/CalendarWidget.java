@@ -24,7 +24,7 @@ public class CalendarWidget extends AbstractWidget {
     private List<CalendarDayComponent> dayComponents;
 
     public CalendarWidget() {
-        this.setSize(500, 100);
+        //this.setSize(500, 100);
         initComponents();
         update();
     }

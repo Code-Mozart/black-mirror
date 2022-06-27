@@ -8,6 +8,12 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 
+/**
+ * digital clock face
+ *
+ * @author Luis Gutzeit
+ * @version 25.06.2022
+ */
 public class DigitalClock implements ClockFace {
     @Override
     public JPanel getClockFace() {

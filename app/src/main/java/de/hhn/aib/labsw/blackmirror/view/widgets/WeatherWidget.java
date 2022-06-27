@@ -1,4 +1,5 @@
 package de.hhn.aib.labsw.blackmirror.view.widgets;
+
 import de.hhn.aib.labsw.blackmirror.model.WeatherSet;
 
 import javax.swing.*;
@@ -12,6 +13,9 @@ import java.util.ResourceBundle;
 /**
  * This widget displays the weather information for a given location.
  * The location can be updated with the setGPSLocation method
+ *
+ * @author Luis Gutzeit
+ * @version 25.06.2022
  */
 public class WeatherWidget extends AbstractWidget {
     ResourceBundle resources = ResourceBundle.getBundle("lang/WeatherWidget", Locale.getDefault());
@@ -35,75 +39,76 @@ public class WeatherWidget extends AbstractWidget {
     private static final ImageIcon stormIcon = new ImageIcon(WeatherSet.class.getResource("/icons/tstorms.png"));
 
     private static final HashMap<Integer, Icon> iconMap = new HashMap<>();
-    static{
-        iconMap.put(0,clearIcon);
-        iconMap.put(1,msunnyIcon);
-        iconMap.put(2,mcloudyIcon);
-        iconMap.put(3,cloudyIcon);
-        iconMap.put(45,fogIcon);
-        iconMap.put(48,fogIcon);
-        iconMap.put(51,drizzleIcon);
-        iconMap.put(53,drizzleIcon);
-        iconMap.put(55,drizzleIcon);
-        iconMap.put(56,drizzleIcon);
-        iconMap.put(57,drizzleIcon);
-        iconMap.put(61,drizzleIcon);
-        iconMap.put(63,rainIcon);
-        iconMap.put(65,rainIcon);
-        iconMap.put(66,drizzleIcon);
-        iconMap.put(67,rainIcon);
-        iconMap.put(71,snowIcon);
-        iconMap.put(73,snowIcon);
-        iconMap.put(75,snowIcon);
-        iconMap.put(77,hailIcon);
-        iconMap.put(80,drizzleIcon);
-        iconMap.put(81,rainIcon);
-        iconMap.put(82,rainIcon);
-        iconMap.put(85,snowIcon);
-        iconMap.put(86,snowIcon);
-        iconMap.put(95,stormIcon);
-        iconMap.put(96,stormIcon);
-        iconMap.put(99,stormIcon);
+
+    static {
+        iconMap.put(0, clearIcon);
+        iconMap.put(1, msunnyIcon);
+        iconMap.put(2, mcloudyIcon);
+        iconMap.put(3, cloudyIcon);
+        iconMap.put(45, fogIcon);
+        iconMap.put(48, fogIcon);
+        iconMap.put(51, drizzleIcon);
+        iconMap.put(53, drizzleIcon);
+        iconMap.put(55, drizzleIcon);
+        iconMap.put(56, drizzleIcon);
+        iconMap.put(57, drizzleIcon);
+        iconMap.put(61, drizzleIcon);
+        iconMap.put(63, rainIcon);
+        iconMap.put(65, rainIcon);
+        iconMap.put(66, drizzleIcon);
+        iconMap.put(67, rainIcon);
+        iconMap.put(71, snowIcon);
+        iconMap.put(73, snowIcon);
+        iconMap.put(75, snowIcon);
+        iconMap.put(77, hailIcon);
+        iconMap.put(80, drizzleIcon);
+        iconMap.put(81, rainIcon);
+        iconMap.put(82, rainIcon);
+        iconMap.put(85, snowIcon);
+        iconMap.put(86, snowIcon);
+        iconMap.put(95, stormIcon);
+        iconMap.put(96, stormIcon);
+        iconMap.put(99, stormIcon);
     }
 
     /**
      * Convert a given weather code to the relevant icon
+     *
      * @param code code to be converted
      * @return weather code as icon
      */
-    public static Icon convertCodeToIcon(int code){
+    public static Icon convertCodeToIcon(int code) {
         return iconMap.get(code);
     }
 
     public WeatherWidget() {
         initGUI();
-        setSize(600,400);
+        //setSize(600, 400);
     }
 
     /**
      * initializes the GUI
      */
-    private void initGUI(){
+    private void initGUI() {
         //GUI Items
         JPanel backgroundPanel = new JPanel();
         backgroundPanel.setLayout(new GridBagLayout());
         backgroundPanel.setBackground(Color.BLACK);
         add(backgroundPanel);
 
-        for(int i = 0; i<weatherPanels.length;i++){
+        for (int i = 0; i < weatherPanels.length; i++) {
             weatherPanels[i] = new WeatherPanel();
             WeatherWidgetConstraints wwc = new WeatherWidgetConstraints();
-            if(i == 0){
+            if (i == 0) {
                 wwc.gridy = 0;
                 wwc.gridx = 0;
-                wwc.gridwidth = weatherPanels.length-1;
+                wwc.gridwidth = weatherPanels.length - 1;
                 wwc.weightx = 0.0;
-                backgroundPanel.add(weatherPanels[i],wwc);
-            }
-            else{
+                backgroundPanel.add(weatherPanels[i], wwc);
+            } else {
                 wwc.gridy = 1;
-                wwc.gridx = i-1;
-                backgroundPanel.add(weatherPanels[i],wwc);
+                wwc.gridx = i - 1;
+                backgroundPanel.add(weatherPanels[i], wwc);
             }
         }
     }
@@ -112,9 +117,10 @@ public class WeatherWidget extends AbstractWidget {
      * updates the gui to display the new data
      */
     public void updateGUI(List<WeatherSet> weatherSets) {
-        for(int i = 0;i<weatherPanels.length;i++){
+        for (int i = 0; i < weatherPanels.length; i++) {
             switch (i) {
-                case 0 -> weatherPanels[i].setData(resources.getString("header_current"), weatherSets.get(LocalDateTime.now().getHour()));
+                case 0 ->
+                        weatherPanels[i].setData(resources.getString("header_current"), weatherSets.get(LocalDateTime.now().getHour()));
                 case 1 -> weatherPanels[i].setData(resources.getString("header_01"), weatherSets.get(8));
                 case 2 -> weatherPanels[i].setData(resources.getString("header_02"), weatherSets.get(12));
                 case 3 -> weatherPanels[i].setData(resources.getString("header_03"), weatherSets.get(16));
@@ -127,7 +133,7 @@ public class WeatherWidget extends AbstractWidget {
     /**
      * creates a single panel that holds the information for one time
      */
-    static class WeatherPanel extends JPanel{
+    static class WeatherPanel extends JPanel {
         WeatherLabel header;
         WeatherLabel icon;
         WeatherLabel temperature;
@@ -135,7 +141,7 @@ public class WeatherWidget extends AbstractWidget {
         WeatherLabel wind;
         WeatherLabel humidity;
 
-        public WeatherPanel(){
+        public WeatherPanel() {
             this.setBackground(Color.BLACK);
             this.setLayout(new GridBagLayout());
             GridBagConstraints ic = new InnerConstraints();
@@ -145,20 +151,26 @@ public class WeatherWidget extends AbstractWidget {
             wind = new WeatherLabel();
             pressure = new WeatherLabel();
             humidity = new WeatherLabel();
-            this.add(header,ic);
+            this.add(header, ic);
             ic.gridy++;
-            this.add(icon,ic);
+            this.add(icon, ic);
             ic.gridy++;
-            this.add(temperature,ic);
+            this.add(temperature, ic);
             ic.gridy++;
-            this.add(pressure,ic);
+            this.add(pressure, ic);
             ic.gridy++;
-            this.add(humidity,ic);
+            this.add(humidity, ic);
             ic.gridy++;
-            this.add(wind,ic);
+            this.add(wind, ic);
         }
 
-        public void setData(String headerText, WeatherSet set){
+        /**
+         * set the data of this WeatherPanel
+         *
+         * @param headerText the text of the headline
+         * @param set        the WeatherSet to be displayed
+         */
+        public void setData(String headerText, WeatherSet set) {
             header.setText(headerText);
             icon.setIcon(convertCodeToIcon(set.getWeathercode()));
             temperature.setText("%01.0f °C".formatted(set.getTemperature()));
@@ -171,12 +183,12 @@ public class WeatherWidget extends AbstractWidget {
     /**
      * special label that already has a white text color.
      */
-    static class WeatherLabel extends JLabel{
-        public WeatherLabel(){
+    static class WeatherLabel extends JLabel {
+        public WeatherLabel() {
             this.setForeground(Color.WHITE);
         }
 
-        public WeatherLabel(String text){
+        public WeatherLabel(String text) {
             super(text);
             this.setForeground(Color.WHITE);
         }
@@ -185,8 +197,8 @@ public class WeatherWidget extends AbstractWidget {
     /**
      * special constraint to be used inside the weather containers
      */
-    static class InnerConstraints extends GridBagConstraints{
-        public InnerConstraints(){
+    static class InnerConstraints extends GridBagConstraints {
+        public InnerConstraints() {
             super();
             fill = GridBagConstraints.BOTH;
             anchor = GridBagConstraints.CENTER;
@@ -200,11 +212,11 @@ public class WeatherWidget extends AbstractWidget {
     /**
      * special constraints that is used to place the weather containers
      */
-    static class WeatherWidgetConstraints extends GridBagConstraints{
-        public WeatherWidgetConstraints(){
+    static class WeatherWidgetConstraints extends GridBagConstraints {
+        public WeatherWidgetConstraints() {
             super();
             anchor = GridBagConstraints.CENTER;
-            insets = new Insets(0,25,50,25);
+            insets = new Insets(0, 25, 50, 25);
         }
     }
 }

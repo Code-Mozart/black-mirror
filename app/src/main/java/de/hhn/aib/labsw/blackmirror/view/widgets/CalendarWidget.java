@@ -38,7 +38,6 @@ public class CalendarWidget extends AbstractWidget {
                 .ofLocalizedDate(FormatStyle.FULL)
                 .withLocale(Locale.getDefault());
         String dateString = formatter.format(now);
-        label.setText(dateString);
         int i = 0;
         for (CalendarDayComponent cdc : dayComponents) {
             cdc.setDay(now.plusDays(i++));
@@ -46,22 +45,35 @@ public class CalendarWidget extends AbstractWidget {
     }
 
     private void initComponents() {
-        JPanel panelMain = new JPanel(new BorderLayout());
+        JPanel panelMain = new JPanel(new GridBagLayout());
         panelMain.setBackground(Color.BLACK);
-
-        label = new JLabel("Time");
-        label.setForeground(Color.WHITE);
+        GridBagConstraints mainConstraints = new GridBagConstraints();
+        mainConstraints.weightx = 1;
+        mainConstraints.weighty = 1;
+        mainConstraints.gridwidth = 3;
+        mainConstraints.gridheight = 3;
 
         dayComponents = new ArrayList<>();
-        JPanel panelDays = new JPanel(new GridLayout(1, 7));
-        for (int i = 0; i < 7; i++) {
-            CalendarDayComponent cdc = new CalendarDayComponent(i == 0);
-            dayComponents.add(cdc);
-            panelDays.add(cdc);
-        }
 
-        panelMain.add(label, BorderLayout.NORTH);
-        panelMain.add(panelDays, BorderLayout.CENTER);
+        CalendarDayComponent cdc = new CalendarDayComponent(true);
+        dayComponents.add(cdc);
+
+        mainConstraints.gridx = 0;
+        mainConstraints.gridy = 0;
+        mainConstraints.fill = GridBagConstraints.BOTH;
+        panelMain.add(cdc, mainConstraints);
+
+        mainConstraints.weightx = 0.2;
+        mainConstraints.weighty = 0.2;
+        mainConstraints.gridwidth = 1;
+        mainConstraints.gridheight = 1;
+        mainConstraints.gridx = 3;
+        for (int i = 0; i < 3; i++) {
+            cdc = new CalendarDayComponent(false);
+            dayComponents.add(cdc);
+            mainConstraints.gridy = i;
+            panelMain.add(cdc, mainConstraints);
+        }
         this.add(panelMain);
 
         SwingUtils.setFont(this, new Font("Calibri", Font.PLAIN, 18));

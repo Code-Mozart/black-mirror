@@ -26,9 +26,11 @@ public class TodosWidgetController extends AbstractWidgetController {
 
     public TodosWidgetController() {
         widget = new TodosWidget();
+        entries.add(new ToDoEntry(System.currentTimeMillis(), "test"));
         widget.setEntries(entries);
 
         subscribe(TODOS_TOPIC);
+        subscribe(FETCH_TODOS_TOPIC);
     }
 
     @Override

@@ -26,7 +26,8 @@ public class TodosWidgetController extends AbstractWidgetController {
 
     public TodosWidgetController() {
         widget = new TodosWidget();
-        entries.add(new ToDoEntry(System.currentTimeMillis(), "test"));
+        entries.add(new ToDoEntry(System.currentTimeMillis(), "Milch einkaufen"));
+        entries.add(new ToDoEntry(System.currentTimeMillis(), "Präsentation halten"));
         widget.setEntries(entries);
 
         subscribe(TODOS_TOPIC);
@@ -51,10 +52,5 @@ public class TodosWidgetController extends AbstractWidgetController {
     @Override
     public AbstractWidget getWidget() {
         return widget;
-    }
-
-    @Override
-    public void close() throws Exception {
-        widget.dispose();
     }
 }

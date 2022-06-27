@@ -8,6 +8,7 @@ import de.hhn.aib.labsw.blackmirror.controller.widgets.*;
 import de.hhn.aib.labsw.blackmirror.view.widgets.AbstractWidget;
 import de.hhn.aib.labsw.blackmirror.view.widgets.clock.ClockFaceType;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -29,10 +30,15 @@ public class Main {
     public Main() {
         MirrorApi server = MirrorApiWebsockets.getInstance();
         //adjust this for the pi because it uses a different naming schema for serial ports
-        //SerialGestureController c = new SerialGestureController(SerialPort.getCommPort("COM3"), pageController);
-        SerialGestureController c = new SerialGestureController(SerialPort.getCommPort(
-                "/dev/serial/by-path/platform-3f980000.usb-usb-0:1.2:1.0"
-        ), pageController);
+
+        try {
+            /*SerialGestureController c = new SerialGestureController(SerialPort.getCommPort(
+                    "/dev/serial/by-path/platform-3f980000.usb-usb-0:1.2:1.0"
+            ), pageController);*/
+            SerialGestureController c = new SerialGestureController(SerialPort.getCommPort("COM3"), pageController);
+        } catch (Exception e){
+            System.out.println("could not establish connection with serial gesture controller");
+        }
         server.init();
 
         // @Team add your widgets here to test them -Markus

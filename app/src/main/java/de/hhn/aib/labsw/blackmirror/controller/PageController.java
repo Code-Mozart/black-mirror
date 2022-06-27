@@ -231,8 +231,6 @@ public class PageController implements TopicListener {
 
         assert (topic.equals(PAGE_UPDATE_TOPIC)) : "Wrong topic received by PageController.";
 
-        System.out.println(object.toPrettyString());
-
         //reset the current pages
         for (int i = pages.size() -1; i > -1; i--) {
             deletePageAtIndex(i);

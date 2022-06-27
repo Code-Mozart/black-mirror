@@ -103,10 +103,12 @@ public abstract class AbstractWidgetController implements TopicListener, AutoClo
     }
 
     /**
-     * put stuff here that must be closed manually when the widget controller gets closed
-     * @throws Exception
+     * Put stuff here that must be closed manually when the widget controller gets closed.
+     * Make sure to call this method as well to correctly dispose this widget.
      */
     @Override
     public void close() throws Exception {
+        api.unsubscribe(this);
+        getWidget().dispose();
     }
 }

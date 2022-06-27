@@ -13,31 +13,37 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * @version 2022-06-27
+ */
 public class TodosWidgetController extends AbstractWidgetController {
 
     private static final String TODOS_TOPIC = "todoList";
+    private static final String FETCH_TODOS_TOPIC = "fetchTodoList";
 
     private List<ToDoEntry> entries = new ArrayList<>();
     private final TodosWidget widget;
 
     public TodosWidgetController() {
         widget = new TodosWidget();
+        entries.add(new ToDoEntry(System.currentTimeMillis(), "Milch einkaufen"));
+        entries.add(new ToDoEntry(System.currentTimeMillis(), "Präsentation halten"));
         widget.setEntries(entries);
 
         subscribe(TODOS_TOPIC);
+        subscribe(FETCH_TODOS_TOPIC);
     }
 
     @Override
     public void dataReceived(String topic, JsonNode object) {
-        // replace this with a switch statement later and also listen to
-        // a topic "getTodoList" in which case the current todo_list is sent
-        // from the mirror to the app
-        assert Objects.equals(topic, TODOS_TOPIC);
-
         try {
-            TodoData data = TopicListener.nodeToObject(object, TodoData.class);
-            entries = data.entries();
-            SwingUtilities.invokeLater(() -> widget.setEntries(entries));
+            if (Objects.equals(topic, TODOS_TOPIC)) {
+                TodoData data = TopicListener.nodeToObject(object, TodoData.class);
+                entries = data.entries();
+                SwingUtilities.invokeLater(() -> widget.setEntries(entries));
+            } else if (Objects.equals(topic, FETCH_TODOS_TOPIC)) {
+                publish(TODOS_TOPIC, new TodoData(entries));
+            }
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -46,10 +52,5 @@ public class TodosWidgetController extends AbstractWidgetController {
     @Override
     public AbstractWidget getWidget() {
         return widget;
-    }
-
-    @Override
-    public void close() throws Exception {
-        widget.dispose();
     }
 }

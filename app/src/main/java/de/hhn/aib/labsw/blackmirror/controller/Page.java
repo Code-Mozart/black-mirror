@@ -12,7 +12,7 @@ import java.util.NoSuchElementException;
  * @author Markus Marewitz
  * @version 2022-05-11
  */
-public class Page {
+public class Page implements AutoCloseable {
 
     /**
      * gets all widgets of the page
@@ -94,4 +94,15 @@ public class Page {
      * @see AbstractWidgetController#onRegularUpdate()
      */
     protected void onRegularUpdate() { widgetsOnPage.forEach(AbstractWidgetController::onRegularUpdate); }
+
+    /**
+     * Closes all widgets and clears this page.
+     */
+    @Override
+    public void close() throws Exception {
+        for (AbstractWidgetController awc : widgetsOnPage) {
+            awc.close();
+        }
+        widgetsOnPage.clear();
+    }
 }

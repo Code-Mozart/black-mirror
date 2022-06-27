@@ -14,6 +14,13 @@ public interface MirrorApi {
     void finish();
     void subscribe(String topic, TopicListener listener);
     void unsubscribe(String topic, TopicListener listener);
+
+    /**
+     * Unsubscribes this listener from all topics. Make sure to call this method when the listener
+     * object gets disposed.
+     */
+    void unsubscribe(TopicListener listener);
+
     void publish(String topic, Object payload);
     void publish(String topic, JsonNode payload);
 }

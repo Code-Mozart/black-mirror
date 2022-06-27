@@ -28,7 +28,7 @@ public class MirrorApiWebsockets extends WebSocketServer implements MirrorApi {
     ObjectMapper mapper = new ObjectMapper();
 
     //maps listerners to their corresponding topics
-    Map<String, List<TopicListener>> listeners = new HashMap<>();
+    Map<String, Set<TopicListener>> listeners = new HashMap<>();
 
     //used for singleton
     private static MirrorApiWebsockets instance = null;
@@ -99,9 +99,9 @@ public class MirrorApiWebsockets extends WebSocketServer implements MirrorApi {
                 }
 
                 //notify each listener for the topic if the JSON is valid
-                List<TopicListener> listenersList = listeners.get(topic);
+                Set<TopicListener> listenersList = listeners.get(topic);
                 if (listenersList != null) {
-                    //Iterater is being used to delete dead references
+                    //Iterator is being used to delete dead references
                     Iterator<TopicListener> topicIterator = listenersList.iterator();
                     while (topicIterator.hasNext()) {
                         TopicListener element = topicIterator.next();
@@ -152,9 +152,9 @@ public class MirrorApiWebsockets extends WebSocketServer implements MirrorApi {
      * @param listener the object that wants to subscribe. In most cases this will probably be "this"
      */
     public void subscribe(String topic, TopicListener listener){
-        List<TopicListener> listenerList = listeners.get(topic);
+        Set<TopicListener> listenerList = listeners.get(topic);
         if(listenerList == null){
-            listenerList = new ArrayList<>();
+            listenerList = new HashSet<>();
             listenerList.add(listener);
             listeners.put(topic,listenerList);
         }
@@ -169,10 +169,15 @@ public class MirrorApiWebsockets extends WebSocketServer implements MirrorApi {
      * @param listener the object that wants to unsubscribe. In most cases this will probably be "this"
      */
     public void unsubscribe(String topic, TopicListener listener){
-        List<TopicListener> listenerList = listeners.get(topic);
+        Set<TopicListener> listenerList = listeners.get(topic);
         if(listenerList != null){
             listenerList.remove(listener);
         }
+    }
+
+    @Override
+    public void unsubscribe(TopicListener listener) {
+        listeners.forEach((topic, listenerList) -> listenerList.remove(listener));
     }
 
     /**

@@ -46,7 +46,7 @@ public class TodosWidget extends AbstractWidget {
         gbc.insets = new Insets(5, 5, 5, 5);
 
         JLabel titleLabel = new JLabel(resources.getString("todoTitle"));
-        titleLabel.setFont(new Font(WidgetFont.STANDARD_FONT.getFontName(), WidgetFont.STANDARD_FONT.getFontStyle(), 16));
+        titleLabel.setFont(new Font(WidgetFont.STANDARD_FONT.getFontName(), WidgetFont.STANDARD_FONT.getFontStyle(), 20));
         titleLabel.setForeground(Color.WHITE);
         Font font = titleLabel.getFont();
         Map attributes = font.getAttributes();
@@ -77,7 +77,7 @@ public class TodosWidget extends AbstractWidget {
         todoList = new JList<>(todoListModel);
         todoList.setBackground(Color.BLACK);
         todoList.setForeground(Color.WHITE);
-        todoList.setFont(new Font(WidgetFont.STANDARD_FONT.getFontName(), WidgetFont.STANDARD_FONT.getFontStyle(), 13));
+        todoList.setFont(new Font(WidgetFont.STANDARD_FONT.getFontName(), WidgetFont.STANDARD_FONT.getFontStyle(), 16));
         panelMain.add(todoList, gbc);
 
         this.add(panelMain);

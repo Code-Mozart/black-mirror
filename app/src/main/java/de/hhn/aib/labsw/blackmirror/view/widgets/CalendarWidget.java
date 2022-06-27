@@ -1,13 +1,9 @@
 package de.hhn.aib.labsw.blackmirror.view.widgets;
 
-import de.hhn.aib.labsw.blackmirror.util.SwingUtils;
-
 import javax.swing.*;
 import java.awt.*;
 import java.time.DayOfWeek;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,10 +13,10 @@ import java.util.Locale;
  * Calendar widget displaying the date and an overview of the coming week.
  *
  * @author Markus Marewitz
- * @version 2022-03-24
+ * @author Niklas Binder
+ * @version 2022-06-27
  */
 public class CalendarWidget extends AbstractWidget {
-    private JLabel label;
     private List<CalendarDayComponent> dayComponents;
 
     public CalendarWidget() {
@@ -34,11 +30,6 @@ public class CalendarWidget extends AbstractWidget {
      */
     public void update() {
         ZonedDateTime now = ZonedDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter
-                .ofLocalizedDate(FormatStyle.FULL)
-                .withLocale(Locale.getDefault());
-        String dateString = formatter.format(now);
-        label.setText(dateString);
         int i = 0;
         for (CalendarDayComponent cdc : dayComponents) {
             cdc.setDay(now.plusDays(i++));
@@ -46,25 +37,37 @@ public class CalendarWidget extends AbstractWidget {
     }
 
     private void initComponents() {
-        JPanel panelMain = new JPanel(new BorderLayout());
+        JPanel panelMain = new JPanel(new GridBagLayout());
         panelMain.setBackground(Color.BLACK);
-
-        label = new JLabel("Time");
-        label.setForeground(Color.WHITE);
+        panelMain.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+        GridBagConstraints mainConstraints = new GridBagConstraints();
+        mainConstraints.weightx = 1;
+        mainConstraints.weighty = 1;
+        mainConstraints.gridwidth = 3;
+        mainConstraints.gridheight = 3;
 
         dayComponents = new ArrayList<>();
-        JPanel panelDays = new JPanel(new GridLayout(1, 7));
-        for (int i = 0; i < 7; i++) {
-            CalendarDayComponent cdc = new CalendarDayComponent(i == 0);
+
+        CalendarDayComponent cdc = new CalendarDayComponent(true);
+        dayComponents.add(cdc);
+
+        mainConstraints.gridx = 0;
+        mainConstraints.gridy = 0;
+        mainConstraints.fill = GridBagConstraints.BOTH;
+        panelMain.add(cdc, mainConstraints);
+
+        mainConstraints.weightx = 0.4;
+        mainConstraints.weighty = 0.4;
+        mainConstraints.gridwidth = 1;
+        mainConstraints.gridheight = 1;
+        mainConstraints.gridx = 3;
+        for (int i = 0; i < 3; i++) {
+            cdc = new CalendarDayComponent(false);
             dayComponents.add(cdc);
-            panelDays.add(cdc);
+            mainConstraints.gridy = i;
+            panelMain.add(cdc, mainConstraints);
         }
-
-        panelMain.add(label, BorderLayout.NORTH);
-        panelMain.add(panelDays, BorderLayout.CENTER);
         this.add(panelMain);
-
-        SwingUtils.setFont(this, new Font("Calibri", Font.PLAIN, 18));
     }
 
     /**
@@ -73,30 +76,49 @@ public class CalendarWidget extends AbstractWidget {
     private static class CalendarDayComponent extends JPanel {
         private final JLabel dateLabel;
         private final JLabel dayLabel;
+        private final JLabel monthLabel;
+
+        private final String fontName = "Calibri";
+        private final int fontStyle = Font.PLAIN;
+        private int dayFontSize = 40;
+        private int dateFontSize = 50;
+        private int monthFontSize = 30;
+
+        private final boolean isCurrentDay;
 
         /**
-         * @param thick Sets whether the border should be thick or thin.
+         * @param isCurrentDay Indicates if the {@link CalendarDayComponent} is the current day.
+         *                     If so, the fonts are bigger and the day will be shown in full length.
          */
-        public CalendarDayComponent(boolean thick) {
+        public CalendarDayComponent(boolean isCurrentDay) {
+            this.isCurrentDay = isCurrentDay;
+
             this.setBackground(Color.BLACK);
-
             this.setLayout(new BorderLayout());
-            if (thick)
-                this.setBorder(BorderFactory.createLineBorder(Color.WHITE, 3));
-            else
-                this.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+            this.setBorder(BorderFactory.createLineBorder(Color.WHITE));
 
-            JPanel panelLabels = new JPanel(new GridLayout(2, 1));
-            panelLabels.setBackground(Color.BLACK);
-            this.add(panelLabels, BorderLayout.NORTH);
-
-            dateLabel = new JLabel("XX");
-            dateLabel.setForeground(Color.WHITE);
-            panelLabels.add(dateLabel);
-
-            dayLabel = new JLabel("Xx");
+            if (isCurrentDay) {
+                dayFontSize = 70;
+                dateFontSize = 200;
+                monthFontSize = 50;
+            }
+            dayLabel = new JLabel();
             dayLabel.setForeground(Color.WHITE);
-            panelLabels.add(dayLabel);
+            dayLabel.setHorizontalAlignment(JLabel.CENTER);
+            dayLabel.setFont(new Font(fontName, fontStyle, dayFontSize));
+            this.add(dayLabel, BorderLayout.NORTH);
+
+            dateLabel = new JLabel();
+            dateLabel.setForeground(Color.WHITE);
+            dateLabel.setHorizontalAlignment(JLabel.CENTER);
+            dateLabel.setFont(new Font(fontName, fontStyle, dateFontSize));
+            this.add(dateLabel, BorderLayout.CENTER);
+
+            monthLabel = new JLabel();
+            monthLabel.setForeground(Color.WHITE);
+            monthLabel.setHorizontalAlignment(JLabel.CENTER);
+            monthLabel.setFont(new Font(fontName, fontStyle, monthFontSize));
+            this.add(monthLabel, BorderLayout.SOUTH);
         }
 
         /**
@@ -105,7 +127,13 @@ public class CalendarWidget extends AbstractWidget {
          * @param date The date of the day that should be displayed by this sheet.
          */
         public void setDay(ZonedDateTime date) {
-            dayLabel.setText(date.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.getDefault()));
+            if (isCurrentDay) {
+                dayLabel.setText(date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault()));
+                monthLabel.setText(date.getMonth().getDisplayName(TextStyle.FULL,Locale.getDefault()));
+            } else {
+                dayLabel.setText(date.getDayOfWeek().getDisplayName(TextStyle.SHORT_STANDALONE, Locale.getDefault()));
+                monthLabel.setText("");
+            }
             if(date.getDayOfWeek() == DayOfWeek.SUNDAY){
                 dayLabel.setForeground(new Color(255,65,0));
                 dateLabel.setForeground(new Color(255,65,0));

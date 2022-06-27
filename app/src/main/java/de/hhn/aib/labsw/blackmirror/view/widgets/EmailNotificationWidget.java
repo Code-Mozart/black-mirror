@@ -33,7 +33,7 @@ public class EmailNotificationWidget extends AbstractWidget {
 
         textLabel = new JLabel("", SwingConstants.CENTER);
         textLabel.setForeground(Color.WHITE);
-        textLabel.setFont(new Font(WidgetFont.STANDARD_FONT.getFontName(), WidgetFont.STANDARD_FONT.getFontStyle(), 16));
+        textLabel.setFont(new Font(WidgetFont.STANDARD_FONT.getFontName(), WidgetFont.STANDARD_FONT.getFontStyle(), 25));
 
         panel.add(iconLabel);
         panel.add(textLabel);

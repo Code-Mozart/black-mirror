@@ -90,8 +90,10 @@ public class PageController implements TopicListener {
         } else if (pageIndex >= pages.size()) {
             throw new IndexOutOfBoundsException("Index has to be lower than the size of the list - 1.");
         } else {
-            for (AbstractWidgetController c : pages.get(pageIndex).getWidgetsOnPage()) {
-                c.getWidget().dispose();
+            try {
+                pages.get(pageIndex).close();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
             pages.remove(pageIndex);
         }
@@ -132,6 +134,7 @@ public class PageController implements TopicListener {
                 try {
                     goToAnyPage(0);
                 } catch (IndexOutOfBoundsException e2) {
+                    e2.printStackTrace();
                 }
             }
         }
@@ -149,6 +152,7 @@ public class PageController implements TopicListener {
                 try {
                     goToAnyPage(pages.size() - 1);
                 } catch (IndexOutOfBoundsException e2) {
+                    e2.printStackTrace();
                 }
             }
         }
@@ -227,7 +231,7 @@ public class PageController implements TopicListener {
     }
 
     @Override
-    public void dataReceived(String topic, JsonNode object) {
+    public synchronized void dataReceived(String topic, JsonNode object) {
 
         assert (topic.equals(PAGE_UPDATE_TOPIC)) : "Wrong topic received by PageController.";
 

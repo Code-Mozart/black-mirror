@@ -52,7 +52,7 @@ class SerialGestureController(
                             else -> {}
                         }
                     } catch (e: Exception) {
-                        /* no-op */
+                        e.printStackTrace()
                     }
                 }
             }

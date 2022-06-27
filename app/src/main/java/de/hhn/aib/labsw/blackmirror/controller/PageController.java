@@ -193,10 +193,15 @@ public class PageController implements TopicListener {
     }
 
     /**
-     * @return Current visible page.
+     * @return Current visible page or null.
      */
     protected Page getCurrentPage() {
-        return pages.get(pageIndex);
+        if (pages.size() > 0) {
+            return pages.get(pageIndex);
+        } else {
+            return null;
+        }
+
     }
 
     /**
@@ -224,6 +229,8 @@ public class PageController implements TopicListener {
     @Override
     public void dataReceived(String topic, JsonNode object) {
 
+        System.out.println(object.toPrettyString());
+
         assert (topic.equals(PAGE_UPDATE_TOPIC)) : "Wrong topic received by PageController.";
 
         //reset the current pages
@@ -239,7 +246,7 @@ public class PageController implements TopicListener {
             // iterate the pages
             for (int i = 0; i < data.pages().size(); i++) {
                 //create new page
-                ArrayList<AbstractWidgetController> page = new ArrayList();
+                ArrayList<AbstractWidgetController> page = new ArrayList<>();
 
                 // process all widgets for this page
                 if (data.pages().get(i).widgets().size() > 0) {
@@ -252,7 +259,6 @@ public class PageController implements TopicListener {
                                 page.add(calendarWidgetController);
                             }
                             case CLOCK -> {
-                                // todo : FaceType handling
                                 ClockWidgetController clockWidgetController = new ClockWidgetController(ClockFaceType.ANALOG);
                                 clockWidgetController.getWidget().setPosition(widget.x(), widget.y());
                                 page.add(clockWidgetController);
@@ -274,7 +280,7 @@ public class PageController implements TopicListener {
                             }
                         }
                     }
-                    addPageAtIndex(i, page);
+                    addPage(page);
                 }
             }
             pageIndex = data.currentPageIndex();

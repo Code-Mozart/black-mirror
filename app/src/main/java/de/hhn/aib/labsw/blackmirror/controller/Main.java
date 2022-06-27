@@ -29,10 +29,14 @@ public class Main {
     public Main() {
         MirrorApi server = MirrorApiWebsockets.getInstance();
         //adjust this for the pi because it uses a different naming schema for serial ports
-        //SerialGestureController c = new SerialGestureController(SerialPort.getCommPort("COM3"), pageController);
-        SerialGestureController c = new SerialGestureController(SerialPort.getCommPort(
-                "/dev/serial/by-path/platform-3f980000.usb-usb-0:1.2:1.0"
-        ),pageController);
+        try {
+            new SerialGestureController(SerialPort.getCommPort(
+                    "/dev/serial/by-path/platform-3f980000.usb-usb-0:1.2:1.0"
+            ), pageController);
+        } catch (Exception e) {
+            System.out.println("gesture control not avaialble");
+            System.out.println(e.toString());
+        }
         server.init();
 
         // @Team add your widgets here to test them -Markus
@@ -45,12 +49,12 @@ public class Main {
         widgets.add(new EmailNotificationController());
 
         int i = 0;
-        widgets.get(i++).getWidget().setPosition(0,0);
-        widgets.get(i++).getWidget().setPosition(1,0);
-        widgets.get(i++).getWidget().setPosition(2,2);
-        widgets.get(i++).getWidget().setPosition(3,0);
-        widgets.get(i++).getWidget().setPosition(0,1);
-        widgets.get(i++).getWidget().setPosition(1,1);
+        widgets.get(i++).getWidget().setPosition(0, 0);
+        widgets.get(i++).getWidget().setPosition(1, 0);
+        widgets.get(i++).getWidget().setPosition(2, 2);
+        widgets.get(i++).getWidget().setPosition(3, 0);
+        widgets.get(i++).getWidget().setPosition(0, 1);
+        widgets.get(i++).getWidget().setPosition(1, 1);
 
 
         ArrayList<AbstractWidgetController> widgetsPage2 = new ArrayList<>();
@@ -60,11 +64,11 @@ public class Main {
         widgetsPage2.add(new CalendarWidgetController());
         widgetsPage2.add(new ClockWidgetController(ClockFaceType.DIGITAL));
 
-        /*i = 0;
-        widgetsPage2.get(i++).getWidget().setPosition(AbstractWidget.Position.TOP_LEFT);
-        widgetsPage2.get(i++).getWidget().setPosition(AbstractWidget.Position.TOP_RIGHT);
-        widgetsPage2.get(i++).getWidget().setPosition(AbstractWidget.Position.BOTTOM_RIGHT);
-        widgetsPage2.get(i++).getWidget().setPosition(AbstractWidget.Position.BOTTOM_LEFT);*/
+/*        i = 0;
+        widgetsPage2.get(i++).getWidget().setPosition(0, 0);
+        widgetsPage2.get(i++).getWidget().setPosition(1, 0);
+        widgetsPage2.get(i++).getWidget().setPosition(2, 2);
+        widgetsPage2.get(i++).getWidget().setPosition(3, 0);*/
 
         //@Team Use this method to add a new page, with a ArrayList of widgets -Niklas
         pageController.addPage(widgets);
@@ -77,7 +81,10 @@ public class Main {
     }
 
     private void onNextSecond() {
-        pageController.getCurrentPage().onNextSecond();
+        Page cPage = pageController.getCurrentPage();
+        if (cPage != null) {
+            cPage.onNextSecond();
+        }
     }
 
     private void onRegularUpdate() {

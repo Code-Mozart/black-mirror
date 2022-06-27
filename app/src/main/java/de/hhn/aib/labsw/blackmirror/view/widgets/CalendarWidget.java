@@ -76,11 +76,13 @@ public class CalendarWidget extends AbstractWidget {
     private static class CalendarDayComponent extends JPanel {
         private final JLabel dateLabel;
         private final JLabel dayLabel;
+        private final JLabel monthLabel;
 
         private final String fontName = "Calibri";
         private final int fontStyle = Font.PLAIN;
         private int dayFontSize = 40;
         private int dateFontSize = 50;
+        private int monthFontSize = 30;
 
         private final boolean isCurrentDay;
 
@@ -97,7 +99,8 @@ public class CalendarWidget extends AbstractWidget {
 
             if (isCurrentDay) {
                 dayFontSize = 70;
-                dateFontSize = 220;
+                dateFontSize = 200;
+                monthFontSize = 50;
             }
             dayLabel = new JLabel();
             dayLabel.setForeground(Color.WHITE);
@@ -110,6 +113,12 @@ public class CalendarWidget extends AbstractWidget {
             dateLabel.setHorizontalAlignment(JLabel.CENTER);
             dateLabel.setFont(new Font(fontName, fontStyle, dateFontSize));
             this.add(dateLabel, BorderLayout.CENTER);
+
+            monthLabel = new JLabel();
+            monthLabel.setForeground(Color.WHITE);
+            monthLabel.setHorizontalAlignment(JLabel.CENTER);
+            monthLabel.setFont(new Font(fontName, fontStyle, monthFontSize));
+            this.add(monthLabel, BorderLayout.SOUTH);
         }
 
         /**
@@ -120,8 +129,10 @@ public class CalendarWidget extends AbstractWidget {
         public void setDay(ZonedDateTime date) {
             if (isCurrentDay) {
                 dayLabel.setText(date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault()));
+                monthLabel.setText(date.getMonth().getDisplayName(TextStyle.FULL,Locale.getDefault()));
             } else {
                 dayLabel.setText(date.getDayOfWeek().getDisplayName(TextStyle.SHORT_STANDALONE, Locale.getDefault()));
+                monthLabel.setText("");
             }
             if(date.getDayOfWeek() == DayOfWeek.SUNDAY){
                 dayLabel.setForeground(new Color(255,65,0));

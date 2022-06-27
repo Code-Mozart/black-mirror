@@ -12,6 +12,7 @@ import de.hhn.aib.labsw.blackmirror.view.widgets.clock.ClockFaceType;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
@@ -89,6 +90,9 @@ public class PageController implements TopicListener {
         } else if (pageIndex >= pages.size()) {
             throw new IndexOutOfBoundsException("Index has to be lower than the size of the list - 1.");
         } else {
+            for (AbstractWidgetController c : pages.get(pageIndex).getWidgetsOnPage()) {
+                c.getWidget().dispose();
+            }
             pages.remove(pageIndex);
         }
     }
@@ -193,7 +197,11 @@ public class PageController implements TopicListener {
      * @return Current visible page.
      */
     protected Page getCurrentPage() {
-        return pages.get(pageIndex);
+        if (pages.size() > 0) {
+            return pages.get(pageIndex);
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -224,18 +232,16 @@ public class PageController implements TopicListener {
         assert (topic.equals(PAGE_UPDATE_TOPIC)) : "Wrong topic received by PageController.";
 
         //reset the current pages
-        for (int i = 0; i < pages.size(); i++) {
-            goToAnyPage(i);
-            getCurrentPage().setWidgetsInvisible();
+        for (int i = pages.size() -1; i > -1; i--) {
             deletePageAtIndex(i);
         }
+
 
         try {
             LayoutData data = TopicListener.nodeToObject(object, LayoutData.class);
 
             // iterate the pages
             for (int i = 0; i < data.pages().size(); i++) {
-
                 //create new page
                 ArrayList<AbstractWidgetController> page = new ArrayList();
 
@@ -246,33 +252,33 @@ public class PageController implements TopicListener {
                         switch (widget.type()) {
                             case CALENDAR -> {
                                 CalendarWidgetController calendarWidgetController = new CalendarWidgetController();
-                                calendarWidgetController.getWidget().setPosition(widget.x(), widget.y());
+                                calendarWidgetController.getWidget().setPosition(widget.x() - 1, widget.y() - 1);
                                 page.add(calendarWidgetController);
                             }
                             case CLOCK -> {
                                 // todo : FaceType handling
                                 ClockWidgetController clockWidgetController = new ClockWidgetController(ClockFaceType.ANALOG);
-                                clockWidgetController.getWidget().setPosition(widget.x(), widget.y());
+                                clockWidgetController.getWidget().setPosition(widget.x() - 1, widget.y() - 1);
                                 page.add(clockWidgetController);
                             }
                             case MAIL -> {
                                 EmailNotificationController emailNotificationController = new EmailNotificationController();
-                                emailNotificationController.getWidget().setPosition(widget.x(), widget.y());
+                                emailNotificationController.getWidget().setPosition(widget.x() - 1, widget.y() - 1);
                                 page.add(emailNotificationController);
                             }
                             case REMINDER -> {
                                 TodosWidgetController todosWidgetController = new TodosWidgetController();
-                                todosWidgetController.getWidget().setPosition(widget.x(), widget.y());
+                                todosWidgetController.getWidget().setPosition(widget.x() - 1, widget.y() - 1);
                                 page.add(todosWidgetController);
                             }
                             case WEATHER -> {
                                 WeatherWidgetController weatherWidgetController = new WeatherWidgetController();
-                                weatherWidgetController.getWidget().setPosition(widget.x(), widget.y());
+                                weatherWidgetController.getWidget().setPosition(widget.x() - 1, widget.y() - 1);
                                 page.add(weatherWidgetController);
                             }
                         }
                     }
-                    addPageAtIndex(i, page);
+                    addPage(page);
                 }
             }
             pageIndex = data.currentPageIndex();

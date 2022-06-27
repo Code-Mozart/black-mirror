@@ -60,15 +60,15 @@ public class Main {
         widgetsPage2.add(new CalendarWidgetController());
         widgetsPage2.add(new ClockWidgetController(ClockFaceType.DIGITAL));
 
-        /*i = 0;
-        widgetsPage2.get(i++).getWidget().setPosition(AbstractWidget.Position.TOP_LEFT);
-        widgetsPage2.get(i++).getWidget().setPosition(AbstractWidget.Position.TOP_RIGHT);
-        widgetsPage2.get(i++).getWidget().setPosition(AbstractWidget.Position.BOTTOM_RIGHT);
-        widgetsPage2.get(i++).getWidget().setPosition(AbstractWidget.Position.BOTTOM_LEFT);*/
+        i = 0;
+        widgetsPage2.get(i++).getWidget().setPosition(0, 0);
+        widgetsPage2.get(i++).getWidget().setPosition(1, 0);
+        widgetsPage2.get(i++).getWidget().setPosition(2, 2);
+        widgetsPage2.get(i++).getWidget().setPosition(3, 0);
 
         //@Team Use this method to add a new page, with a ArrayList of widgets -Niklas
         pageController.addPage(widgets);
-        //pageController.addPage(widgetsPage2);
+        pageController.addPage(widgetsPage2);
 
         pageController.getCurrentPage().setWidgetsVisible(); //Sets all widgets on the default page visible.
         new SecondsTimer(this::onNextSecond);

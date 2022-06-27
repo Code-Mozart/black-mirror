@@ -12,6 +12,7 @@ import de.hhn.aib.labsw.blackmirror.view.widgets.clock.ClockFaceType;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
@@ -233,11 +234,10 @@ public class PageController implements TopicListener {
         System.out.println(object.toPrettyString());
 
         //reset the current pages
-        for (int i = 0; i < pages.size(); i++) {
-            goToAnyPage(i);
-            getCurrentPage().setWidgetsInvisible();
+        for (int i = pages.size() -1; i > -1; i--) {
             deletePageAtIndex(i);
         }
+
 
         try {
             LayoutData data = TopicListener.nodeToObject(object, LayoutData.class);

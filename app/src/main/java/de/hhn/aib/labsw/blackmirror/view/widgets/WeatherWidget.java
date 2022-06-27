@@ -144,6 +144,7 @@ public class WeatherWidget extends AbstractWidget {
         public WeatherPanel() {
             this.setBackground(Color.BLACK);
             this.setLayout(new GridBagLayout());
+            this.setFont(new Font(WidgetFont.STANDARD_FONT.getFontName(), WidgetFont.STANDARD_FONT.getFontStyle(), 16));
             GridBagConstraints ic = new InnerConstraints();
             header = new WeatherLabel();
             icon = new WeatherLabel();

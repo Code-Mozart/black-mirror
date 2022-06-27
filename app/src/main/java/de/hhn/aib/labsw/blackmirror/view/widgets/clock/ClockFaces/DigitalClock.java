@@ -1,5 +1,6 @@
 package de.hhn.aib.labsw.blackmirror.view.widgets.clock.ClockFaces;
 
+import de.hhn.aib.labsw.blackmirror.view.widgets.WidgetFont;
 import de.hhn.aib.labsw.blackmirror.view.widgets.clock.ClockFace;
 
 import javax.swing.*;
@@ -32,7 +33,7 @@ public class DigitalClock implements ClockFace {
             String time = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).format(LocalTime.now());
             int size = 5;
             while (true) {
-                g.setFont(new Font("Arial", Font.PLAIN, size));
+                g.setFont(new Font(WidgetFont.STANDARD_FONT.getFontName(), WidgetFont.STANDARD_FONT.getFontStyle(), size));
                 if (g.getFontMetrics().stringWidth(time) > (getWidth() * 0.75) ||
                         g.getFontMetrics().getHeight() > (getHeight() * 0.75)) {
                     break;

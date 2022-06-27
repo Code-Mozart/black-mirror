@@ -1,5 +1,6 @@
 package de.hhn.aib.labsw.blackmirror.view.widgets.clock.ClockFaces;
 
+import de.hhn.aib.labsw.blackmirror.view.widgets.WidgetFont;
 import de.hhn.aib.labsw.blackmirror.view.widgets.clock.ClockFace;
 
 import javax.swing.*;
@@ -244,7 +245,7 @@ public class AnalogClock implements ClockFace {
                 int y = (int) (Math.cos((i / 12.0) * 2 * Math.PI) * numberPos);
 
                 //set font and color
-                g2.setFont(new Font("calibri", Font.PLAIN, (int) (size*0.065)));
+                g2.setFont(new Font(WidgetFont.STANDARD_FONT.getFontName(), WidgetFont.STANDARD_FONT.getFontStyle(), (int) (size*0.065)));
                 g2.setColor(numColor);
 
                 //calculate correction factor

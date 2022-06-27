@@ -78,8 +78,8 @@ public class CalendarWidget extends AbstractWidget {
         private final JLabel dayLabel;
         private final JLabel monthLabel;
 
-        private final String fontName = "Calibri";
-        private final int fontStyle = Font.PLAIN;
+        private final String fontName = WidgetFont.STANDARD_FONT.getFontName();
+        private final int fontStyle = WidgetFont.STANDARD_FONT.getFontStyle();
         private int dayFontSize = 40;
         private int dateFontSize = 50;
         private int monthFontSize = 30;

@@ -32,10 +32,10 @@ public class Main {
         //adjust this for the pi because it uses a different naming schema for serial ports
 
         try {
-            /*SerialGestureController c = new SerialGestureController(SerialPort.getCommPort(
-                    "/dev/serial/by-path/platform-3f980000.usb-usb-0:1.2:1.0"
-            ), pageController);*/
-            SerialGestureController c = new SerialGestureController(SerialPort.getCommPort("COM3"), pageController);
+            SerialGestureController c = new SerialGestureController(SerialPort.getCommPort(
+                    "/dev/serial/by-path/platform-3f980000.usb-usb-0:1.5:1.0"
+            ), pageController);
+            //SerialGestureController c = new SerialGestureController(SerialPort.getCommPort("COM3"), pageController);
         } catch (Exception e){
             System.out.println("could not establish connection with serial gesture controller");
         }
@@ -45,7 +45,6 @@ public class Main {
         ArrayList<AbstractWidgetController> widgets = new ArrayList<>();
         widgets.add(new TodosWidgetController());
         widgets.add(new ClockWidgetController(ClockFaceType.ANALOG));
-        widgets.add(new ClockWidgetController(ClockFaceType.DIGITAL));
         widgets.add(new WeatherWidgetController());
         widgets.add(new CalendarWidgetController());
         widgets.add(new EmailNotificationController());
@@ -56,15 +55,13 @@ public class Main {
         widgets.get(i++).getWidget().setPosition(2, 2);
         widgets.get(i++).getWidget().setPosition(3, 0);
         widgets.get(i++).getWidget().setPosition(0, 1);
-        widgets.get(i++).getWidget().setPosition(1, 1);
-
 
         ArrayList<AbstractWidgetController> widgetsPage2 = new ArrayList<>();
         widgetsPage2.add(new TodosWidgetController());
         widgetsPage2.add(new WeatherWidgetController());
         widgetsPage2.add(new EmailNotificationController());
         widgetsPage2.add(new CalendarWidgetController());
-        widgetsPage2.add(new ClockWidgetController(ClockFaceType.DIGITAL));
+        widgetsPage2.add(new ClockWidgetController(ClockFaceType.ANALOG));
 
         i = 0;
         widgetsPage2.get(i++).getWidget().setPosition(0, 0);

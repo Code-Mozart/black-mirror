@@ -32,7 +32,7 @@ public class Main {
         //SerialGestureController c = new SerialGestureController(SerialPort.getCommPort("COM3"), pageController);
         SerialGestureController c = new SerialGestureController(SerialPort.getCommPort(
                 "/dev/serial/by-path/platform-3f980000.usb-usb-0:1.2:1.0"
-        ),pageController);
+        ), pageController);
         server.init();
 
         // @Team add your widgets here to test them -Markus
@@ -45,12 +45,12 @@ public class Main {
         widgets.add(new EmailNotificationController());
 
         int i = 0;
-        widgets.get(i++).getWidget().setPosition(0,0);
-        widgets.get(i++).getWidget().setPosition(1,0);
-        widgets.get(i++).getWidget().setPosition(2,2);
-        widgets.get(i++).getWidget().setPosition(3,0);
-        widgets.get(i++).getWidget().setPosition(0,1);
-        widgets.get(i++).getWidget().setPosition(1,1);
+        widgets.get(i++).getWidget().setPosition(0, 0);
+        widgets.get(i++).getWidget().setPosition(1, 0);
+        widgets.get(i++).getWidget().setPosition(2, 2);
+        widgets.get(i++).getWidget().setPosition(3, 0);
+        widgets.get(i++).getWidget().setPosition(0, 1);
+        widgets.get(i++).getWidget().setPosition(1, 1);
 
 
         ArrayList<AbstractWidgetController> widgetsPage2 = new ArrayList<>();
@@ -77,7 +77,10 @@ public class Main {
     }
 
     private void onNextSecond() {
-        pageController.getCurrentPage().onNextSecond();
+        Page cPage = pageController.getCurrentPage();
+        if (cPage != null) {
+            pageController.getCurrentPage().onNextSecond();
+        }
     }
 
     private void onRegularUpdate() {

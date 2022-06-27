@@ -114,7 +114,7 @@ public class MirrorApiWebsockets extends WebSocketServer implements MirrorApi {
                 }
             }
         }
-        catch(Exception e){
+        catch(IOException e){
             System.out.println(e.getMessage());
         }
     }
@@ -133,6 +133,7 @@ public class MirrorApiWebsockets extends WebSocketServer implements MirrorApi {
      */
     @Override
     public void onError(WebSocket session, Exception ex) {
+        ex.printStackTrace();
         session.close();
         sessions.remove(session);
     }

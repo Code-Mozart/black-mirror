@@ -196,7 +196,11 @@ public class PageController implements TopicListener {
      * @return Current visible page.
      */
     protected Page getCurrentPage() {
-        return pages.get(pageIndex);
+        if (pages.size() > 0) {
+            return pages.get(pageIndex);
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -226,6 +230,8 @@ public class PageController implements TopicListener {
 
         assert (topic.equals(PAGE_UPDATE_TOPIC)) : "Wrong topic received by PageController.";
 
+        System.out.println(object.toPrettyString());
+
         //reset the current pages
         for (int i = 0; i < pages.size(); i++) {
             goToAnyPage(i);
@@ -248,33 +254,33 @@ public class PageController implements TopicListener {
                         switch (widget.type()) {
                             case CALENDAR -> {
                                 CalendarWidgetController calendarWidgetController = new CalendarWidgetController();
-                                calendarWidgetController.getWidget().setPosition(widget.x(), widget.y());
+                                calendarWidgetController.getWidget().setPosition(widget.x() - 1, widget.y() - 1);
                                 page.add(calendarWidgetController);
                             }
                             case CLOCK -> {
                                 // todo : FaceType handling
                                 ClockWidgetController clockWidgetController = new ClockWidgetController(ClockFaceType.ANALOG);
-                                clockWidgetController.getWidget().setPosition(widget.x(), widget.y());
+                                clockWidgetController.getWidget().setPosition(widget.x() - 1, widget.y() - 1);
                                 page.add(clockWidgetController);
                             }
                             case MAIL -> {
                                 EmailNotificationController emailNotificationController = new EmailNotificationController();
-                                emailNotificationController.getWidget().setPosition(widget.x(), widget.y());
+                                emailNotificationController.getWidget().setPosition(widget.x() - 1, widget.y() - 1);
                                 page.add(emailNotificationController);
                             }
                             case REMINDER -> {
                                 TodosWidgetController todosWidgetController = new TodosWidgetController();
-                                todosWidgetController.getWidget().setPosition(widget.x(), widget.y());
+                                todosWidgetController.getWidget().setPosition(widget.x() - 1, widget.y() - 1);
                                 page.add(todosWidgetController);
                             }
                             case WEATHER -> {
                                 WeatherWidgetController weatherWidgetController = new WeatherWidgetController();
-                                weatherWidgetController.getWidget().setPosition(widget.x(), widget.y());
+                                weatherWidgetController.getWidget().setPosition(widget.x() - 1, widget.y() - 1);
                                 page.add(weatherWidgetController);
                             }
                         }
                     }
-                    addPageAtIndex(i, page);
+                    addPage(page);
                 }
             }
             pageIndex = data.currentPageIndex();

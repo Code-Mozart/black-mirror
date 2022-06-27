@@ -44,10 +44,24 @@ public class EmailNotificationController extends AbstractWidgetController {
         // web.de imap server: imap.web.de
         // gmail.com imap server: imap.gmail.com
         // Project Mail: "blackmirror.labswp@gmail.com", "labSWPproject" (error: app not a "secure app" for google)
+
         host = "imap.web.de";
         port = 993;
         username = "blackmirror.labswp@web.de";
         password = "labSWPproject";
+
+        // set wrong pw on purpose
+        /*host = "imap.web.de";
+        port = 993;
+        username = "blackmirror.labswp@web.de";
+        password = "wert";*/
+
+        // set empty fields
+        /*host = "";
+        port = 993;
+        username = "";
+        password = "";*/
+
 
         subscribeWithID(EMAIL_DATA_TOPIC);
 
@@ -76,14 +90,18 @@ public class EmailNotificationController extends AbstractWidgetController {
      * @throws MessagingException if connection failed
      */
     public boolean login(String host, int port, String username, String password) throws MessagingException {
+
+        // Check if parameters are valid. Abort login process if not.
+        if (!validateParameters(host, username, password)) return false;
+
         Properties properties = new Properties();
         properties.put("mail.store.protocol", "imaps");
         properties.put("mail.imaps.port", String.valueOf(port));
         properties.put("mail.imaps.starttls.enable", "true");
 
         Session mailSession = Session.getDefaultInstance(properties);
-
         Store store = mailSession.getStore("imaps");
+
         try {
             store.connect(host, username, password);
         } catch (AuthenticationFailedException e) {
@@ -93,6 +111,12 @@ public class EmailNotificationController extends AbstractWidgetController {
         this.imapStore = (IMAPStore) store;
 
         return true;
+    }
+
+    private boolean validateParameters(String host, String username, String password) {
+        return (!host.isBlank() && !host.isEmpty()) &&
+                (!username.isBlank() && !username.isEmpty()) &&
+                (!password.isBlank() && !password.isEmpty());
     }
 
     /**

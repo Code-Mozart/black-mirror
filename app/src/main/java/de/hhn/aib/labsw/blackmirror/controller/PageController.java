@@ -200,8 +200,8 @@ public class PageController implements TopicListener {
     /**
      * @return Current visible page.
      */
-    protected synchronized Page getCurrentPage() {
-        if (pages.size() > 0) {
+    protected Page getCurrentPage() {
+        if (pages.size() > 0 && pageIndex < pages.size()) {
             return pages.get(pageIndex);
         } else {
             return null;
@@ -236,7 +236,7 @@ public class PageController implements TopicListener {
         assert (topic.equals(PAGE_UPDATE_TOPIC)) : "Wrong topic received by PageController.";
 
         //reset the current pages
-        for (int i = pages.size() -1; i > -1; i--) {
+        for (int i = pages.size() - 1; i > -1; i--) {
             deletePageAtIndex(i);
         }
 
@@ -286,6 +286,13 @@ public class PageController implements TopicListener {
                 }
             }
             pageIndex = data.currentPageIndex();
+            if(pageIndex >= pages.size()||pages.get(pageIndex).getWidgetsOnPage().size() == 0){
+                int newPageIndex = 0;
+                while(pages.get(newPageIndex).getWidgetsOnPage().size() == 0){
+                    ++newPageIndex;
+                }
+                pageIndex = newPageIndex;
+            }
             getCurrentPage().setWidgetsVisible();
         } catch (JsonProcessingException e) {
             e.printStackTrace();
